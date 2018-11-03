@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript" src="xonomy-3.5.0/xonomy.js"></script>
+	<link type="text/css" rel="stylesheet" href="xonomy-3.5.0/xonomy.css"/>
+
+    <script type="text/javascript">
+        function start() {
+            var xml = "<list></list>";
+
+            function askDate(defaultString) {
+                return `
+		            <form onsubmit='Xonomy.answer(this.val.value); return false;'>
+			        <input type='datetime-local' name='val' class='focusme' value='${defaultString}' step='1'/>
+			        <input type='submit' value='确定' />
+		            </form>
+	            `;
+            }
+
+            function askNum(defaultString, rule) {
+                if (typeof rule.default !== 'undefined' && defaultString.length <= 0) {
+                    defaultString = rule.default;
+                }
+                var minString = "";
+                if (typeof rule.min !== 'undefined') {
+                    minString = "min=\"" + rule.min + "\"";
+                }
+                var maxString = "";
+                if (typeof rule.max !== 'undefined') {
+                    maxString = `max="${rule.max}"`;
+                }
+                var stepString = "";
+                if (typeof rule.precision !== 'undefined') {
+                    stepString = `step=${rule.precision}`;
+                }
+                return `
+		            <form onsubmit='Xonomy.answer(this.val.value); return false;'>
+			        <input type='number' name='val' class='focusme' value='${defaultString}' ${stepString} ${minString} ${maxString} />
+			        <input type='submit' value='确定' />
+		            </form>
+	            `;
+            }
+            function genIntAttrSpec(rule) {
+                var intAttrSpec = {
+                    asker: askNum,
+                    askerParameter: rule,
+                    menu: [],
+                };
+                if (rule.optional === true) {
+                    intAttrSpec.menu.push({
+                        caption: "Delete",
+                        action: Xonomy.deleteAttribute,
+                        actionParameter: null,
+                        hideIf: function (jsAttribute) { return false }
+                    });
+                }
+                return intAttrSpec;
+            }
+            var dateAttrSpec = {
+                asker: askDate,
+                askerParameter: {},
+                menu: [],
+            };
+
+            var intOptionalAttrSpec = {
+                asker: Xonomy.askString,
+                askerParameter: {},
+                menu: [{
+                    caption: "Delete",
+                    action: Xonomy.deleteAttribute,
+                    actionParameter: null,
+                    hideIf: function (jsAttribute) { return false }
+                }],
+            };
+            var spec = {
+                onchange: function () {
+                    console.log("Ah been chaaanged!");
+                },
+                validate: function (jsElement) {
+                },
+                elements: {
+                    "list": {
+                        menu: [{
+                            caption: "添加 <item>",
+                            action: Xonomy.newElementChild,
+                            actionParameter: "<item />",
+                        }],
+                        collapsed: function (jsElement) { return false }
+                    },
+                    "item": {
+                        backgroundColour: "#d6d6ff",
+                        menu: [{
+                            caption: "Add @age",
+                            action: Xonomy.newAttribute,
+                            actionParameter: { name: "age", value: "" },
+                            hideIf: function (jsElement) { return jsElement.hasAttribute("age"); }
+                        },
+                        {
+                            caption: "Add @height",
+                            action: Xonomy.newAttribute,
+                            actionParameter: { name: "height", value: "" },
+                            hideIf: function (jsElement) { return jsElement.hasAttribute("height"); }
+                        },
+                        {
+                            caption: "Add @create_time",
+                            action: Xonomy.newAttribute,
+                            actionParameter: { name: "create_time", value: "2018-09-09T23:12:11" },
+                            hideIf: function (jsElement) { return jsElement.hasAttribute("create_time"); }
+                        }
+                        ],
+                        attributes: {
+                            "age": genIntAttrSpec({default:20, min:0, max:100, precision:1}),
+                            "height": genIntAttrSpec({min:0, max:200, precision:0.01, optional:true}),
+                            "create_time": dateAttrSpec
+                        },
+                        collapsed: function (jsElement) { return false }
+                    },
+                }
+            };
+            var editor = document.getElementById("editor");
+            Xonomy.render(xml, editor, spec);
+        }
+    </script>
+</head>
+
+<body onload="start()">
+    <div id="editor"></div>
+</body>
+
+</html>
