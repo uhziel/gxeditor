@@ -211,7 +211,7 @@
                         ...genNumAttrSpec({ min: 1, max: 10 }),
                         backgroundColour: "#d6d6ff",
                         menu: [],
-                        child_elements: ["skill"],
+                        child_elements: ["skill", "school"],
                         attributes: {
                             "age": genNumAttrSpec({ default: 20, min: 0, max: 100, precision: 1, tips: "年龄", desc: "范围(0,100)"}),
                             "height": genNumAttrSpec({ default: 170, min: 0, max: 200, precision: 0.01, optional: true }),
@@ -223,6 +223,14 @@
                         attributes: {
                             "id" : genNumAttrSpec({default: 1, precision: 1}),
                             "level" : genNumAttrSpec({default: 1, precision: 1}),
+                        }
+                    },  
+                    "school": {
+                        optional: true,
+                        multi: true,
+                        menu: [],
+                        attributes: {
+                            "id" : genNumAttrSpec({default: 1, precision: 1}),
                         }
                     }
                 }
