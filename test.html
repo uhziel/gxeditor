@@ -8,7 +8,7 @@
 
     <script type="text/javascript">
         function start() {
-            var xml = "<list><item age='100000' /></list>";
+            var xml = "<list><person age='18' /></list>";
 
             ///////////////////////////////////////
             // Num
@@ -120,7 +120,7 @@
                         let child_name = element.child_elements[key];
                         const param = getNewElementParam(child_name);
                         let menu_action = {
-                            caption: `Add <${child_name}/>`,
+                            caption: `添加 <${child_name}/>`,
                             action: Xonomy.newElementChild,
                             actionParameter: param,
                         }
@@ -137,7 +137,7 @@
                             defaultString = attribute.askerParameter.default;
                         }
                         let menu_action = {
-                            caption: `Add @${key}`,
+                            caption: `添加 @${key}`,
                             action: Xonomy.newAttribute,
                             actionParameter: { name: key, value: defaultString },
                             hideIf: function (jsElement) { return jsElement.hasAttribute(key); }
@@ -201,21 +201,26 @@
                 elements: {
                     "list": {
                         menu: [],
-                        child_elements: ["item"],
-                        collapsed: function (jsElement) { return false }
+                        child_elements: ["person"],
                     },
-                    "item": {
+                    "person": {
                         ...genNumAttrSpec({ min: 1, max: 10 }),
-                        hasText: true,
                         backgroundColour: "#d6d6ff",
                         menu: [],
+                        child_elements: ["skill"],
                         attributes: {
                             "age": genNumAttrSpec({ default: 20, min: 0, max: 100, precision: 1, tips: "年龄", desc: "范围(0,100)"}),
                             "height": genNumAttrSpec({ default: 170, min: 0, max: 200, precision: 0.01, optional: true }),
                             "create_time": dateAttrSpec
                         },
-                        collapsed: function (jsElement) { return false }
                     },
+                    "skill": {
+                        menu: [],
+                        attributes: {
+                            "id" : genNumAttrSpec({default: 1, precision: 1}),
+                            "level" : genNumAttrSpec({default: 1, precision: 1}),
+                        }
+                    }
                 }
             };
             genMenu(spec);
