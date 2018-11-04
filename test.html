@@ -121,16 +121,24 @@
                 param += `</${element_name}>`
                 return param;
             }
-            function genElementMenu(element) {
+            function genElementMenu(element_name, element) {
                 //action: 添加子元素
                 if (typeof element.child_elements === "object") {
                     for (const key in element.child_elements) {
                         let child_name = element.child_elements[key];
+                        const child_element = spec.elements[child_name];
                         const param = getNewElementParam(child_name);
                         let menu_action = {
                             caption: `添加 <${child_name}/>`,
                             action: Xonomy.newElementChild,
                             actionParameter: param,
+                            hideIf: function (jsElement) {
+                                if (child_element.multi === true) {
+                                    return false;
+                                }
+
+                                return jsElement.hasChildElement(child_name); 
+                            }
                         }
                         element.menu.push(menu_action);
                     }
@@ -161,14 +169,25 @@
                     action: Xonomy.deleteElement,
                     actionParameter: null,
                     hideIf: function (jsElement) {
-                        return element.optional !== true;
+                        if (element.optional === true) {
+                            return false;
+                        }
+                        const parentElement = jsElement.parent();
+                        if (parentElement === null) {
+                            return true;
+                        }
+                        const children_num = parentElement.getChildElements(element_name).length;
+                        if (children_num <= 1) {
+                            return true;
+                        }
+                        return false;
                     }
                 });
             }
             function genMenu(spec) {
                 for (const key in spec.elements) {
                     const element = spec.elements[key];
-                    genElementMenu(element);
+                    genElementMenu(key, element);
 
                     if (typeof element.attributes !== 'object') {
                         continue;
@@ -216,6 +235,7 @@
                     "person": {
                         ...genNumAttrSpec({ min: 1, max: 10 }),
                         backgroundColour: "#d6d6ff",
+                        multi: true,
                         menu: [],
                         child_elements: ["skill", "school"],
                         attributes: {
