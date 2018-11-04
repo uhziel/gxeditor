@@ -97,15 +97,32 @@
                     });
                 }
             }
+            function getNewElementParam(element_name) {
+                var param = '<' + element_name;
+                const element = spec.elements[element_name];
+                for (const key in element.attributes) {
+                    const attr = element.attributes[key];
+                    let defaultString = "";
+                    if (typeof attr.askerParameter.default !== 'undefined') {
+                        defaultString = attr.askerParameter.default;
+                    }
+                    if (attr.askerParameter.optional !== true) {
+                        param += ` ${key}="${defaultString}"`;
+                    }
+                }
+                param += ' />';
+                return param;
+            }
             function genElementMenu(element) {
                 //action: 添加子元素
                 if (typeof element.child_elements === "object") {
                     for (const key in element.child_elements) {
-                        let element_name = element.child_elements[key];
+                        let child_name = element.child_elements[key];
+                        const param = getNewElementParam(child_name);
                         let menu_action = {
-                            caption: `Add <${element_name}/>`,
+                            caption: `Add <${child_name}/>`,
                             action: Xonomy.newElementChild,
-                            actionParameter: `<${element_name} />`,
+                            actionParameter: param,
                         }
                         element.menu.push(menu_action);
                     }
@@ -193,7 +210,7 @@
                         backgroundColour: "#d6d6ff",
                         menu: [],
                         attributes: {
-                            "age": genNumAttrSpec({ default: 20, min: 0, max: 100, precision: 1, tips: "年龄", desc: "范围(0,100)", optional: true }),
+                            "age": genNumAttrSpec({ default: 20, min: 0, max: 100, precision: 1, tips: "年龄", desc: "范围(0,100)"}),
                             "height": genNumAttrSpec({ default: 170, min: 0, max: 200, precision: 0.01, optional: true }),
                             "create_time": dateAttrSpec
                         },
