@@ -110,7 +110,11 @@
                         param += ` ${key}="${defaultString}"`;
                     }
                 }
-                param += ' />';
+                param += ' >';
+                for (const key in element.child_elements) {
+                    param += getNewElementParam(element.child_elements[key]);
+                }
+                param += `</${element_name}>`
                 return param;
             }
             function genElementMenu(element) {
