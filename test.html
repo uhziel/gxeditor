@@ -10,15 +10,8 @@
         function start() {
             var xml = "<list></list>";
 
-            function askDate(defaultString) {
-                return `
-		            <form onsubmit='Xonomy.answer(this.val.value); return false;'>
-			        <input type='datetime-local' name='val' class='focusme' value='${defaultString}' step='1'/>
-			        <input type='submit' value='确定' />
-		            </form>
-	            `;
-            }
-
+            ///////////////////////////////////////
+            // Number
             function askNum(defaultString, rule) {
                 if (typeof rule.default !== 'undefined' && defaultString.length <= 0) {
                     defaultString = rule.default;
@@ -58,22 +51,23 @@
                 }
                 return intAttrSpec;
             }
+
+            ///////////////////////////////////////
+            // Datetime
             var dateAttrSpec = {
                 asker: askDate,
                 askerParameter: {},
                 menu: [],
             };
+            function askDate(defaultString) {
+                return `
+		            <form onsubmit='Xonomy.answer(this.val.value); return false;'>
+			        <input type='datetime-local' name='val' class='focusme' value='${defaultString}' step='1'/>
+			        <input type='submit' value='确定' />
+		            </form>
+	            `;
+            }
 
-            var intOptionalAttrSpec = {
-                asker: Xonomy.askString,
-                askerParameter: {},
-                menu: [{
-                    caption: "Delete",
-                    action: Xonomy.deleteAttribute,
-                    actionParameter: null,
-                    hideIf: function (jsAttribute) { return false }
-                }],
-            };
             var spec = {
                 onchange: function () {
                     console.log("Ah been chaaanged!");
@@ -90,6 +84,8 @@
                         collapsed: function (jsElement) { return false }
                     },
                     "item": {
+                        ...genIntAttrSpec({min:1, max:10}),
+                        hasText : true,
                         backgroundColour: "#d6d6ff",
                         menu: [{
                             caption: "Add @age",
