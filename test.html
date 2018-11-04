@@ -160,7 +160,9 @@
                     caption: "删除",
                     action: Xonomy.deleteElement,
                     actionParameter: null,
-                    hideIf: function (jsAttribute) { return false }
+                    hideIf: function (jsElement) {
+                        return element.optional !== true;
+                    }
                 });
             }
             function genMenu(spec) {
