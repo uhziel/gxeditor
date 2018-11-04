@@ -112,7 +112,11 @@
                 }
                 param += ' >';
                 for (const key in element.child_elements) {
-                    param += getNewElementParam(element.child_elements[key]);
+                    const child_name = element.child_elements[key];
+                    const child_element = spec.elements[child_name];
+                    if (child_element.optional !== true) {
+                        param += getNewElementParam(child_name);
+                    }
                 }
                 param += `</${element_name}>`
                 return param;
