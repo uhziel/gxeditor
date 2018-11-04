@@ -64,14 +64,6 @@
                 if (typeof rule.tips === 'string') {
                     numAttrSpec.title = rule.tips
                 }
-                if (rule.optional === true) {
-                    numAttrSpec.menu.push({
-                        caption: "Delete",
-                        action: Xonomy.deleteAttribute,
-                        actionParameter: null,
-                        hideIf: function (jsAttribute) { return false }
-                    });
-                }
                 return numAttrSpec;
             }
 
@@ -91,6 +83,30 @@
 	            `;
             }
 
+            ///////////////////////////////////////
+            /// genMenu
+            function genMenu(spec) {
+                for (var key in spec.elements) {
+                    var element = spec.elements[key];
+                    if (typeof element.attributes !== 'object')
+                        continue;
+                    for (var key_attrs in element.attributes) {
+                        var attribute = element.attributes[key_attrs];
+                        var rule = attribute.askerParameter;
+                        // 给属性添加删除自身的action
+                        if (typeof rule !== 'undefined' && rule.optional === true) {
+                            attribute.menu.push({
+                                caption: "删除",
+                                action: Xonomy.deleteAttribute,
+                                actionParameter: null,
+                                hideIf: function (jsAttribute) { return false }
+                            });
+                        }
+                    }
+                }
+            }
+            ///////////////////////////////////////
+            /// spec
             var spec = {
                 onchange: function () {
                     console.log("Ah been chaaanged!");
@@ -150,7 +166,7 @@
                         }
                         ],
                         attributes: {
-                            "age": genNumAttrSpec({ default: 20, min: 0, max: 100, precision: 1, tips : "年龄", desc : "范围(0,100)" }),
+                            "age": genNumAttrSpec({ default: 20, min: 0, max: 100, precision: 1, tips: "年龄", desc: "范围(0,100)" }),
                             "height": genNumAttrSpec({ min: 0, max: 200, precision: 0.01, optional: true }),
                             "create_time": dateAttrSpec
                         },
@@ -158,6 +174,7 @@
                     },
                 }
             };
+            genMenu(spec);
             var editor = document.getElementById("editor");
             Xonomy.render(xml, editor, spec);
         }
