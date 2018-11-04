@@ -2,13 +2,13 @@
 <html>
 
 <head>
-	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-	<script type="text/javascript" src="xonomy-3.5.0/xonomy.js"></script>
-	<link type="text/css" rel="stylesheet" href="xonomy-3.5.0/xonomy.css"/>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="xonomy-3.5.0/xonomy.js"></script>
+    <link type="text/css" rel="stylesheet" href="xonomy-3.5.0/xonomy.css" />
 
     <script type="text/javascript">
         function start() {
-            var xml = "<list></list>";
+            var xml = "<list><item age='-1' /></list>";
 
             ///////////////////////////////////////
             // Number
@@ -40,6 +40,21 @@
                     asker: askNum,
                     askerParameter: rule,
                     menu: [],
+                    validate: function (jsAttribute) {
+                        var _rule = this.askerParameter;
+                        if (_rule.min !== undefined && jsAttribute.value < _rule.min) {
+                            Xonomy.warnings.push({
+                                htmlID: jsAttribute.htmlID,
+                                text: `不能比${_rule.min}小。`
+                            })
+                        }
+                        if (_rule.max !== undefined && jsAttribute.value > _rule.max) {
+                            Xonomy.warnings.push({
+                                htmlID: jsAttribute.htmlID,
+                                text: `不能比${_rule.max}大。`
+                            })
+                        }
+                    }
                 };
                 if (rule.optional === true) {
                     intAttrSpec.menu.push({
@@ -73,6 +88,26 @@
                     console.log("Ah been chaaanged!");
                 },
                 validate: function (jsElement) {
+                    if (typeof (jsElement) == "string") jsElement = Xonomy.xml2js(jsElement);
+                    var valid = true;
+                    var elementSpec = this.elements[jsElement.name];
+                    if (elementSpec.validate) {
+                        elementSpec.validate(jsElement); //validate the element
+                    }
+                    for (var iAttribute = 0; iAttribute < jsElement.attributes.length; iAttribute++) {
+                        var jsAttribute = jsElement.attributes[iAttribute];
+                        var attributeSpec = elementSpec.attributes[jsAttribute.name];
+                        if (attributeSpec.validate) {
+                            if (!attributeSpec.validate(jsAttribute)) valid = false; //validate the attribute
+                        }
+                    }
+                    for (var iChild = 0; iChild < jsElement.children.length; iChild++) {
+                        if (jsElement.children[iChild].type == "element") {
+                            var jsChild = jsElement.children[iChild];
+                            if (!this.validate(jsChild)) valid = false; //recurse to the child element
+                        }
+                    }
+                    return valid;
                 },
                 elements: {
                     "list": {
@@ -84,8 +119,8 @@
                         collapsed: function (jsElement) { return false }
                     },
                     "item": {
-                        ...genIntAttrSpec({min:1, max:10}),
-                        hasText : true,
+                        ...genIntAttrSpec({ min: 1, max: 10 }),
+                        hasText: true,
                         backgroundColour: "#d6d6ff",
                         menu: [{
                             caption: "Add @age",
@@ -107,8 +142,8 @@
                         }
                         ],
                         attributes: {
-                            "age": genIntAttrSpec({default:20, min:0, max:100, precision:1}),
-                            "height": genIntAttrSpec({min:0, max:200, precision:0.01, optional:true}),
+                            "age": genIntAttrSpec({ default: 20, min: 0, max: 100, precision: 1 }),
+                            "height": genIntAttrSpec({ min: 0, max: 200, precision: 0.01, optional: true }),
                             "create_time": dateAttrSpec
                         },
                         collapsed: function (jsElement) { return false }
