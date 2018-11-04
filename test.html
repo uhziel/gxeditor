@@ -85,23 +85,58 @@
 
             ///////////////////////////////////////
             /// genMenu
+            function genAttrMenu(attribute) {
+                var rule = attribute.askerParameter;
+                // 给属性添加删除自身的actionelement
+                if (typeof rule !== 'undefined' && rule.optional === true) {
+                    attribute.menu.push({
+                        caption: "删除",
+                        action: Xonomy.deleteElement,
+                        actionParameter: null,
+                        hideIf: function (jsAttribute) { return false }
+                    });
+                }
+            }
+            function genElementMenu(element) {
+                //action: 添加属性
+                if (typeof element.attributes === 'object') {
+                    for (const key_attr in element.attributes) {
+                        let attribute = element.attributes[key_attr];
+                        let defaultString = "";
+                        if (typeof attribute.askerParameter.default !== 'undefined') {
+                            defaultString = attribute.askerParameter.default;
+                        }
+                        let menu_action = {
+                            caption: `Add @${key_attr}`,
+                            action: Xonomy.newAttribute,
+                            actionParameter: { name: key_attr, value: defaultString },
+                            hideIf: function (jsElement) { return jsElement.hasAttribute(key_attr); }
+                        };
+                        element.menu.push(menu_action);
+
+                    }
+                }
+
+                //action: 删除自身
+                element.menu.push({
+                    caption: "删除",
+                    action: Xonomy.deleteElement,
+                    actionParameter: null,
+                    hideIf: function (jsAttribute) { return false }
+                });
+            }
             function genMenu(spec) {
                 for (var key in spec.elements) {
                     var element = spec.elements[key];
-                    if (typeof element.attributes !== 'object')
+                    genElementMenu(element);
+
+                    if (typeof element.attributes !== 'object') {
                         continue;
-                    for (var key_attrs in element.attributes) {
-                        var attribute = element.attributes[key_attrs];
-                        var rule = attribute.askerParameter;
-                        // 给属性添加删除自身的action
-                        if (typeof rule !== 'undefined' && rule.optional === true) {
-                            attribute.menu.push({
-                                caption: "删除",
-                                action: Xonomy.deleteAttribute,
-                                actionParameter: null,
-                                hideIf: function (jsAttribute) { return false }
-                            });
-                        }
+                    }
+
+                    for (var key_attr in element.attributes) {
+                        var attribute = element.attributes[key_attr];
+                        genAttrMenu(attribute);
                     }
                 }
             }
@@ -146,28 +181,10 @@
                         ...genNumAttrSpec({ min: 1, max: 10 }),
                         hasText: true,
                         backgroundColour: "#d6d6ff",
-                        menu: [{
-                            caption: "Add @age",
-                            action: Xonomy.newAttribute,
-                            actionParameter: { name: "age", value: "" },
-                            hideIf: function (jsElement) { return jsElement.hasAttribute("age"); }
-                        },
-                        {
-                            caption: "Add @height",
-                            action: Xonomy.newAttribute,
-                            actionParameter: { name: "height", value: "" },
-                            hideIf: function (jsElement) { return jsElement.hasAttribute("height"); }
-                        },
-                        {
-                            caption: "Add @create_time",
-                            action: Xonomy.newAttribute,
-                            actionParameter: { name: "create_time", value: "2018-09-09T23:12:11" },
-                            hideIf: function (jsElement) { return jsElement.hasAttribute("create_time"); }
-                        }
-                        ],
+                        menu: [],
                         attributes: {
-                            "age": genNumAttrSpec({ default: 20, min: 0, max: 100, precision: 1, tips: "年龄", desc: "范围(0,100)" }),
-                            "height": genNumAttrSpec({ min: 0, max: 200, precision: 0.01, optional: true }),
+                            "age": genNumAttrSpec({ default: 20, min: 0, max: 100, precision: 1, tips: "年龄", desc: "范围(0,100)", optional: true }),
+                            "height": genNumAttrSpec({ default: 170, min: 0, max: 200, precision: 0.01, optional: true }),
                             "create_time": dateAttrSpec
                         },
                         collapsed: function (jsElement) { return false }
