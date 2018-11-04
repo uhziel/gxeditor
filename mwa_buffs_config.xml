@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="GB2312"?>
+<MWABattleBuffs>
+    <MWABattleBuff sn="1">
+        <Groups>
+            <Group id="1" />
+            <Group id="2" replace_priority="10" />
+        </Groups>
+        <Triggers>
+            <Trigger type="1" effect="1" effect_i1="3" effect_i2="4" priority="100">
+              <ParaType value="3" />
+			  <ParaType value="1" />
+            </Trigger>
+			<Trigger type="2" effect="1">
+              <ParaType value="3" />
+            </Trigger>
+			<Trigger type="3" effect="1">
+              <ParaType value="3" />
+            </Trigger>
+        </Triggers>
+        <Level value="1">
+            <Icon value="abc" />
+            <Effect3D value="efg" />
+            <Durations>
+                <Duration type="1" value="2" />
+            </Durations>
+        </Level>
+    </MWABattleBuff>
+</MWABattleBuffs>
