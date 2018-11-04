@@ -98,19 +98,32 @@
                 }
             }
             function genElementMenu(element) {
+                //action: 添加子元素
+                if (typeof element.child_elements === "object") {
+                    for (const key in element.child_elements) {
+                        let element_name = element.child_elements[key];
+                        let menu_action = {
+                            caption: `Add <${element_name}/>`,
+                            action: Xonomy.newElementChild,
+                            actionParameter: `<${element_name} />`,
+                        }
+                        element.menu.push(menu_action);
+                    }
+                }
+
                 //action: 添加属性
                 if (typeof element.attributes === 'object') {
-                    for (const key_attr in element.attributes) {
-                        let attribute = element.attributes[key_attr];
+                    for (const key in element.attributes) {
+                        let attribute = element.attributes[key];
                         let defaultString = "";
                         if (typeof attribute.askerParameter.default !== 'undefined') {
                             defaultString = attribute.askerParameter.default;
                         }
                         let menu_action = {
-                            caption: `Add @${key_attr}`,
+                            caption: `Add @${key}`,
                             action: Xonomy.newAttribute,
-                            actionParameter: { name: key_attr, value: defaultString },
-                            hideIf: function (jsElement) { return jsElement.hasAttribute(key_attr); }
+                            actionParameter: { name: key, value: defaultString },
+                            hideIf: function (jsElement) { return jsElement.hasAttribute(key); }
                         };
                         element.menu.push(menu_action);
 
@@ -126,16 +139,16 @@
                 });
             }
             function genMenu(spec) {
-                for (var key in spec.elements) {
-                    var element = spec.elements[key];
+                for (const key in spec.elements) {
+                    const element = spec.elements[key];
                     genElementMenu(element);
 
                     if (typeof element.attributes !== 'object') {
                         continue;
                     }
 
-                    for (var key_attr in element.attributes) {
-                        var attribute = element.attributes[key_attr];
+                    for (const key in element.attributes) {
+                        const attribute = element.attributes[key];
                         genAttrMenu(attribute);
                     }
                 }
@@ -170,11 +183,8 @@
                 },
                 elements: {
                     "list": {
-                        menu: [{
-                            caption: "添加 <item>",
-                            action: Xonomy.newElementChild,
-                            actionParameter: "<item />",
-                        }],
+                        menu: [],
+                        child_elements: ["item"],
                         collapsed: function (jsElement) { return false }
                     },
                     "item": {
