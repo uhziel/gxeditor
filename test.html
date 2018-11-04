@@ -11,7 +11,7 @@
             var xml = "<list><item age='100000' /></list>";
 
             ///////////////////////////////////////
-            // Number
+            // Num
             function askNum(defaultString, rule) {
                 if (typeof rule.default !== 'undefined' && defaultString.length <= 0) {
                     defaultString = rule.default;
@@ -35,13 +35,13 @@
                 return `
 		            <form onsubmit='Xonomy.answer(this.val.value); return false;'>
                     ${descString}
-			        <input type='number' name='val' class='focusme' value='${defaultString}' ${stepString} ${minString} ${maxString} />
+			        <input type='num' name='val' class='focusme' value='${defaultString}' ${stepString} ${minString} ${maxString} />
 			        <input type='submit' value='确定' />
 		            </form>
 	            `;
             }
-            function genIntAttrSpec(rule) {
-                var intAttrSpec = {
+            function genNumAttrSpec(rule) {
+                var numAttrSpec = {
                     asker: askNum,
                     askerParameter: rule,
                     menu: [],
@@ -62,17 +62,17 @@
                     }
                 };
                 if (typeof rule.tips === 'string') {
-                    intAttrSpec.title = rule.tips
+                    numAttrSpec.title = rule.tips
                 }
                 if (rule.optional === true) {
-                    intAttrSpec.menu.push({
+                    numAttrSpec.menu.push({
                         caption: "Delete",
                         action: Xonomy.deleteAttribute,
                         actionParameter: null,
                         hideIf: function (jsAttribute) { return false }
                     });
                 }
-                return intAttrSpec;
+                return numAttrSpec;
             }
 
             ///////////////////////////////////////
@@ -127,9 +127,8 @@
                         collapsed: function (jsElement) { return false }
                     },
                     "item": {
-                        ...genIntAttrSpec({ min: 1, max: 10 }),
+                        ...genNumAttrSpec({ min: 1, max: 10 }),
                         hasText: true,
-                        oneliner: true,
                         backgroundColour: "#d6d6ff",
                         menu: [{
                             caption: "Add @age",
@@ -151,8 +150,8 @@
                         }
                         ],
                         attributes: {
-                            "age": genIntAttrSpec({ default: 20, min: 0, max: 100, precision: 1, tips : "年龄", desc : "范围(0,100)" }),
-                            "height": genIntAttrSpec({ min: 0, max: 200, precision: 0.01, optional: true }),
+                            "age": genNumAttrSpec({ default: 20, min: 0, max: 100, precision: 1, tips : "年龄", desc : "范围(0,100)" }),
+                            "height": genNumAttrSpec({ min: 0, max: 200, precision: 0.01, optional: true }),
                             "create_time": dateAttrSpec
                         },
                         collapsed: function (jsElement) { return false }
