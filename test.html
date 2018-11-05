@@ -8,7 +8,16 @@
 
     <script type="text/javascript">
         function start() {
-            var xml = "<list><person age='18' /></list>";
+            document.getElementById("file").addEventListener('change', readFile);
+        }
+        function readFile(evt) {
+            let file = evt.target.files[0];
+            let fileReader = new FileReader();
+            fileReader.onload = fileOnLoad;
+            fileReader.readAsText(file);
+        }
+        function fileOnLoad (e) {
+            let xml = e.target.result;
 
             ///////////////////////////////////////
             // Num
@@ -269,6 +278,10 @@
 </head>
 
 <body onload="start()">
+    <div class="file_selector">
+        <label for="file">请输入文件路径：</label>
+        <input type="file" id="file" name="file" accept=".xml" />
+	</div>
     <div id="editor"></div>
 </body>
 
