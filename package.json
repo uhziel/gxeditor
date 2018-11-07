@@ -1,0 +1,21 @@
+{
+  "name": "gxeditor",
+  "version": "1.0.0",
+  "description": "game xml editor",
+  "main": "main.js",
+  "scripts": {
+    "test": "none",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/uhziel/gxeditor.git"
+  },
+  "keywords": [
+    "game",
+    "xml",
+    "editor"
+  ],
+  "author": "zhulei",
+  "license": "ISC"
+}
