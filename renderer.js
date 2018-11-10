@@ -7,6 +7,7 @@ $.getScript('./third_party/xonomy-3.5.0/xonomy.js');
 
 const { ipcRenderer, remote } = require('electron');
 const { Menu } = remote;
+const iconv = require('iconv-lite');
 
 let currentFile = null; //当前文档保存的路径
 let isSaved = true;     //当前文档是否已保存
@@ -76,12 +77,15 @@ ipcRenderer.on('action', (event, arg) => {
 
 function readText(file) {
     const fs = require('fs');
-    return fs.readFileSync(file, 'utf8');
+    let buffer = fs.readFileSync(file);
+    let text = iconv.decode(buffer, 'gbk');
+    return text;
 }
 
 function saveText(text, file) {
     const fs = require('fs');
-    fs.writeFileSync(file, text);
+    let buffer = iconv.encode(text, 'gbk');
+    fs.writeFileSync(file, buffer);
 }
 
 //保存当前文档
