@@ -141,7 +141,7 @@ function fileOnLoad(xmlText) {
         return `
             <form onsubmit='Xonomy.answer(this.val.value); return false;'>
             ${descString}
-            <input type='num' name='val' class='focusme' value='${defaultString}' ${stepString} ${minString} ${maxString} />
+            <input type='number' name='val' class='focusme' value='${defaultString}' ${stepString} ${minString} ${maxString} />
             <input type='submit' value='确定' />
             </form>
         `;
