@@ -2,6 +2,7 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 
+const gxeditor = require('./gxeditor');
 const { ipcRenderer, remote } = require('electron');
 const { Menu } = remote;
 const iconv = require('iconv-lite');
@@ -56,7 +57,7 @@ ipcRenderer.on('action', (event, arg) => {
             });
             if (files) {
                 currentFile = files[0];
-                const txtRead = readText(currentFile);
+                const txtRead = gxeditor.readXMLFromFile(currentFile);
                 fileOnLoad(txtRead);
                 document.title = "gxeditor - " + currentFile;
                 isSaved = true;
@@ -72,21 +73,6 @@ ipcRenderer.on('action', (event, arg) => {
     }
 });
 
-function readText(file) {
-    const fs = require('fs');
-    let buffer = fs.readFileSync(file);
-    let text = iconv.decode(buffer, 'gbk');
-    return text;
-}
-
-function saveText(text, file) {
-    const format = require('xml-formatter');
-    let beautifulText = format(text);
-    const fs = require('fs');
-    let buffer = iconv.encode(beautifulText, 'gbk');
-    fs.writeFileSync(file, buffer);
-}
-
 //保存当前文档
 function saveCurrentDoc() {
     if (!currentFile) {
@@ -99,7 +85,7 @@ function saveCurrentDoc() {
     }
     if (currentFile) {
         const txtSave = Xonomy.harvest();
-        saveText(txtSave, currentFile);
+        gxeditor.writeXMLToFile(currentFile, txtSave);
         isSaved = true;
         document.title = "gxeditor - " + currentFile;
     }
