@@ -1,9 +1,6 @@
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
-window.$ = window.jQuery = require('./third_party/jquery-1.11.0.min.js');
-$.getScript('./third_party/xonomy-3.5.0/xonomy.js');
-//const Xonomy = require('./third_party/xonomy-3.5.0/xonomy.js');
 
 const { ipcRenderer, remote } = require('electron');
 const { Menu } = remote;
@@ -83,8 +80,10 @@ function readText(file) {
 }
 
 function saveText(text, file) {
+    const format = require('xml-formatter');
+    let beautifulText = format(text);
     const fs = require('fs');
-    let buffer = iconv.encode(text, 'gbk');
+    let buffer = iconv.encode(beautifulText, 'gbk');
     fs.writeFileSync(file, buffer);
 }
 

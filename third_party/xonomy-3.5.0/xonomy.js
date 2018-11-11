@@ -650,7 +650,7 @@ Xonomy.renderAttribute=function(attribute, optionalParentName) {
 Xonomy.renderText=function(text) {
 	var htmlID=Xonomy.nextID();
 	var classNames="textnode focusable";
-	if($.trim(text.value)=="") classNames+=" whitespace";
+	if($.trim(text.value)=="") text.value = "";
 	if(text.value=="") classNames+=" empty";
 	var html="";
 	html+='<div id="'+htmlID+'" data-value="'+Xonomy.xmlEscape(text.value)+'" class="'+classNames+'">';
@@ -1871,3 +1871,5 @@ Xonomy.goLeft=function(){
 	if($next.hasClass("rollouter")) Xonomy.setFocus($next.closest(".element").prop("id"), "rollouter");
 	if($next.hasClass("char")) Xonomy.setFocus($next.prop("id"), "char");
 };
+
+module.exports = Xonomy;

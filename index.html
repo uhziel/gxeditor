@@ -12,6 +12,8 @@
 
     <script>
         // You can also require other files to run in this process
+        window.$ = window.jQuery = require('./third_party/jquery-1.11.0.min.js');
+        var Xonomy = require('./third_party/xonomy-3.5.0/xonomy.js');
         require('./renderer.js')
     </script>
 </body>
