@@ -57,8 +57,7 @@ ipcRenderer.on('action', (event, arg) => {
             });
             if (files) {
                 currentFile = files[0];
-                const txtRead = gxeditor.readXMLFromFile(currentFile);
-                fileOnLoad(txtRead);
+                fileOnLoad(currentFile);
                 document.title = "gxeditor - " + currentFile;
                 isSaved = true;
             }
@@ -101,8 +100,11 @@ function askSaveIfNeed() {
     if (response == 0) saveCurrentDoc();
 }
 
-function fileOnLoad(xmlText) {
-    const testJsonText = fs.readFileSync("./config/test.json", "utf8");
+function fileOnLoad(currentFile) {
+    const path = require('path');
+    const basename = path.basename(currentFile, ".xml");
+    const xmlText = gxeditor.readXMLFromFile(currentFile);
+    const testJsonText = fs.readFileSync(`./config/${basename}.json`, "utf8");
     const testJson = JSON.parse(testJsonText);
 
     const spec = gxeditor.genDocSpec(testJson);
