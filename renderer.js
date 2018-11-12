@@ -5,7 +5,7 @@
 const gxeditor = require('./gxeditor');
 const { ipcRenderer, remote } = require('electron');
 const { Menu } = remote;
-const iconv = require('iconv-lite');
+const fs = require('fs');
 
 let currentFile = null; //当前文档保存的路径
 let isSaved = true;     //当前文档是否已保存
@@ -102,102 +102,10 @@ function askSaveIfNeed() {
 }
 
 function fileOnLoad(xmlText) {
-    function genNumAttrSpec(rule) {
-        var numAttrSpec = {
-            asker: gxeditor.askNum,
-            askerParameter: rule,
-            menu: [],
-            validate: function (jsAttribute) {
-                var _rule = this.askerParameter;
-                if (_rule.min !== undefined && jsAttribute.value < _rule.min) {
-                    Xonomy.warnings.push({
-                        htmlID: jsAttribute.htmlID,
-                        text: `值必须大于或等于 ${_rule.min}。`
-                    })
-                }
-                if (_rule.max !== undefined && jsAttribute.value > _rule.max) {
-                    Xonomy.warnings.push({
-                        htmlID: jsAttribute.htmlID,
-                        text: `值必须小于或等于 ${_rule.max}。`
-                    })
-                }
-            }
-        };
-        if (typeof rule.tips === 'string') {
-            numAttrSpec.title = rule.tips
-        }
-        return numAttrSpec;
-    }
+    const testJsonText = fs.readFileSync("./config/test.json", "utf8");
+    const testJson = JSON.parse(testJsonText);
 
-    var dateAttrSpec = {
-        asker: gxeditor.askDate,
-        askerParameter: {},
-        menu: [],
-    };
-
-    ///////////////////////////////////////
-    /// spec
-    var spec = {
-        onchange: function () {
-            console.log("Ah been chaaanged!");
-        },
-        validate: function (jsElement) {
-            if (typeof (jsElement) == "string") jsElement = Xonomy.xml2js(jsElement);
-            var valid = true;
-            var elementSpec = this.elements[jsElement.name];
-            if (elementSpec.validate) {
-                elementSpec.validate(jsElement); //validate the element
-            }
-            for (var iAttribute = 0; iAttribute < jsElement.attributes.length; iAttribute++) {
-                var jsAttribute = jsElement.attributes[iAttribute];
-                var attributeSpec = elementSpec.attributes[jsAttribute.name];
-                if (attributeSpec.validate) {
-                    if (!attributeSpec.validate(jsAttribute)) valid = false; //validate the attribute
-                }
-            }
-            for (var iChild = 0; iChild < jsElement.children.length; iChild++) {
-                if (jsElement.children[iChild].type == "element") {
-                    var jsChild = jsElement.children[iChild];
-                    if (!this.validate(jsChild)) valid = false; //recurse to the child element
-                }
-            }
-            return valid;
-        },
-        elements: {
-            "list": {
-                menu: [],
-                child_elements: ["person"],
-            },
-            "person": {
-                ...genNumAttrSpec({ min: 1, max: 10 }),
-                backgroundColour: "#d6d6ff",
-                multi: true,
-                menu: [],
-                child_elements: ["skill", "school"],
-                attributes: {
-                    "age": genNumAttrSpec({ default: 20, min: 0, max: 100, precision: 1, tips: "年龄", desc: "范围(0,100)" }),
-                    "height": genNumAttrSpec({ default: 170, min: 0, max: 200, precision: 0.01, optional: true }),
-                    "brith_time": dateAttrSpec
-                },
-            },
-            "skill": {
-                menu: [],
-                attributes: {
-                    "id": genNumAttrSpec({ default: 1, precision: 1 }),
-                    "level": genNumAttrSpec({ default: 1, precision: 1 }),
-                }
-            },
-            "school": {
-                optional: true,
-                multi: true,
-                menu: [],
-                attributes: {
-                    "id": genNumAttrSpec({ default: 1, precision: 1 }),
-                }
-            }
-        }
-    };
-    gxeditor.genMenu(spec);
+    const spec = gxeditor.genDocSpec(testJson);
     var editor = document.getElementById("editor");
     Xonomy.render(xmlText, editor, spec);
 }
