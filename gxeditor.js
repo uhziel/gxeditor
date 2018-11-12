@@ -1,7 +1,3 @@
-// This file is required by the index.html file and will
-// be executed in the renderer process for that window.
-// All of the Node.js APIs are available in this process.
-
 const iconv = require('iconv-lite');
 const fs = require('fs');
 const format = require('xml-formatter');
@@ -65,12 +61,12 @@ gxeditor.askDate = function (defaultString) {
 
 ///////////////////////////////////////
 /// genMenu
-gxeditor.genAttrMenu = function (attribute) {
-    attribute.menu = [];
-    const tmpl = attribute.tmpl;
+gxeditor.genAttrMenu = function (attrSpec) {
+    attrSpec.menu = [];
+    const tmpl = attrSpec.tmpl;
     // 给属性添加删除自身的actionelement
     if (typeof tmpl !== 'undefined' && tmpl.optional === true) {
-        attribute.menu.push({
+        attrSpec.menu.push({
             caption: "删除",
             action: Xonomy.deleteElement,
             actionParameter: null,
@@ -80,20 +76,20 @@ gxeditor.genAttrMenu = function (attribute) {
 
     // 添加修改属性的ask方法
     if (tmpl.type === "INT") {
-        attribute.asker = gxeditor.askNum;
+        attrSpec.asker = gxeditor.askNum;
     }
     else if (tmpl.type === "DOUBLE") {
-        attribute.asker = gxeditor.askNum;
+        attrSpec.asker = gxeditor.askNum;
     }
     else if (tmpl.type == "DATETIME") {
-        attribute.asker = gxeditor.askDate;
+        attrSpec.asker = gxeditor.askDate;
     }
-    attribute.askerParameter = tmpl;
+    attrSpec.askerParameter = tmpl;
 }
 
-gxeditor.getNewElementParam = function (spec, element_name) {
-    var param = '<' + element_name;
-    const element = spec.elements[element_name];
+gxeditor.getNewElementParam = function (spec, elemName) {
+    var param = '<' + elemName;
+    const element = spec.elements[elemName];
     for (const key in element.attributes) {
         const attr = element.attributes[key];
         let defaultString = "";
@@ -106,19 +102,19 @@ gxeditor.getNewElementParam = function (spec, element_name) {
     }
     param += ' >';
     for (const key in element.tmpl.children) {
-        const child_name = element.tmpl.children[key];
-        const child_element = spec.elements[child_name];
-        if (child_element.tmpl.optional !== true) {
-            param += gxeditor.getNewElementParam(spec, child_name);
+        const childName = element.tmpl.children[key];
+        const childElem = spec.elements[childName];
+        if (childElem.tmpl.optional !== true) {
+            param += gxeditor.getNewElementParam(spec, childName);
         }
     }
-    param += `</${element_name}>`
+    param += `</${elemName}>`
     return param;
 }
 
-gxeditor.genElementMenu = function (spec, element_name, element) {
-    element.menu = [];
-    const tmpl = element.tmpl;
+gxeditor.genElementMenu = function (spec, elemName, elemSpec) {
+    elemSpec.menu = [];
+    const tmpl = elemSpec.tmpl;
 
     //action: 添加子元素
     if (typeof tmpl.children === "object") {
@@ -126,7 +122,7 @@ gxeditor.genElementMenu = function (spec, element_name, element) {
             let child_name = tmpl.children[key];
             const child_element = spec.elements[child_name];
             const param = gxeditor.getNewElementParam(spec, child_name);
-            let menu_action = {
+            let menuAction = {
                 caption: `添加 <${child_name}/>`,
                 action: Xonomy.newElementChild,
                 actionParameter: param,
@@ -138,31 +134,31 @@ gxeditor.genElementMenu = function (spec, element_name, element) {
                     return jsElement.hasChildElement(child_name);
                 }
             }
-            element.menu.push(menu_action);
+            elemSpec.menu.push(menuAction);
         }
     }
 
     //action: 添加属性
-    if (typeof element.attributes === 'object') {
-        for (const key in element.attributes) {
-            let attribute = element.attributes[key];
+    if (typeof elemSpec.attributes === 'object') {
+        for (const key in elemSpec.attributes) {
+            let attribute = elemSpec.attributes[key];
             let defaultString = "";
             if (typeof attribute.tmpl.default !== 'undefined') {
                 defaultString = attribute.tmpl.default;
             }
-            let menu_action = {
+            let menuAction = {
                 caption: `添加 @${key}`,
                 action: Xonomy.newAttribute,
                 actionParameter: { name: key, value: defaultString },
                 hideIf: function (jsElement) { return jsElement.hasAttribute(key); }
             };
-            element.menu.push(menu_action);
+            elemSpec.menu.push(menuAction);
 
         }
     }
 
     //action: 删除自身
-    element.menu.push({
+    elemSpec.menu.push({
         caption: "删除",
         action: Xonomy.deleteElement,
         actionParameter: null,
@@ -174,8 +170,8 @@ gxeditor.genElementMenu = function (spec, element_name, element) {
             if (parentElement === null) {
                 return true;
             }
-            const children_num = parentElement.getChildElements(element_name).length;
-            if (children_num <= 1) {
+            const childrenNum = parentElement.getChildElements(elemName).length;
+            if (childrenNum <= 1) {
                 return true;
             }
             return false;
