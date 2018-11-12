@@ -23,25 +23,25 @@ gxeditor.writeXMLToFile = function (filename, content) {
 
 ///////////////////////////////////////
 // Num
-gxeditor.askNum = function (defaultString, rule) {
-    if (typeof rule.default !== 'undefined' && defaultString.length <= 0) {
-        defaultString = rule.default;
+gxeditor.askNum = function (defaultString, tmpl) {
+    if (typeof tmpl.default !== 'undefined' && defaultString.length <= 0) {
+        defaultString = tmpl.default;
     }
     var minString = "";
-    if (typeof rule.min !== 'undefined') {
-        minString = "min=\"" + rule.min + "\"";
+    if (typeof tmpl.min !== 'undefined') {
+        minString = "min=\"" + tmpl.min + "\"";
     }
     var maxString = "";
-    if (typeof rule.max !== 'undefined') {
-        maxString = `max="${rule.max}"`;
+    if (typeof tmpl.max !== 'undefined') {
+        maxString = `max="${tmpl.max}"`;
     }
     var stepString = "";
-    if (typeof rule.precision !== 'undefined') {
-        stepString = `step=${rule.precision}`;
+    if (typeof tmpl.precision !== 'undefined') {
+        stepString = `step=${tmpl.precision}`;
     }
     var descString = "";
-    if (typeof rule.desc === 'string') {
-        descString = `<label for="val">${rule.desc}</label>`
+    if (typeof tmpl.desc === 'string') {
+        descString = `<label for="val">${tmpl.desc}</label>`
     }
     return `
             <form onsubmit='Xonomy.answer(this.val.value); return false;'>
