@@ -108,6 +108,11 @@ function fileOnLoad(currentFile) {
     const testJson = JSON.parse(testJsonText);
 
     const spec = gxeditor.genDocSpec(testJson);
+    spec.onchange = function() {
+        if (isSaved) document.title += " *";
+        isSaved = false;
+    }
+
     var editor = document.getElementById("editor");
     Xonomy.render(xmlText, editor, spec);
 }
