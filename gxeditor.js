@@ -51,6 +51,16 @@ gxeditor.askNum = function (defaultString, tmpl) {
 }
 
 ///////////////////////////////////////
+// Enum
+gxeditor.askEnum = function (defaultString, tmpl) {
+    if (typeof tmpl.default !== 'undefined' && defaultString.length <= 0) {
+        defaultString = tmpl.default;
+    }
+
+    return Xonomy.askPicklist(defaultString, tmpl.enumlist);
+}
+
+///////////////////////////////////////
 // Datetime
 gxeditor.askDateTime = function (defaultString) {
     const dateString = defaultString.replace(" ", "T");
@@ -83,6 +93,9 @@ gxeditor.genAttrMenu = function (attrSpec) {
     }
     else if (tmpl.type === "DOUBLE") {
         attrSpec.asker = gxeditor.askNum;
+    }
+    else if (tmpl.type === "ENUM") {
+        attrSpec.asker = gxeditor.askEnum;
     }
     else if (tmpl.type === "STRING") {
         attrSpec.asker = Xonomy.askString;
