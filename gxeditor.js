@@ -81,6 +81,9 @@ gxeditor.genAttrMenu = function (attrSpec) {
     else if (tmpl.type === "DOUBLE") {
         attrSpec.asker = gxeditor.askNum;
     }
+    else if (tmpl.type === "STRING") {
+        attrSpec.asker = Xonomy.askString;
+    }
     else if (tmpl.type == "DATETIME") {
         attrSpec.asker = gxeditor.askDate;
     }
