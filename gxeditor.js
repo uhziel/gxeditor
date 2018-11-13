@@ -14,7 +14,9 @@ gxeditor.readXMLFromFile = function (filename) {
 gxeditor.writeXMLToFile = function (filename, content) {
     let beautifulText = format(content);
     let buffer = iconv.encode(beautifulText, 'gbk');
-    fs.writeFileSync(filename, buffer);
+    let head = '<?xml version="1.0" encoding="GB2312"?>\n';
+    fs.writeFileSync(filename, head, {flag:'w'});
+    fs.writeFileSync(filename, buffer, {flag:'a'});
 }
 
 ///////////////////////////////////////
