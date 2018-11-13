@@ -50,10 +50,11 @@ gxeditor.askNum = function (defaultString, tmpl) {
 
 ///////////////////////////////////////
 // Datetime
-gxeditor.askDate = function (defaultString) {
+gxeditor.askDateTime = function (defaultString) {
+    const dateString = defaultString.replace(" ", "T");
     return `
-        <form onsubmit='Xonomy.answer(this.val.value); return false;'>
-        <input type='datetime-local' name='val' class='focusme' value='${defaultString}' step='1'/>
+        <form onsubmit='Xonomy.answer(this.val.value.replace("T", " ")); return false;'>
+        <input type='datetime-local' name='val' class='focusme' value='${dateString}' step='1'/>
         <input type='submit' value='确定' />
         </form>
     `;
@@ -85,7 +86,7 @@ gxeditor.genAttrMenu = function (attrSpec) {
         attrSpec.asker = Xonomy.askString;
     }
     else if (tmpl.type == "DATETIME") {
-        attrSpec.asker = gxeditor.askDate;
+        attrSpec.asker = gxeditor.askDateTime;
     }
     attrSpec.askerParameter = tmpl;
 }
