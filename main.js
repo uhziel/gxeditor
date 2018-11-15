@@ -1,6 +1,7 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow } = require('electron')
 const { Menu, ipcMain } = require('electron');
+const { clipboard } = require('electron');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -32,6 +33,18 @@ function genMenu() {
         {
           label: "退出",
           role: 'quit'
+        }
+      ]
+    },
+    {
+      label: '查看',
+      submenu: [
+        {
+          label: "搜索",
+          click() {
+            mainWindow.webContents.findInPage(clipboard.readText());
+          },
+          accelerator: 'CmdOrCtrl+F'
         }
       ]
     },
@@ -72,6 +85,12 @@ function createWindow() {
     if (!safeExit) {
       e.preventDefault();
       mainWindow.webContents.send('action', 'exiting');
+    }
+  });
+
+  mainWindow.webContents.on('found-in-page', (event, result) => {
+    if (result.finalUpdate) {
+      //mainWindow.webContents.stopFindInPage('keepSelection');
     }
   });
 
