@@ -37,15 +37,21 @@ function genMenu() {
       ]
     },
     {
-      label: '查看',
+      label: '编辑',
       submenu: [
+        { label: "剪切", role: 'cut' },
+        { label: "复制", role: 'copy' },
+        { label: "粘贴", role: 'paste' },
+        { type: 'separator' },
         {
           label: "搜索",
           click() {
             mainWindow.webContents.findInPage(clipboard.readText());
           },
           accelerator: 'CmdOrCtrl+F'
-        }
+        },
+        { type: 'separator' },
+        { label: "全选", role: 'selectall' },
       ]
     },
     {
