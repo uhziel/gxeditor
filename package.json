@@ -17,5 +17,9 @@
     "editor"
   ],
   "author": "zhulei",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "iconv-lite": "^0.4.24",
+    "xml-formatter": "^1.0.1"
+  }
 }
