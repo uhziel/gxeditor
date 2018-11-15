@@ -40,13 +40,6 @@ editor.oninput = (e) => {
 //监听与主进程的通信
 ipcRenderer.on('action', (event, arg) => {
     switch (arg) {
-        case 'new':
-            askSaveIfNeed();
-            currentFile = null;
-            fileOnLoad("");
-            document.title = "gxeditor - Untitled";
-            isSaved = true;
-            break;
         case 'open':
             askSaveIfNeed();
             const files = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
