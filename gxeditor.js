@@ -15,8 +15,8 @@ gxeditor.writeXMLToFile = function (filename, content) {
     let beautifulText = format(content);
     let buffer = iconv.encode(beautifulText, 'gbk');
     let head = '<?xml version="1.0" encoding="GB2312"?>\n';
-    fs.writeFileSync(filename, head, {flag:'w'});
-    fs.writeFileSync(filename, buffer, {flag:'a'});
+    fs.writeFileSync(filename, head, { flag: 'w' });
+    fs.writeFileSync(filename, buffer, { flag: 'a' });
 }
 
 ///////////////////////////////////////
@@ -176,6 +176,13 @@ gxeditor.genElementMenu = function (spec, elemName, elemSpec) {
         }
     }
 
+    //action: 克隆
+    elemSpec.menu.push({
+        caption: "克隆",
+        action: Xonomy.duplicateElement,
+        actionParameter: null
+    });
+
     //action: 删除自身
     elemSpec.menu.push({
         caption: "删除",
@@ -207,11 +214,11 @@ gxeditor.genDocSpecFullInfo = function (spec) {
             const attrSpec = elemSpec.attributes[attrName];
             gxeditor.genAttrMenu(attrSpec);
         }
-    } 
+    }
 }
 
 // xmlTmpl xml文件的模版
-gxeditor.genDocSpec = function(xmlTmpl) {
+gxeditor.genDocSpec = function (xmlTmpl) {
     const spec = {
         onchange: function () {
             console.log("You have changed this xml file.");
@@ -219,8 +226,8 @@ gxeditor.genDocSpec = function(xmlTmpl) {
         validate: function () {
             console.log("You can validate this xml file.");
         },
-        allowLayby : false,
-        elements : {}
+        allowLayby: false,
+        elements: {}
     };
 
     for (const elemName in xmlTmpl) {
