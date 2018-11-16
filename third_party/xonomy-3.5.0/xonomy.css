@@ -80,6 +80,7 @@
 
 /*Inline layout (overrides block-layout default)*/
 .xonomy.nerd .element.hasText > .children > .element { padding-left: 0px; display: inline; }
+.xonomy.nerd .element.hasText > .children > .element.invisible { display: none; }
 .xonomy.nerd .element.hasText .children .connector { position: relative; top: 0px; left: 0px; display: inline; padding-right: 16px; border: 0px; }
 .xonomy.nerd .element.hasText .children .element.uncollapsible .connector { padding-right: 0px; }
 .xonomy.nerd .element.hasText .children .element.noChildren .connector { padding-right: 0px; }
@@ -91,6 +92,7 @@
 
 /*One-liner layout*/
 .xonomy.nerd .element.oneliner .element { padding-left: 0px; display: inline; }
+.xonomy.nerd .element.oneliner .element.invisible { display: none; }
 .xonomy.nerd .element.oneliner .children { margin-left: 0px; border-left: 0px; padding: 0px; display: inline; }
 .xonomy.nerd .element.oneliner .element.hasText .children { margin-left: 0px; border-left: 0px; padding: 0px; display: inline; }
 .xonomy.nerd .element.oneliner .children .textnode { padding-left: 0px; display: inline; }
@@ -366,7 +368,7 @@
 .xonomy.laic .readonly .plusminus { cursor: pointer !important; }
 .xonomy.laic .readonly .childrenCollapsed { cursor: pointer !important; }
 .xonomy.laic .readonly .textnode .char > .selector > .inside:hover { background-color: transparent !important; }
-.xonomy.laic .invisible { display: none; }
+.xonomy.laic .invisible { display: none !important; }
 .xonomy.laic .readonly .textnode .value { border: 0px !important; }
 .xonomy.laic .readonly .textnode .value:hover { background-color: transparent !important; }
 

@@ -1138,6 +1138,7 @@ Xonomy.toggleSubmenu=function(menuItem){
 	else { $menuItem.find(".submenu").first().slideDown("fast", function(){$menuItem.addClass("expanded");}); };
 }
 Xonomy.internalMenu=function(htmlID, items, harvest, getter, indices) {
+	Xonomy.harvestCache={};
 	indices = indices || [];
 	var fragments = items.map(function (item, i) {
 		Xonomy.verifyDocSpecMenuItem(item);
@@ -1171,6 +1172,7 @@ Xonomy.internalMenu=function(htmlID, items, harvest, getter, indices) {
 		: "";
 };
 Xonomy.attributeMenu=function(htmlID) {
+	Xonomy.harvestCache={};
 	var name=$("#"+htmlID).attr("data-name"); //obtain attribute's name
 	var elName=$("#"+htmlID).closest(".element").attr("data-name"); //obtain element's name
 	Xonomy.verifyDocSpecAttribute(elName, name);
@@ -1181,6 +1183,7 @@ Xonomy.attributeMenu=function(htmlID) {
 	return Xonomy.internalMenu(htmlID, spec.menu, Xonomy.harvestAttribute, getter);
 };
 Xonomy.elementMenu=function(htmlID) {
+	Xonomy.harvestCache={};
 	var elName=$("#"+htmlID).attr("data-name"); //obtain element's name
 	var spec=Xonomy.docSpec.elements[elName];
 	function getter(indices) {
@@ -1189,6 +1192,7 @@ Xonomy.elementMenu=function(htmlID) {
 	return Xonomy.internalMenu(htmlID, spec.menu, Xonomy.harvestElement, getter);
 };
 Xonomy.inlineMenu=function(htmlID) {
+	Xonomy.harvestCache={};
 	var elName=$("#"+htmlID).attr("data-name"); //obtain element's name
 	var spec=Xonomy.docSpec.elements[elName];
 	function getter(indices) {
@@ -1345,7 +1349,10 @@ Xonomy.editRaw=function(htmlID, parameter) {
 };
 Xonomy.duplicateElement=function(htmlID) {
 	Xonomy.clickoff();
-	var html=document.getElementById(htmlID).outerHTML.replace(/ id=['"]/g, function(x){return x+"d_"});
+	var html=document.getElementById(htmlID).outerHTML;
+		  html=html.replace(/ id=['"]/g, function(x){return x+"d_"});
+		  html=html.replace(/Xonomy\.click\(['"]/g, function(x){return x+"d_"});
+		  html=html.replace(/Xonomy\.plusminus\(['"]/g, function(x){return x+"d_"});
 	var $html=$(html).hide();
 	$("#"+htmlID).after($html);
 	Xonomy.changed();
@@ -1465,15 +1472,33 @@ Xonomy.mergeElements=function(elDead, elLive){
 		window.setTimeout(function(){ Xonomy.setFocus(htmlID, "openingTagName"); }, 100);
 	}
 };
+Xonomy.deleteEponymousSiblings=function(htmlID, parameter) {
+	var what=Xonomy.currentFocus;
+	Xonomy.clickoff();
+	var obj=document.getElementById(htmlID);
+	var parent=obj.parentNode.parentNode;
+	var _htmlChildren=$(parent).children(".children").toArray()[0].childNodes;
+	var htmlChildren=[]; for(var i=0; i<_htmlChildren.length; i++) htmlChildren.push(_htmlChildren[i]);
+	for(var i=0; i<htmlChildren.length; i++) {
+		var htmlChild=htmlChildren[i];
+		if($(htmlChild).hasClass("element")) {
+			if($(htmlChild).attr("data-name")==$(obj).attr("data-name") && htmlChild!=obj){
+				htmlChild.parentNode.removeChild(htmlChild);
+			}
+		}
+	}
+	Xonomy.changed();
+	window.setTimeout(function(){ Xonomy.setFocus(htmlID, what);  }, 100);
+};
 
 Xonomy.insertDropTargets=function(htmlID){
 	var $element=$("#"+htmlID);
 	$element.addClass("dragging");
 	var elementName=$element.attr("data-name");
 	var elSpec=Xonomy.docSpec.elements[elementName];
-	$(".xonomy .children:visible").append("<div class='elementDropper' ondragover='Xonomy.dragOver(event)' ondragleave='Xonomy.dragOut(event)' ondrop='Xonomy.drop(event)'><div class='inside'></div></div>")
-	$(".xonomy .children:visible > .element").before("<div class='elementDropper' ondragover='Xonomy.dragOver(event)' ondragleave='Xonomy.dragOut(event)' ondrop='Xonomy.drop(event)'><div class='inside'></div></div>")
-	$(".xonomy .children:visible > .text").before("<div class='elementDropper' ondragover='Xonomy.dragOver(event)' ondragleave='Xonomy.dragOut(event)' ondrop='Xonomy.drop(event)'><div class='inside'></div></div>")
+	$(".xonomy .element:visible > .children").append("<div class='elementDropper' ondragover='Xonomy.dragOver(event)' ondragleave='Xonomy.dragOut(event)' ondrop='Xonomy.drop(event)'><div class='inside'></div></div>")
+	$(".xonomy .element:visible > .children > .element").before("<div class='elementDropper' ondragover='Xonomy.dragOver(event)' ondragleave='Xonomy.dragOut(event)' ondrop='Xonomy.drop(event)'><div class='inside'></div></div>")
+	$(".xonomy .element:visible > .children > .text").before("<div class='elementDropper' ondragover='Xonomy.dragOver(event)' ondragleave='Xonomy.dragOut(event)' ondrop='Xonomy.drop(event)'><div class='inside'></div></div>")
 	$(".xonomy .dragging .children:visible > .elementDropper").remove(); //remove drop targets fom inside the element being dragged
 	$(".xonomy .dragging").prev(".elementDropper").remove(); //remove drop targets from immediately before the element being dragged
 	$(".xonomy .dragging").next(".elementDropper").remove(); //remove drop targets from immediately after the element being dragged
@@ -1619,6 +1644,16 @@ Xonomy.recomputeLayby=function(){
 		$(".xonomy .layby").removeClass("nonempty").addClass("empty");
 	}
 }
+Xonomy.newElementLayby=function(xml) {
+	Xonomy.clickoff();
+	var html=Xonomy.renderElement(Xonomy.xml2js(xml));
+	var $html=$(html).hide();
+	$(".xonomy .layby > .content").append($html);
+	Xonomy.refresh();
+	$html.fadeIn();
+	Xonomy.openCloseLayby();
+	Xonomy.recomputeLayby();
+};
 
 Xonomy.changed=function(jsElement) { //called when the document changes
 	Xonomy.harvestCache={};
@@ -1739,6 +1774,7 @@ Xonomy.key=function(event){
 	Xonomy.notKeyUp=false;
 };
 Xonomy.keyboardMenu=function(event){
+	Xonomy.harvestCache={};
 	var $obj=$("#"+Xonomy.currentHtmlId);
 	var jsMe=null;
 	var menu=null;
@@ -1753,6 +1789,7 @@ Xonomy.keyboardMenu=function(event){
 		menu=Xonomy.docSpec.elements[elName].attributes[atName].menu;
 	}
 	if(menu){
+		Xonomy.harvestCache={};
 		var findMenuItem=function(menu){
 			var ret=null;
 			for(var i=0; i<menu.length; i++){
