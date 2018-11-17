@@ -111,7 +111,6 @@ function fileOnLoad(currentFile) {
         if (isSaved) document.title += " *";
         isSaved = false;
     }
-    spec.elements["Groups"].displayName = 'en: Groups | cn: 组';
 
     var editor = document.getElementById("editor");
     gxeditor.setViewModeRaw();

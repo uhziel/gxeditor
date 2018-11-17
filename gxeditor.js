@@ -78,6 +78,14 @@ gxeditor.fillCnNameInfo = function (name, spec, tmpl) {
     }
 }
 
+gxeditor.getCnName = function (name, tmpl) {
+    if (typeof tmpl.cnName === 'string') {
+        return tmpl.cnName;
+    }
+    else {
+        return name;
+    }
+}
 ///////////////////////////////////////
 /// genMenu
 gxeditor.genAttrMenu = function (attrName, attrSpec) {
@@ -149,8 +157,9 @@ gxeditor.genElementMenu = function (spec, elemName, elemSpec) {
             let childName = tmpl.children[key];
             const childElement = spec.elements[childName];
             const param = gxeditor.getNewElementParam(spec, childName);
+            const childCnName = gxeditor.getCnName(childName, childElement.tmpl);
             let menuAction = {
-                caption: `添加 <${childName}/>`,
+                caption: `en: 添加 ${childName}|cn: 添加 ${childCnName}`,
                 action: Xonomy.newElementChild,
                 actionParameter: param,
                 hideIf: function (jsElement) {
@@ -168,17 +177,18 @@ gxeditor.genElementMenu = function (spec, elemName, elemSpec) {
 
     //action: 添加属性
     if (typeof elemSpec.attributes === 'object') {
-        for (const key in elemSpec.attributes) {
-            let attribute = elemSpec.attributes[key];
+        for (const attrName in elemSpec.attributes) {
+            let attrSpec = elemSpec.attributes[attrName];
             let defaultString = "";
-            if (typeof attribute.tmpl.default !== 'undefined') {
-                defaultString = attribute.tmpl.default;
+            if (typeof attrSpec.tmpl.default !== 'undefined') {
+                defaultString = attrSpec.tmpl.default;
             }
+            const attrCnName = gxeditor.getCnName(attrName, attrSpec.tmpl);
             let menuAction = {
-                caption: `en: Add @${key} | cn:添加 @${key}`,
+                caption: `en: 添加属性 ${attrName}|cn: 添加属性 ${attrCnName}`,
                 action: Xonomy.newAttribute,
-                actionParameter: { name: key, value: defaultString },
-                hideIf: function (jsElement) { return jsElement.hasAttribute(key); }
+                actionParameter: { name: attrName, value: defaultString },
+                hideIf: function (jsElement) { return jsElement.hasAttribute(attrName); }
             };
             elemSpec.menu.push(menuAction);
 
