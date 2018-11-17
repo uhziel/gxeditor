@@ -62,6 +62,12 @@ ipcRenderer.on('action', (event, arg) => {
             askSaveIfNeed();
             ipcRenderer.sendSync('reqaction', 'exit');
             break;
+        case 'setViewModeRaw':
+            gxeditor.setViewModeRaw();
+            break;
+        case 'setViewModeEasy':
+            gxeditor.setViewModeEasy();
+            break;
     }
 });
 
@@ -101,11 +107,13 @@ function fileOnLoad(currentFile) {
     const testJson = JSON.parse(testJsonText);
 
     const spec = gxeditor.genDocSpec(testJson);
-    spec.onchange = function() {
+    spec.onchange = function () {
         if (isSaved) document.title += " *";
         isSaved = false;
     }
+    spec.elements["Groups"].displayName = 'en: Groups | cn: 组';
 
     var editor = document.getElementById("editor");
+    gxeditor.setViewModeRaw();
     Xonomy.render(xmlText, editor, spec);
 }

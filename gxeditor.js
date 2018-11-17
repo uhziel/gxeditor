@@ -72,9 +72,15 @@ gxeditor.askDateTime = function (defaultString) {
     `;
 }
 
+gxeditor.fillCnNameInfo = function (name, spec, tmpl) {
+    if (typeof tmpl.cnName === 'string') {
+        spec.displayName = `en: ${name} | cn: ${tmpl.cnName}`;
+    }
+}
+
 ///////////////////////////////////////
 /// genMenu
-gxeditor.genAttrMenu = function (attrSpec) {
+gxeditor.genAttrMenu = function (attrName, attrSpec) {
     attrSpec.menu = [];
     const tmpl = attrSpec.tmpl;
     // 给属性添加删除自身的actionelement
@@ -104,6 +110,8 @@ gxeditor.genAttrMenu = function (attrSpec) {
         attrSpec.asker = gxeditor.askDateTime;
     }
     attrSpec.askerParameter = tmpl;
+
+    gxeditor.fillCnNameInfo(attrName, attrSpec, tmpl);
 }
 
 gxeditor.getNewElementParam = function (spec, elemName) {
@@ -167,7 +175,7 @@ gxeditor.genElementMenu = function (spec, elemName, elemSpec) {
                 defaultString = attribute.tmpl.default;
             }
             let menuAction = {
-                caption: `添加 @${key}`,
+                caption: `en: Add @${key} | cn:添加 @${key}`,
                 action: Xonomy.newAttribute,
                 actionParameter: { name: key, value: defaultString },
                 hideIf: function (jsElement) { return jsElement.hasAttribute(key); }
@@ -207,6 +215,8 @@ gxeditor.genElementMenu = function (spec, elemName, elemSpec) {
             return false;
         }
     });
+
+    gxeditor.fillCnNameInfo(elemName, elemSpec, tmpl);
 }
 
 gxeditor.genDocSpecFullInfo = function (spec) {
@@ -216,7 +226,7 @@ gxeditor.genDocSpecFullInfo = function (spec) {
 
         for (const attrName in elemSpec.attributes) {
             const attrSpec = elemSpec.attributes[attrName];
-            gxeditor.genAttrMenu(attrSpec);
+            gxeditor.genAttrMenu(attrName, attrSpec);
         }
     }
 }
@@ -232,7 +242,6 @@ gxeditor.genDocSpec = function (xmlTmpl) {
         },
         allowLayby: true,
         laybyMessage: "您可以将节点拖过来临时存放再放回其他地方。",
-        allowModeSwitching: true,
         elements: {}
     };
 
@@ -256,6 +265,18 @@ gxeditor.genDocSpec = function (xmlTmpl) {
     gxeditor.genDocSpecFullInfo(spec);
 
     return spec;
+}
+
+gxeditor.setViewModeRaw = function () {
+    Xonomy.lang = "en";
+    Xonomy.setMode("nerd");
+    Xonomy.refresh();
+}
+
+gxeditor.setViewModeEasy = function () {
+    Xonomy.lang = "cn";
+    Xonomy.setMode("laic");
+    Xonomy.refresh();
 }
 
 module.exports = gxeditor;

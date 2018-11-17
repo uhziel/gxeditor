@@ -55,6 +55,23 @@ function genMenu() {
       ]
     },
     {
+      label: '查看',
+      submenu: [
+        {
+          label: "原生",
+          click() {
+            mainWindow.webContents.send('action', 'setViewModeRaw');
+          }
+        },
+        {
+          label: "易读",
+          click() {
+            mainWindow.webContents.send('action', 'setViewModeEasy');
+          }
+        }
+      ]
+    },
+    {
       label: '帮助',
       role: 'help',
       submenu: [
