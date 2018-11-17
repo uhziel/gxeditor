@@ -180,7 +180,10 @@ gxeditor.genElementMenu = function (spec, elemName, elemSpec) {
     elemSpec.menu.push({
         caption: "克隆",
         action: Xonomy.duplicateElement,
-        actionParameter: null
+        actionParameter: null,
+        hideIf: function (jsElement) {
+            return tmpl.multi !== true;
+        }
     });
 
     //action: 删除自身
