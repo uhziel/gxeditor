@@ -138,21 +138,22 @@ gxeditor.genElementMenu = function (spec, elemName, elemSpec) {
     //action: 添加子元素
     if (typeof tmpl.children === "object") {
         for (const key in tmpl.children) {
-            let child_name = tmpl.children[key];
-            const child_element = spec.elements[child_name];
-            const param = gxeditor.getNewElementParam(spec, child_name);
+            let childName = tmpl.children[key];
+            const childElement = spec.elements[childName];
+            const param = gxeditor.getNewElementParam(spec, childName);
             let menuAction = {
-                caption: `添加 <${child_name}/>`,
+                caption: `添加 <${childName}/>`,
                 action: Xonomy.newElementChild,
                 actionParameter: param,
                 hideIf: function (jsElement) {
-                    if (child_element.tmpl.multi === true) {
+                    if (childElement.tmpl.multi === true) {
                         return false;
                     }
 
-                    return jsElement.hasChildElement(child_name);
+                    return jsElement.hasChildElement(childName);
                 }
             }
+            childElement.canDropTo = [elemName];
             elemSpec.menu.push(menuAction);
         }
     }
@@ -229,7 +230,9 @@ gxeditor.genDocSpec = function (xmlTmpl) {
         validate: function () {
             console.log("You can validate this xml file.");
         },
-        allowLayby: false,
+        allowLayby: true,
+        laybyMessage: "您可以将节点拖过来临时存放再放回其他地方。",
+        allowModeSwitching: true,
         elements: {}
     };
 
