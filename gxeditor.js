@@ -57,7 +57,7 @@ gxeditor.askEnum = function (defaultString, tmpl) {
         defaultString = tmpl.default;
     }
 
-    return Xonomy.askPicklist(defaultString, tmpl.enumlist);
+    return Xonomy.askPicklist(defaultString, tmpl.enumList);
 }
 
 ///////////////////////////////////////
