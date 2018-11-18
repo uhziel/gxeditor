@@ -52,12 +52,38 @@ gxeditor.askNum = function (defaultString, tmpl) {
 
 ///////////////////////////////////////
 // Enum
-gxeditor.askEnum = function (defaultString, tmpl) {
+function isValidPick(displayIf, jsAttribute) {
+    if (typeof displayIf === 'undefined') {
+        return true;
+    }
+
+    const jsElement = jsAttribute.parent();
+    for (const attrName in displayIf) {
+        const expectedValue = displayIf[attrName];
+        if (jsElement.getAttributeValue(attrName, null) != expectedValue) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function getValidPicklist(enumList, jsAttribute) {
+    const pickList = [];
+    enumList.forEach(element => {
+        if (isValidPick(element.displayIf, jsAttribute)) {
+            pickList.push(element);
+        }
+    });
+
+    return pickList;
+}
+gxeditor.askEnum = function (defaultString, tmpl, jsAttribute) {
     if (typeof tmpl.default !== 'undefined' && defaultString.length <= 0) {
         defaultString = tmpl.default;
     }
-
-    return Xonomy.askPicklist(defaultString, tmpl.enumList);
+    const picklist = getValidPicklist(tmpl.enumList, jsAttribute);
+    return Xonomy.askOpenPicklist(defaultString, picklist);
 }
 
 ///////////////////////////////////////
