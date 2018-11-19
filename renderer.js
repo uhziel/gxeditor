@@ -92,7 +92,8 @@ function fileOnLoad(currentFile) {
     const path = require('path');
     const basename = path.basename(currentFile, ".xml");
     const xmlText = gxeditor.readXMLFromFile(currentFile);
-    const testJsonText = fs.readFileSync(`./config/${basename}.json`, "utf8");
+    const testJsonFile = path.join(__dirname, `config/${basename}.json`);
+    const testJsonText = fs.readFileSync(testJsonFile, "utf8");
     const testJson = JSON.parse(testJsonText);
 
     const spec = gxeditor.genDocSpec(testJson);
