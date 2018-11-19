@@ -9,33 +9,22 @@ const fs = require('fs');
 
 let currentFile = null; //当前文档保存的路径
 let isSaved = true;     //当前文档是否已保存
-let editor = document.getElementById('editor'); //获得TextArea文本框的引用
 
 document.title = "gxeditor - Untitled"; //设置文档标题，影响窗口标题栏名称
 
-//给文本框增加右键菜单
 const contextMenuTemplate = [
-    { role: 'undo' },       //Undo菜单项
-    { role: 'redo' },       //Redo菜单项
-    { type: 'separator' },  //分隔线
-    { role: 'cut' },        //Cut菜单项
-    { role: 'copy' },       //Copy菜单项
-    { role: 'paste' },      //Paste菜单项
-    { role: 'delete' },     //Delete菜单项
-    { type: 'separator' },  //分隔线
-    { role: 'selectall' }   //Select All菜单项
+    { label: "剪切", role: 'cut' },
+    { label: "复制", role: 'copy' },
+    { label: "粘贴", role: 'paste' },
+    { type: 'separator' },
+    { label: "全选", role: 'selectall' }
 ];
+
 const contextMenu = Menu.buildFromTemplate(contextMenuTemplate);
 editor.addEventListener('contextmenu', (e) => {
     e.preventDefault();
     contextMenu.popup(remote.getCurrentWindow());
 });
-
-//监控文本框内容是否改变
-editor.oninput = (e) => {
-    if (isSaved) document.title += " *";
-    isSaved = false;
-};
 
 //监听与主进程的通信
 ipcRenderer.on('action', (event, arg) => {
