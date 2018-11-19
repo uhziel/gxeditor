@@ -144,6 +144,7 @@ gxeditor.genAttrMenu = function (attrName, attrSpec) {
         attrSpec.asker = gxeditor.askDateTime;
     }
     attrSpec.askerParameter = tmpl;
+    attrSpec.title = tmpl.desc;
 
     gxeditor.fillCnNameInfo(attrName, attrSpec, tmpl);
 }
@@ -252,6 +253,7 @@ gxeditor.genElementMenu = function (spec, elemName, elemSpec) {
         }
     });
 
+    elemSpec.title = tmpl.desc;
     gxeditor.fillCnNameInfo(elemName, elemSpec, tmpl);
 }
 
