@@ -59,12 +59,14 @@ function genMenu() {
       submenu: [
         {
           label: "原生",
+          type: "radio",
           click() {
             mainWindow.webContents.send('action', 'setViewModeRaw');
           }
         },
         {
           label: "易读",
+          type: "radio",
           click() {
             mainWindow.webContents.send('action', 'setViewModeEasy');
           }
