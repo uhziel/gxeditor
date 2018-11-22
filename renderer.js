@@ -102,6 +102,22 @@ function fileOnLoad(currentFile) {
         isSaved = false;
     }
 
+    //TODO zhulei 后续去除写死的validate
+    if (spec.elements["commodity"]) {
+        spec.elements["commodity"].validate = function (jsElement) {
+            const buy_price = jsElement.getAttributeValue("buy_price", null);
+            const sell_price = jsElement.getAttributeValue("sell_price", null);
+            if (buy_price !== null && sell_price !== null) {
+                if (Number(buy_price) < Number(sell_price)) {
+                    Xonomy.warnings.push({
+                        htmlID: jsElement.htmlID,
+                        text: `卖价(sell_price)不能高于买价(buy_price)。`
+                    });
+                }
+            }
+        };
+    }
+
     var editor = document.getElementById("editor");
     gxeditor.setViewModeRaw();
     Xonomy.render(xmlText, editor, spec);
