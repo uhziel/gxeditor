@@ -13,7 +13,7 @@ let isSaved = true;     //当前文档是否已保存
 document.title = "gxeditor - Untitled"; //设置文档标题，影响窗口标题栏名称
 
 const contextMenuTemplate = [
-    { label: "剪切", role: 'cut' },
+    { label: "剪切", role: 'cut' },
     { label: "复制", role: 'copy' },
     { label: "粘贴", role: 'paste' },
     { type: 'separator' },
