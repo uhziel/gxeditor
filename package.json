@@ -20,7 +20,7 @@
   "license": "ISC",
   "dependencies": {
     "iconv-lite": "^0.4.24",
-    "xml-formatter": "^1.0.1"
+    "js-beautify": "^1.8.8"
   },
   "devDependencies": {
     "electron": "^3.0.9"

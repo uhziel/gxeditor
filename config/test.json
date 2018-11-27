@@ -1,51 +1,66 @@
 {
-    "list": {
-        "children": ["person"]
-    },
-    "person": {
-        "multi": true,
-        "children": ["skill", "school"],
+    "example": {
+        "cnName": "示例",
+        "desc": "属性展示了目前支持的各数据类型。",
+        "children": [ "commodities" ],
         "attributes": {
-            "age": {
+            "int": {
                 "type": "INT",
-                "default": 20,
+                "default": 1,
                 "min": 0,
                 "max": 100,
-                "tips": "年龄",
-                "desc": "范围(0,100)"
+                "desc": "描述文本，会显示成tips。"
             },
-            "height": {
+            "float": {
                 "type": "DOUBLE",
-                "default": 170.0,
+                "default": 1.1,
                 "min": 0.0,
                 "max": 200.0,
                 "precision": 0.01,
                 "optional": true
             },
-            "brith_time": {
-                "type": "DATETIME"
-            }
-        }
-    },
-    "skill": {
-        "attributes": {
-            "id": {
-                "type": "INT",
-                "default": 1
+            "datetime": {
+                "type": "DATETIME",
+                "default": "2018-01-01 07:02:01"
             },
-            "level": {
-                "type": "INT",
+            "string": {
+                "type": "STRING",
+                "default": "abc"
+            },
+            "enum": {
+                "type": "ENUM",
+                "enumList": [
+                    { "value": 1, "caption": "男" },
+                    { "value": 2, "caption": "女" }
+                ],
                 "default": 1
             }
         }
     },
-    "school": {
-        "optional": true,
+    "commodities": {
+        "children": [ "commodity" ]
+    },
+    "commodity": {
         "multi": true,
         "attributes": {
             "id": {
                 "type": "INT",
-                "default": 1
+                "default": 1,
+                "min": 0
+            },
+            "name": {
+                "type": "STRING",
+                "default": "未命名"
+            },            
+            "buy_price": {
+                "type": "INT",
+                "default": 100,
+                "min": 0
+            },
+            "sell_price": {
+                "type": "INT",
+                "default": 80,
+                "min": 0
             }
         }
     }

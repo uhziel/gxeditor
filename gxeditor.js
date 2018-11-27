@@ -1,6 +1,6 @@
 const iconv = require('iconv-lite');
 const fs = require('fs');
-const format = require('xml-formatter');
+const format = require('js-beautify').html;
 const Xonomy = require('./third_party/xonomy-3.5.0/xonomy.js');
 
 let gxeditor = {};
@@ -12,7 +12,7 @@ gxeditor.readXMLFromFile = function (filename) {
 }
 
 gxeditor.writeXMLToFile = function (filename, content) {
-    let beautifulText = format(content);
+    let beautifulText = format(content, { eol: "\r\n" });
     let buffer = iconv.encode(beautifulText, 'gbk');
     let head = '<?xml version="1.0" encoding="GB2312"?>\n';
     fs.writeFileSync(filename, head, { flag: 'w' });
@@ -275,8 +275,27 @@ gxeditor.genDocSpec = function (xmlTmpl) {
         onchange: function () {
             console.log("You have changed this xml file.");
         },
-        validate: function () {
-            console.log("You can validate this xml file.");
+        validate: function (jsElement) {
+            if (typeof (jsElement) == "string") jsElement = Xonomy.xml2js(jsElement);
+            var valid = true;
+            var elementSpec = this.elements[jsElement.name];
+            if (elementSpec.validate) {
+                elementSpec.validate(jsElement); //validate the element
+            }
+            for (var iAttribute = 0; iAttribute < jsElement.attributes.length; iAttribute++) {
+                var jsAttribute = jsElement.attributes[iAttribute];
+                var attributeSpec = elementSpec.attributes[jsAttribute.name];
+                if (attributeSpec.validate) {
+                    if (!attributeSpec.validate(jsAttribute)) valid = false; //validate the attribute
+                }
+            }
+            for (var iChild = 0; iChild < jsElement.children.length; iChild++) {
+                if (jsElement.children[iChild].type == "element") {
+                    var jsChild = jsElement.children[iChild];
+                    if (!this.validate(jsChild)) valid = false; //recurse to the child element
+                }
+            }
+            return valid;
         },
         allowLayby: true,
         laybyMessage: "您可以将节点拖过来临时存放再放回其他地方。",
