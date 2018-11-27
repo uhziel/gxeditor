@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "test": "none",
-    "start": "electron ."
+    "start": "electron .",
+    "packwin": "electron-packager . --overwrite --icon=gxeditor.ico --prune=true"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
     "js-beautify": "^1.8.8"
   },
   "devDependencies": {
-    "electron": "^3.0.9"
+    "electron": "^3.0.9",
+    "electron-packager": "^12.2.0"
   }
 }
