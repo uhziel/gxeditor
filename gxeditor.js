@@ -1,6 +1,6 @@
 const iconv = require('iconv-lite');
 const fs = require('fs');
-const format = require('xml-formatter');
+const format = require('js-beautify').html;
 const Xonomy = require('./third_party/xonomy-3.5.0/xonomy.js');
 
 let gxeditor = {};
@@ -12,7 +12,7 @@ gxeditor.readXMLFromFile = function (filename) {
 }
 
 gxeditor.writeXMLToFile = function (filename, content) {
-    let beautifulText = format(content);
+    let beautifulText = format(content, { eol: "\r\n" });
     let buffer = iconv.encode(beautifulText, 'gbk');
     let head = '<?xml version="1.0" encoding="GB2312"?>\n';
     fs.writeFileSync(filename, head, { flag: 'w' });
