@@ -232,6 +232,16 @@ gxeditor.genElementMenu = function (spec, elemName, elemSpec) {
         }
     });
 
+    //action: 
+    elemSpec.menu.push({
+        caption: "注释",
+        action: Xonomy.newElementChildAtTop,
+        actionParameter: `<comment>你的注释</comment>`,
+        hideIf: function (jsElement) {
+            return jsElement.hasChildElement("comment");
+        }
+    });
+
     //action: 删除自身
     elemSpec.menu.push({
         caption: "删除",
@@ -320,6 +330,19 @@ gxeditor.genDocSpec = function (xmlTmpl) {
     }
 
     gxeditor.genDocSpecFullInfo(spec);
+    spec.elements.comment = {
+        displayName: "注释",
+        backgroundColour: "#D3D3D3",
+        menu: [
+            {
+                caption: "删除",
+                action: Xonomy.deleteElement,
+                actionParameter: null
+            }
+        ],
+        oneliner: true,
+        hasText: true
+    };
 
     return spec;
 }

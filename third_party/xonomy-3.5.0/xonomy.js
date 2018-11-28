@@ -1260,6 +1260,18 @@ Xonomy.newElementChild=function(htmlID, parameter) {
 	$html.fadeIn();
 	window.setTimeout(function(){ Xonomy.setFocus($html.prop("id"), "openingTagName"); }, 100);
 };
+Xonomy.newElementChildAtTop=function(htmlID, parameter) {
+	Xonomy.clickoff();
+	var jsElement=Xonomy.harvestElement(document.getElementById(htmlID));
+	var html=Xonomy.renderElement(Xonomy.xml2js(parameter, jsElement));
+	var $html=$(html).hide();
+	$("#"+htmlID+" > .children").prepend($html);
+	Xonomy.plusminus(htmlID, true);
+	Xonomy.elementReorder($html.attr("id"));
+	Xonomy.changed();
+	$html.fadeIn();
+	window.setTimeout(function(){ Xonomy.setFocus($html.prop("id"), "openingTagName"); }, 100);
+};
 Xonomy.elementReorder=function(htmlID){
 	var that=document.getElementById(htmlID);
 	var elSpec=Xonomy.docSpec.elements[that.getAttribute("data-name")];
