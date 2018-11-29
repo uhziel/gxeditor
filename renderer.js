@@ -119,6 +119,6 @@ function fileOnLoad(currentFile) {
     }
 
     var editor = document.getElementById("editor");
-    gxeditor.setViewModeRaw();
+    gxeditor.setViewModeEasy();
     Xonomy.render(xmlText, editor, spec);
 }

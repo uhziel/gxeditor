@@ -58,17 +58,17 @@ function genMenu() {
       label: '查看',
       submenu: [
         {
-          label: "原生",
-          type: "radio",
-          click() {
-            mainWindow.webContents.send('action', 'setViewModeRaw');
-          }
-        },
-        {
           label: "易读",
           type: "radio",
           click() {
             mainWindow.webContents.send('action', 'setViewModeEasy');
+          }
+        },
+        {
+          label: "原生",
+          type: "radio",
+          click() {
+            mainWindow.webContents.send('action', 'setViewModeRaw');
           }
         }
       ]
