@@ -2,7 +2,7 @@
     "example": {
         "cnName": "示例",
         "desc": "属性展示了目前支持的各数据类型。",
-        "children": [ "commodities" ],
+        "children": [ "commodities", "items" ],
         "attributes": {
             "int": {
                 "type": "INT",
@@ -43,15 +43,13 @@
     "commodity": {
         "multi": true,
         "attributes": {
-            "id": {
-                "type": "INT",
+            "item_id": {
+                "type": "REF",
+                "refPath": "item",
                 "default": 1,
                 "min": 0
             },
-            "name": {
-                "type": "STRING",
-                "default": "未命名"
-            },            
+           
             "buy_price": {
                 "type": "INT",
                 "default": 100,
@@ -61,6 +59,23 @@
                 "type": "INT",
                 "default": 80,
                 "min": 0
+            }
+        }
+    },
+    "items": {
+        "children": [ "item" ]
+    },
+    "item": {
+        "multi": true,
+        "attributes": {
+            "id": {
+                "type": "INT",
+                "default": 1,
+                "min": 1
+            },
+            "name": {
+                "type": "STRING",
+                "default": "未命名"
             }
         }
     }

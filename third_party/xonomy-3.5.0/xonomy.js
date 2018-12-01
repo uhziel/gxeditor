@@ -1921,4 +1921,9 @@ Xonomy.goLeft=function(){
 	if($next.hasClass("char")) Xonomy.setFocus($next.prop("id"), "char");
 };
 
+//Self defined
+Xonomy.getDescendantElements = function(elemName) {
+	return Xonomy.harvestCache["xonomy1"].getDescendantElements(elemName);
+}
+
 module.exports = Xonomy;

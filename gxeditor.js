@@ -98,6 +98,17 @@ gxeditor.askDateTime = function (defaultString) {
     `;
 }
 
+///////////////////////////////////////
+// Ref
+gxeditor.askRef = function (defaultString, tmpl) {
+    let picklist = [];
+    const refJsElemments = Xonomy.getDescendantElements(tmpl.refPath);
+    refJsElemments.forEach(jsElement => {
+        picklist.push({ value: jsElement.getAttributeValue("id"), caption: jsElement.getAttributeValue("name")});
+    });
+    return Xonomy.askPicklist(defaultString, picklist);
+}
+
 gxeditor.fillCnNameInfo = function (name, spec, tmpl) {
     if (typeof tmpl.cnName === 'string') {
         spec.displayName = `en: ${name} | cn: ${tmpl.cnName}`;
@@ -142,6 +153,12 @@ gxeditor.genAttrMenu = function (attrName, attrSpec) {
     }
     else if (tmpl.type == "DATETIME") {
         attrSpec.asker = gxeditor.askDateTime;
+    }
+    else if (tmpl.type == "REF") {
+        attrSpec.asker = gxeditor.askRef;
+    }
+    else {
+        attrSpec.asker = Xonomy.askString;
     }
     attrSpec.askerParameter = tmpl;
     attrSpec.title = tmpl.desc;
