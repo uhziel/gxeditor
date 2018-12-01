@@ -6,6 +6,12 @@ const gxeditor = require('./gxeditor');
 const { ipcRenderer, remote } = require('electron');
 const { Menu } = remote;
 const fs = require('fs');
+const path = require('path');
+
+//读取本应用程序的配置
+const configFile = path.join(__dirname, `config.json`);
+const configText = fs.readFileSync(configFile, "utf8");
+const config = JSON.parse(configText);
 
 let currentFile = null; //当前文档保存的路径
 let isSaved = true;     //当前文档是否已保存
@@ -89,10 +95,9 @@ function askSaveIfNeed() {
 }
 
 function fileOnLoad(currentFile) {
-    const path = require('path');
     const basename = path.basename(currentFile, ".xml");
     const xmlText = gxeditor.readXMLFromFile(currentFile);
-    const testJsonFile = path.join(__dirname, `config/${basename}.json`);
+    const testJsonFile = path.join(__dirname, `${config.templateDirectory}/${basename}.json`);
     const testJsonText = fs.readFileSync(testJsonFile, "utf8");
     const testJson = JSON.parse(testJsonText);
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="GB2312"?>
+<example int='5' float='1.15' datetime='2018-01-01 07:02:01' string='abcefg' enum='1'>
+    <commodities>
+        <commodity id='1' name=' 小红药' buy_price='100' sell_price='101' />
+        <commodity id='2' name='中红' buy_price='100' sell_price='80' />
+    </commodities>
+</example>
