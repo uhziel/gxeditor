@@ -1,11 +1,11 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow } = require('electron')
 const { Menu, ipcMain } = require('electron');
-const { clipboard } = require('electron');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+let searchWindow = null;
 let safeExit = false;
 
 function genMenu() {
@@ -46,7 +46,9 @@ function genMenu() {
         {
           label: "搜索",
           click() {
-            mainWindow.webContents.findInPage(clipboard.readText());
+            if (searchWindow === null) {
+              newSearchWindow(mainWindow);
+            }
           },
           accelerator: 'CmdOrCtrl+F'
         },
@@ -114,9 +116,7 @@ function createWindow() {
   });
 
   mainWindow.webContents.on('found-in-page', (event, result) => {
-    if (result.finalUpdate) {
-      //mainWindow.webContents.stopFindInPage('keepSelection');
-    }
+    searchWindow.send('notifyFoundInPage', `(${result.activeMatchOrdinal},${result.matches})`);
   });
 
   genMenu();
@@ -147,11 +147,29 @@ app.on('activate', function () {
 // code. You can also put them in separate files and require them here.
 
 //监听与渲染进程的通信
-ipcMain.on('reqaction', (event, arg) => {
+ipcMain.on('reqaction', (event, arg, arg1, arg2) => {
   switch (arg) {
+    case 'search':
+      mainWindow.webContents.findInPage(arg1, {forward: arg2});
+      break;
+    case 'stopSearch':
+      searchWindow.close();
+      break;
     case 'exit':
       safeExit = true;
       app.quit();//退出程序
       break;
   }
 });
+
+function newSearchWindow(parentWindow) {
+  searchWindow = new BrowserWindow({parent: parentWindow});
+  let {x, y, width} = parentWindow.getContentBounds();
+  searchWindow.setBounds({ x: x+width-300, y: y, width: 300, height: 100 });
+  searchWindow.webContents.loadFile('search_text_box.html');
+  //searchWindow.webContents.openDevTools(); 
+  searchWindow.on('closed', () => {
+    mainWindow.webContents.stopFindInPage('clearSelection');
+    searchWindow = null;
+  });
+}
