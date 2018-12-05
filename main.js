@@ -53,7 +53,7 @@ function genMenu() {
           accelerator: 'CmdOrCtrl+F'
         },
         { type: 'separator' },
-        { label: "全选", role: 'selectall' },
+        { label: "全选", role: 'selectall' }
       ]
     },
     {
@@ -86,6 +86,9 @@ function genMenu() {
       ]
     }
   ];
+  if (process.env.GXEDITOR_DEBUG) {
+    appMenuTemplate[1].submenu.push({ role: 'toggleDevTools' });
+  }
   const appMenu = Menu.buildFromTemplate(appMenuTemplate);
   Menu.setApplicationMenu(appMenu);
 }
@@ -98,7 +101,7 @@ function createWindow() {
   mainWindow.loadFile('index.html')
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {

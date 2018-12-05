@@ -6,6 +6,7 @@
   "scripts": {
     "test": "none",
     "start": "electron .",
+    "debug": "GXEDITOR_DEBUG=1 electron .",
     "packwin": "electron-packager . --overwrite --icon=gxeditor.ico --prune=true"
   },
   "repository": {
