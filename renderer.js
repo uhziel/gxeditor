@@ -12,6 +12,10 @@ const path = require('path');
 const configFile = path.join(__dirname, `config.json`);
 const configText = fs.readFileSync(configFile, "utf8");
 const config = JSON.parse(configText);
+const curProjectPath = config.projectPath;
+const curProjectConfigFile = path.join(curProjectPath, 'gxproject.json');
+const curProjectConfigText = fs.readFileSync(curProjectConfigFile, "utf8");
+const curProjectConfig = JSON.parse(curProjectConfigText);
 
 let currentFile = null; //当前文档保存的路径
 let isSaved = true;     //当前文档是否已保存
@@ -38,6 +42,7 @@ ipcRenderer.on('action', (event, arg) => {
         case 'open':
             askSaveIfNeed();
             const files = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
+                defaultPath: path.join(curProjectPath, curProjectConfig.dataPath),
                 filters: [
                     { name: "Xml Files", extensions: ['xml'] },
                     { name: 'All Files', extensions: ['*'] }],
@@ -97,11 +102,11 @@ function askSaveIfNeed() {
 function fileOnLoad(currentFile) {
     const basename = path.basename(currentFile, ".xml");
     const xmlText = gxeditor.readXMLFromFile(currentFile);
-    const testJsonFile = path.join(__dirname, `${config.templateDirectory}/${basename}.json`);
-    const testJsonText = fs.readFileSync(testJsonFile, "utf8");
-    const testJson = JSON.parse(testJsonText);
+    const templateFile = path.join(curProjectPath, `template/${basename}.json`);
+    const templateFileText = fs.readFileSync(templateFile, "utf8");
+    const templateJSON = JSON.parse(templateFileText);
 
-    const spec = gxeditor.genDocSpec(testJson);
+    const spec = gxeditor.genDocSpec(templateJSON);
     spec.onchange = function () {
         if (isSaved) document.title += " *";
         isSaved = false;
