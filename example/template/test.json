@@ -74,6 +74,7 @@
                 "min": 1
             },
             "name": {
+                "cnName": "名字",
                 "type": "STRING",
                 "default": "未命名"
             }
