@@ -118,10 +118,10 @@ gxeditor.askImage = function (defaultString, tmpl) {
     const pathString = path.join(curDataPath, defaultString);
     return `
         <form onsubmit='Xonomy.answer(this.val.value); return false;'>
-        <img id='pathimg' src='file://${pathString}' width='200' onclick='gxeditor.onclickImage(event);' alt='图片内容'>
+        <img id='pathimg' src='file://${pathString}' width='200' alt='图片内容'>
         <div>
             <label for='path'>路径：</label>
-            <input type='text' id='path' name='val' value='${defaultString}' readonly>
+            <input type='text' id='path' name='val' value='${defaultString}' onclick='gxeditor.onclickImage(event);' readonly>
             <input type='submit' value='确定' >
         </div>
         </form>
