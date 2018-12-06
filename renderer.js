@@ -2,7 +2,6 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 
-const gxeditor = require('./gxeditor');
 const { ipcRenderer, remote } = require('electron');
 const { Menu } = remote;
 const fs = require('fs');

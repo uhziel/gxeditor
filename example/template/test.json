@@ -77,6 +77,11 @@
                 "cnName": "名字",
                 "type": "STRING",
                 "default": "未命名"
+            },
+            "icon": {
+                "cnName": "图标",
+                "type": "IMAGE",
+                "optional": true
             }
         }
     }

@@ -2,6 +2,8 @@ const iconv = require('iconv-lite');
 const fs = require('fs');
 const format = require('js-beautify').html;
 const Xonomy = require('./third_party/xonomy-3.5.0/xonomy.js');
+const path = require('path');
+const { remote } = require('electron');
 
 let gxeditor = {};
 
@@ -109,6 +111,37 @@ gxeditor.askRef = function (defaultString, tmpl) {
     return Xonomy.askPicklist(defaultString, picklist);
 }
 
+///////////////////////////////////////
+// Image
+let curDataPath = '/Users/zhulei/workspace/gxeditor/example/data';
+gxeditor.askImage = function (defaultString, tmpl) {
+    const pathString = path.join(curDataPath, defaultString);
+    return `
+        <form onsubmit='Xonomy.answer(this.val.value); return false;'>
+        <img id='pathimg' src='file://${pathString}' width='200' onclick='gxeditor.onclickImage(event);' alt='图片内容'>
+        <div>
+            <label for='path'>路径：</label>
+            <input type='text' id='path' name='val' value='${defaultString}' readonly>
+            <input type='submit' value='确定' >
+        </div>
+        </form>
+    `;
+}
+gxeditor.onclickImage = function(event) {
+    const files = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
+        defaultPath: curDataPath,
+        filters: [
+            { name: "图片", extensions: ['png', 'jpg', 'gif', 'bmp'] },
+            { name: '所有类型', extensions: ['*'] }],
+        properties: ['openFile']
+    });
+    if (files) {
+        const currentFile = files[0];
+        document.getElementById('pathimg').src = `file://${currentFile}`;
+        document.getElementById('path').value = currentFile.replace(curDataPath+path.sep, '');
+    }
+}
+
 gxeditor.fillCnNameInfo = function (name, spec, tmpl) {
     if (typeof tmpl.cnName === 'string') {
         spec.displayName = `en: ${name} | cn: ${tmpl.cnName}`;
@@ -156,6 +189,9 @@ gxeditor.genAttrMenu = function (attrName, attrSpec) {
     }
     else if (tmpl.type == "REF") {
         attrSpec.asker = gxeditor.askRef;
+    }
+    else if (tmpl.type == "IMAGE") {
+        attrSpec.asker = gxeditor.askImage;
     }
     else {
         attrSpec.asker = Xonomy.askString;
