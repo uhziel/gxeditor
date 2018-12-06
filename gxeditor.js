@@ -142,6 +142,32 @@ gxeditor.onclickImage = function(event) {
     }
 }
 
+///////////////////////////////////////
+// File
+gxeditor.askFile = function (defaultString, tmpl) {
+    return `
+        <form onsubmit='Xonomy.answer(this.val.value); return false;'>
+        <div>
+            <label for='path'>路径：</label>
+            <input type='text' id='path' name='val' value='${defaultString}' onclick='gxeditor.onclickFile(event);' readonly>
+            <input type='submit' value='确定' >
+        </div>
+        </form>
+    `;
+}
+gxeditor.onclickFile = function(event) {
+    const files = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
+        defaultPath: curDataPath,
+        filters: [
+            { name: '所有类型', extensions: ['*'] }],
+        properties: ['openFile']
+    });
+    if (files) {
+        const currentFile = files[0];
+        document.getElementById('path').value = currentFile.replace(curDataPath+path.sep, '');
+    }
+}
+
 gxeditor.fillCnNameInfo = function (name, spec, tmpl) {
     if (typeof tmpl.cnName === 'string') {
         spec.displayName = `en: ${name} | cn: ${tmpl.cnName}`;
@@ -192,6 +218,9 @@ gxeditor.genAttrMenu = function (attrName, attrSpec) {
     }
     else if (tmpl.type == "IMAGE") {
         attrSpec.asker = gxeditor.askImage;
+    }
+    else if (tmpl.type == "FILE") {
+        attrSpec.asker = gxeditor.askFile;
     }
     else {
         attrSpec.asker = Xonomy.askString;

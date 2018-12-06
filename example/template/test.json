@@ -34,6 +34,9 @@
                     { "value": 2, "caption": "女" }
                 ],
                 "default": 1
+            },
+            "file": {
+                "type": "FILE"
             }
         }
     },
