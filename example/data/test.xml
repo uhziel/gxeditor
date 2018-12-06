@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="GB2312"?>
-<example int='4' float='1.15' datetime='2018-01-01 07:02:01' string='abcefg' enum='1' file='icons/potions (6).png'>
+<example int='4' float='1.15' datetime='2018-01-01 07:02:01' string='abcefg' enum='1' file='icons/potions (6).png' sound='sounds/example1.mp3'>
     <commodities>
         <commodity item_id='1' buy_price='100' sell_price='101' />
         <commodity item_id='1' buy_price='100' sell_price='80' />

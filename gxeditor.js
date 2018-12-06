@@ -168,6 +168,37 @@ gxeditor.onclickFile = function(event) {
     }
 }
 
+///////////////////////////////////////
+// Sound
+gxeditor.askSound = function (defaultString, tmpl) {
+    const pathString = path.join(curDataPath, defaultString);
+    return `
+        <form onsubmit='Xonomy.answer(this.val.value); return false;'>
+        <audio id='pathsound' src='file://${pathString}' controls alt='声音内容'>
+        </audio>
+        <div>
+            <label for='path'>路径：</label>
+            <input type='text' id='path' name='val' value='${defaultString}' onclick='gxeditor.onclickSound(event);' readonly>
+            <input type='submit' value='确定' >
+        </div>
+        </form>
+    `;
+}
+gxeditor.onclickSound = function(event) {
+    const files = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
+        defaultPath: curDataPath,
+        filters: [
+            { name: "声音", extensions: ['mp3', 'ogg', 'wav'] },
+            { name: '所有类型', extensions: ['*'] }],
+        properties: ['openFile']
+    });
+    if (files) {
+        const currentFile = files[0];
+        document.getElementById('pathsound').src = `file://${currentFile}`;
+        document.getElementById('path').value = currentFile.replace(curDataPath+path.sep, '');
+    }
+}
+
 gxeditor.fillCnNameInfo = function (name, spec, tmpl) {
     if (typeof tmpl.cnName === 'string') {
         spec.displayName = `en: ${name} | cn: ${tmpl.cnName}`;
@@ -221,6 +252,9 @@ gxeditor.genAttrMenu = function (attrName, attrSpec) {
     }
     else if (tmpl.type == "FILE") {
         attrSpec.asker = gxeditor.askFile;
+    }
+    else if (tmpl.type == "SOUND") {
+        attrSpec.asker = gxeditor.askSound;
     }
     else {
         attrSpec.asker = Xonomy.askString;

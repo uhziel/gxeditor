@@ -37,6 +37,9 @@
             },
             "file": {
                 "type": "FILE"
+            },
+            "sound": {
+                "type": "SOUND"
             }
         }
     },
