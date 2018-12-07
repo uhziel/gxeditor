@@ -138,7 +138,7 @@ gxeditor.onclickImage = function(event) {
     if (files) {
         const currentFile = files[0];
         document.getElementById('pathimg').src = `file://${currentFile}`;
-        document.getElementById('path').value = currentFile.replace(curDataPath+path.sep, '');
+        document.getElementById('path').value = path.relative(curDataPath, currentFile);
     }
 }
 
@@ -164,7 +164,7 @@ gxeditor.onclickFile = function(event) {
     });
     if (files) {
         const currentFile = files[0];
-        document.getElementById('path').value = currentFile.replace(curDataPath+path.sep, '');
+        document.getElementById('path').value = path.relative(curDataPath, currentFile);
     }
 }
 
@@ -195,7 +195,7 @@ gxeditor.onclickSound = function(event) {
     if (files) {
         const currentFile = files[0];
         document.getElementById('pathsound').src = `file://${currentFile}`;
-        document.getElementById('path').value = currentFile.replace(curDataPath+path.sep, '');
+        document.getElementById('path').value = path.relative(curDataPath, currentFile);
     }
 }
 
