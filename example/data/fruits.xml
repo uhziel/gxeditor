@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="GB2312"?>
+<fruits>
+    <fruit name='苹果' price='10' />
+    <fruit name='梨' price='9' />
+</fruits>

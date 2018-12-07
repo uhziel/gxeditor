@@ -15,11 +15,31 @@ const curProjectPath = config.projectPath;
 const curProjectConfigFile = path.join(curProjectPath, 'gxproject.json');
 const curProjectConfigText = fs.readFileSync(curProjectConfigFile, "utf8");
 const curProjectConfig = JSON.parse(curProjectConfigText);
+let currentFile = curProjectConfig.curFilePath;
 
-let currentFile = null; //当前文档保存的路径
+if (currentFile) {
+    fileOnLoad(currentFile);
+}
+
 let isSaved = true;     //当前文档是否已保存
 
-document.title = "gxeditor - Untitled"; //设置文档标题，影响窗口标题栏名称
+function genAppTitle() {
+    let projectName = null;
+    if (curProjectPath === null) {
+        projectName = '无项目';
+    } else {
+        projectName = path.basename(curProjectPath);
+    }
+
+    let fileName = currentFile;
+    if (fileName === null) {
+        fileName = 'Untitled';
+    }
+
+    return `${projectName} - ${fileName}`;
+}
+
+document.title = genAppTitle();
 
 const contextMenuTemplate = [
     { label: "剪切", role: 'cut' },
@@ -50,7 +70,7 @@ ipcRenderer.on('action', (event, arg) => {
             if (files) {
                 currentFile = files[0];
                 fileOnLoad(currentFile);
-                document.title = "gxeditor - " + currentFile;
+                document.title = genAppTitle();
                 isSaved = true;
             }
             break;
@@ -84,7 +104,7 @@ function saveCurrentDoc() {
         const txtSave = Xonomy.harvest();
         gxeditor.writeXMLToFile(currentFile, txtSave);
         isSaved = true;
-        document.title = "gxeditor - " + currentFile;
+        document.title = genAppTitle();
     }
 }
 
@@ -99,12 +119,12 @@ function askSaveIfNeed() {
 }
 
 function fileOnLoad(currentFile) {
-    const basename = path.basename(currentFile, ".xml");
     const xmlText = gxeditor.readXMLFromFile(currentFile);
+
+    const basename = path.basename(currentFile, ".xml");
     const templateFile = path.join(curProjectPath, `template/${basename}.json`);
     const templateFileText = fs.readFileSync(templateFile, "utf8");
     const templateJSON = JSON.parse(templateFileText);
-
     const spec = gxeditor.genDocSpec(templateJSON);
     spec.onchange = function () {
         if (isSaved) document.title += " *";
