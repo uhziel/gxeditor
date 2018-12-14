@@ -14,16 +14,14 @@ Config.prototype.get = function (key) {
 }
 
 Config.prototype.set = function (key, value) {
-    this._data[key] = vaule;
+    this._data[key] = value;
+
+    const text = JSON.stringify(this._data, null, 4);
+    fs.writeFileSync(this._path, text);
 }
 
 Config.prototype.all = function () {
     return this._data;
-}
-
-Config.prototype.save = function () {
-    const text = JSON.stringify(this._data);
-    fs.writeFileSync(this._path, text);
 }
 
 module.exports = Config;

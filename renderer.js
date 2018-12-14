@@ -123,6 +123,8 @@ function askSaveIfNeed() {
 function fileOnLoad(currentFile) {
     const xmlText = gxeditor.readXMLFromFile(currentFile);
 
+    curProjectConfig.set('curFilePath', currentFile);
+
     const basename = path.basename(currentFile, ".xml");
     const templateFile = path.join(curProjectPath, `template/${basename}.json`);
     const templateConfig = new Config(templateFile);
