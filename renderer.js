@@ -4,44 +4,16 @@
 
 const { ipcRenderer, remote } = require('electron');
 const { Menu } = remote;
-const path = require('path');
 const Config = require('./utils/config');
+const GXPage = require('./gxpage.js');
 
-//读取本应用程序的配置
-const configFile = path.join(__dirname, `config.json`);
-const config = new Config(configFile);
+let gxpage = new GXPage();
 
-const curProjectPath = config.get('projectPath');
-
-//读取当前项目的配置
-const curProjectConfigFile = path.join(curProjectPath, 'gxproject.json');
-const curProjectConfig = new Config(curProjectConfigFile);
-
-let currentFile = curProjectConfig.get('curFilePath');
-
-if (currentFile) {
-    fileOnLoad(currentFile);
+if (gxpage.curProjectConfig.get('curFilePath')) {
+    fileOnLoad();
 }
 
-let isSaved = true;     //当前文档是否已保存
-
-function genAppTitle() {
-    let projectName = null;
-    if (curProjectPath === null) {
-        projectName = '无项目';
-    } else {
-        projectName = path.basename(curProjectPath);
-    }
-
-    let fileName = currentFile;
-    if (fileName === null) {
-        fileName = 'Untitled';
-    }
-
-    return `${projectName} - ${fileName}`;
-}
-
-document.title = genAppTitle();
+document.title = gxpage.genAppTitle();
 
 const contextMenuTemplate = [
     { label: "剪切", role: 'cut' },
@@ -63,17 +35,18 @@ ipcRenderer.on('action', (event, arg) => {
         case 'open':
             askSaveIfNeed();
             const files = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
-                defaultPath: path.join(curProjectPath, curProjectConfig.get('dataPath')),
+                defaultPath: gxpage.getDataDirPath(),
                 filters: [
                     { name: "Xml Files", extensions: ['xml'] },
                     { name: 'All Files', extensions: ['*'] }],
                 properties: ['openFile']
             });
             if (files) {
-                currentFile = files[0];
-                fileOnLoad(currentFile);
-                document.title = genAppTitle();
-                isSaved = true;
+                gxpage.curProjectConfig.set('curFilePath', files[0]);
+                gxpage.isCurFileSaved = true;
+
+                fileOnLoad();
+                document.title = gxpage.genAppTitle();                
             }
             break;
         case 'save':
@@ -94,24 +67,17 @@ ipcRenderer.on('action', (event, arg) => {
 
 //保存当前文档
 function saveCurrentDoc() {
-    if (!currentFile) {
-        const file = remote.dialog.showSaveDialog(remote.getCurrentWindow(), {
-            filters: [
-                { name: "Xml Files", extensions: ['xml'] },
-                { name: 'All Files', extensions: ['*'] }]
-        });
-        if (file) currentFile = file;
-    }
-    if (currentFile) {
+    let curFilePath = gxpage.curProjectConfig.get('curFilePath');
+    if (curFilePath) {
         const txtSave = Xonomy.harvest();
-        gxeditor.writeXMLToFile(currentFile, txtSave);
-        isSaved = true;
-        document.title = genAppTitle();
+        gxeditor.writeXMLToFile(curFilePath, txtSave);
+        gxpage.isCurFileSaved = true;
+        document.title = gxpage.genAppTitle();
     }
 }
 
 function askSaveIfNeed() {
-    if (isSaved) return;
+    if (gxpage.isCurFileSaved) return;
     const response = remote.dialog.showMessageBox(remote.getCurrentWindow(), {
         message: 'Do you want to save the current document?',
         type: 'question',
@@ -120,19 +86,19 @@ function askSaveIfNeed() {
     if (response == 0) saveCurrentDoc();
 }
 
-function fileOnLoad(currentFile) {
+function fileOnLoad() {
+    const currentFile = gxpage.curProjectConfig.get('curFilePath');    
     const xmlText = gxeditor.readXMLFromFile(currentFile);
 
-    curProjectConfig.set('curFilePath', currentFile);
-
-    const basename = path.basename(currentFile, ".xml");
-    const templateFile = path.join(curProjectPath, `template/${basename}.json`);
-    const templateConfig = new Config(templateFile);
+    const templatePath = gxpage.getTemplatePath(currentFile);
+    const templateConfig = new Config(templatePath);
    
-    const spec = gxeditor.genDocSpec(templateConfig.all());
+    const spec = gxeditor.genDocSpec(templateConfig.data);
     spec.onchange = function () {
-        if (isSaved) document.title += " *";
-        isSaved = false;
+        if (gxpage.isCurFileSaved) {
+            gxpage.isCurFileSaved = false;
+            document.title = gxpage.genAppTitle();
+        }
     }
 
     //TODO zhulei 后续去除写死的validate
