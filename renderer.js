@@ -4,18 +4,20 @@
 
 const { ipcRenderer, remote } = require('electron');
 const { Menu } = remote;
-const fs = require('fs');
 const path = require('path');
+const Config = require('./utils/config');
 
 //读取本应用程序的配置
 const configFile = path.join(__dirname, `config.json`);
-const configText = fs.readFileSync(configFile, "utf8");
-const config = JSON.parse(configText);
-const curProjectPath = config.projectPath;
+const config = new Config(configFile);
+
+const curProjectPath = config.get('projectPath');
+
+//读取当前项目的配置
 const curProjectConfigFile = path.join(curProjectPath, 'gxproject.json');
-const curProjectConfigText = fs.readFileSync(curProjectConfigFile, "utf8");
-const curProjectConfig = JSON.parse(curProjectConfigText);
-let currentFile = curProjectConfig.curFilePath;
+const curProjectConfig = new Config(curProjectConfigFile);
+
+let currentFile = curProjectConfig.get('curFilePath');
 
 if (currentFile) {
     fileOnLoad(currentFile);
@@ -61,7 +63,7 @@ ipcRenderer.on('action', (event, arg) => {
         case 'open':
             askSaveIfNeed();
             const files = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
-                defaultPath: path.join(curProjectPath, curProjectConfig.dataPath),
+                defaultPath: path.join(curProjectPath, curProjectConfig.get('dataPath')),
                 filters: [
                     { name: "Xml Files", extensions: ['xml'] },
                     { name: 'All Files', extensions: ['*'] }],
@@ -123,9 +125,9 @@ function fileOnLoad(currentFile) {
 
     const basename = path.basename(currentFile, ".xml");
     const templateFile = path.join(curProjectPath, `template/${basename}.json`);
-    const templateFileText = fs.readFileSync(templateFile, "utf8");
-    const templateJSON = JSON.parse(templateFileText);
-    const spec = gxeditor.genDocSpec(templateJSON);
+    const templateConfig = new Config(templateFile);
+   
+    const spec = gxeditor.genDocSpec(templateConfig.all());
     spec.onchange = function () {
         if (isSaved) document.title += " *";
         isSaved = false;
