@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const fs = require('fs');
 const Config = require('./utils/config');
 
 function GXPage() {
@@ -19,7 +20,14 @@ function GXPage() {
 }
 
 GXPage.prototype.switchProject = function (projectPath) {
-
+    const curProjectConfigPath = path.join(projectPath, 'gxproject.json');
+    if (!fs.existsSync(curProjectConfigPath)) {
+        return false;
+    }
+    this.curProjectConfig = new Config(curProjectConfigPath);
+    this.config.set('projectPath', projectPath);
+    this.isCurFileSaved = true;
+    return true;
 }
 
 GXPage.prototype.switchFile = function (filePath) {

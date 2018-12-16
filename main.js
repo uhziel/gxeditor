@@ -14,6 +14,12 @@ function genMenu() {
       label: '文件',
       submenu: [
         {
+          label: "打开项目",
+          click() {
+            mainWindow.webContents.send('action', 'openProject');
+          }
+        },
+        {
           label: "打开",
           click() {
             mainWindow.webContents.send('action', 'open');

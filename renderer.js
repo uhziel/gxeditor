@@ -9,10 +9,7 @@ const GXPage = require('./gxpage.js');
 
 let gxpage = new GXPage();
 
-if (gxpage.curProjectConfig.get('curFilePath')) {
-    fileOnLoad();
-}
-
+fileOnLoad();
 document.title = gxpage.genAppTitle();
 
 const contextMenuTemplate = [
@@ -32,6 +29,22 @@ editor.addEventListener('contextmenu', (e) => {
 //监听与主进程的通信
 ipcRenderer.on('action', (event, arg) => {
     switch (arg) {
+        case 'openProject':
+        {
+            askSaveIfNeed();
+            const files = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
+                properties: ['openDirectory']
+            });
+            if (files) {
+                if (gxpage.switchProject(files[0])) {
+                    fileOnLoad();
+                    document.title = gxpage.genAppTitle(); 
+                } else {
+                    remote.dialog.showErrorBox('错误', '不是合法的工程目录，目录内必须带gxproject.json。');
+                }              
+            }
+            break;
+        }
         case 'open':
             askSaveIfNeed();
             const files = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
@@ -87,7 +100,12 @@ function askSaveIfNeed() {
 }
 
 function fileOnLoad() {
-    const currentFile = gxpage.curProjectConfig.get('curFilePath');    
+    const currentFile = gxpage.curProjectConfig.get('curFilePath');
+    if (typeof currentFile !== 'string') {
+        let editor = document.getElementById("editor");
+        editor.innerHTML = "";
+        return;
+    }
     const xmlText = gxeditor.readXMLFromFile(currentFile);
 
     const templatePath = gxpage.getTemplatePath(currentFile);
@@ -117,7 +135,7 @@ function fileOnLoad() {
         };
     }
 
-    var editor = document.getElementById("editor");
+    let editor = document.getElementById("editor");
     gxeditor.setViewModeEasy();
     Xonomy.render(xmlText, editor, spec);
 }
