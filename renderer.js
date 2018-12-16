@@ -4,7 +4,7 @@
 
 const { ipcRenderer, remote } = require('electron');
 const { Menu } = remote;
-const Config = require('./utils/gx_config');
+const GXTemplate = require('./utils/gx_template');
 const GXPage = require('./gxpage.js');
 
 let gxpage = new GXPage();
@@ -109,7 +109,7 @@ function fileOnLoad() {
     const xmlText = gxeditor.readXMLFromFile(currentFile);
 
     const templatePath = gxpage.getTemplatePath(currentFile);
-    const templateConfig = new Config(templatePath);
+    const templateConfig = new GXTemplate(templatePath);
    
     const spec = gxeditor.genDocSpec(templateConfig.data);
     spec.onchange = function () {

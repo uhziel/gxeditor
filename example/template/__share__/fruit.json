@@ -1,0 +1,17 @@
+{
+    "fruit": {
+        "multi": true,
+        "optional": true,
+        "attributes": {
+            "name": {
+                "type": "STRING",
+                "default": ""
+            },
+            "price": {
+                "type": "INT",
+                "default": 1,
+                "min": 1
+            }
+        }
+    }
+}
