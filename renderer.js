@@ -4,7 +4,7 @@
 
 const { ipcRenderer, remote } = require('electron');
 const { Menu } = remote;
-const Config = require('./utils/config');
+const Config = require('./utils/gx_config');
 const GXPage = require('./gxpage.js');
 
 let gxpage = new GXPage();

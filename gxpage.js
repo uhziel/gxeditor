@@ -2,7 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
-const Config = require('./utils/config');
+const Config = require('./utils/gx_config');
 
 function GXPage() {
     const configPath = path.join(__dirname, `config.json`);
