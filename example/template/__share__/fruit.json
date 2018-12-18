@@ -1,5 +1,6 @@
 {
     "fruit": {
+        "children": [ "energy" ],
         "multi": true,
         "optional": true,
         "attributes": {
@@ -11,6 +12,25 @@
                 "type": "INT",
                 "default": 1,
                 "min": 1
+            }
+        }
+    },
+    "energy": {
+        "attributes": {
+            "carbohydrates": {
+                "type": "DOUBLE",
+                "default": 0.0,
+                "precision": 0.01
+            },
+            "fat": {
+                "type": "DOUBLE",
+                "default": 0.0,
+                "precision": 0.01
+            },
+            "protein": {
+                "type": "DOUBLE",
+                "default": 0.0,
+                "precision": 0.01
             }
         }
     }

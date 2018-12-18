@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="GB2312"?>
 <fruits>
-    <fruit name='苹果' price='10' />
+    <fruit name='苹果' price='10'>
+        <energy carbohydrates='22.84' fat='0.33' protein='1.09' />
+    </fruit>
     <fruit name='梨' price='9' />
 </fruits>
