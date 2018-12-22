@@ -117,8 +117,8 @@ function fileOnLoad() {
     }
     const xmlText = gxeditor.readXMLFromFile(currentFile);
 
-    const templatePath = gxpage.getTemplatePath(currentFile);
-    const templateConfig = new GXTemplate(templatePath);
+    const tmplFilePath = gxpage.getTemplatePath(currentFile);
+    const templateConfig = new GXTemplate(tmplFilePath);
    
     const spec = gxeditor.genDocSpec(templateConfig.data);
     spec.onchange = function () {

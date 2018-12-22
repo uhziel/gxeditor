@@ -24,7 +24,10 @@ function _parseFile(that, templatePath) {
         data.__include__.forEach(includePath => {
             const absolutePath = includePath.replace('${templateDirPath}', that.templateDirPath);
             const includeData = _parseFile(that, absolutePath);
-            for (const key in includeData) { data[key] = includeData[key]; }
+            for (const key in includeData) {
+                includeData[key].sourceFilePath = absolutePath;
+                data[key] = includeData[key];
+            }
         });
     }
 

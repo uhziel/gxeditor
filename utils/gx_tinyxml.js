@@ -4,12 +4,12 @@ let GXTinyXml = {};
 
 //////////////////////////////////////////////////
 // HeaderFile
-GXTinyXml.genHeaderFile = (tmplNamespace, content) => `
+GXTinyXml.genHeaderFile = (tmplNamespace, content, includeDirectives) => `
 #ifndef __${tmplNamespace}__HEADER__
 #define __${tmplNamespace}__HEADER__
 
 #include "ixmlread.h"
-
+${includeDirectives}
 namespace ${tmplNamespace} {
 ${content}
 }
@@ -23,7 +23,6 @@ struct ${elemStructName}
     ${elemStructName}();
 
 ${content}
-
     void Load(TiXmlElement* node);
 };
 `;
@@ -34,7 +33,6 @@ struct Config
     Config();
 
 ${content}
-
     void Load(TiXmlElement* node);
     void Parse(const char* content);
     void LoadFile(const char* filename);
