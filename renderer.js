@@ -6,6 +6,7 @@ const { ipcRenderer, remote } = require('electron');
 const { Menu } = remote;
 const GXTemplate = require('./utils/gx_template');
 const GXPage = require('./gxpage.js');
+const CodeGenerator = require('./utils/gx_code_generator');
 
 let gxpage = new GXPage();
 
@@ -75,6 +76,14 @@ ipcRenderer.on('action', (event, arg) => {
         case 'setViewModeEasy':
             gxeditor.setViewModeEasy();
             break;
+        case 'genCppCode':
+        {
+            const currentFilePath = gxpage.curProjectConfig.get('curFilePath');
+            const templatePath = gxpage.getTemplatePath(currentFilePath);
+            const generator = new CodeGenerator(templatePath);
+            generator.gen();
+            break;
+        }
     }
 });
 

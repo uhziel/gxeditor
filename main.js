@@ -82,6 +82,17 @@ function genMenu() {
       ]
     },
     {
+      label: '工具',
+      submenu: [
+        {
+          label: "生成cpp代码",
+          click() {
+            mainWindow.webContents.send('action', 'genCppCode');
+          }
+        }
+      ]
+    },
+    {
       label: '帮助',
       role: 'help',
       submenu: [
