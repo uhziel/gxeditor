@@ -89,6 +89,9 @@ ipcRenderer.on('action', (event, arg) => {
 
 //保存当前文档
 function saveCurrentDoc() {
+    if (gxpage.isCurFileSaved) {
+        return;
+    }
     let curFilePath = gxpage.curProjectConfig.get('curFilePath');
     if (curFilePath) {
         const txtSave = Xonomy.harvest();
