@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const GXTinyXml = require('./gx_tinyxml');
+const GXCodeScheme = require('./gx_tinyxml');
 const {shell} = require('electron');
 const GXTemplate = require('./gx_template');
 
@@ -52,10 +52,10 @@ GXCodeGenerator.prototype.genFromTemplate = function (tmplFilePath) {
     const isRoot = (this.sharedTemplate) ? false : true;
     const structContent = this.genHeaderStruct(template.data, fileBaseName, isRoot);
     const includeDirectives = getIncludeDirectives(template.data.__include__);
-    const headerContent = GXTinyXml.genHeaderFile(tmplNamespace, structContent, includeDirectives);
+    const headerContent = GXCodeScheme.genHeaderFile(tmplNamespace, structContent, includeDirectives);
 
     const elemContent = this.genSourceElem(template.data, fileBaseName, isRoot);
-    const sourceContent = GXTinyXml.genSourceFile(fileBaseName, tmplNamespace, elemContent);
+    const sourceContent = GXCodeScheme.genSourceFile(fileBaseName, tmplNamespace, elemContent);
 
     const headerFilePath = path.resolve(this.cppCodePath, `${fileBaseName}.h`);
     const sourceFilePath = path.resolve(this.cppCodePath, `${fileBaseName}.cpp`);
@@ -99,9 +99,9 @@ GXCodeGenerator.prototype.genHeaderStruct = function (template, elemName, isRoot
     }
 
     if (isRoot) {
-        content += GXTinyXml.genHeaderFileStructRoot(varContent);
+        content += GXCodeScheme.genHeaderFileStructRoot(varContent);
     } else {
-        content += GXTinyXml.genHeaderFileStruct(toPascal(elemName), varContent);
+        content += GXCodeScheme.genHeaderFileStruct(toPascal(elemName), varContent);
     }
     
     return content;
@@ -117,7 +117,7 @@ GXCodeGenerator.prototype.genHeaderStructVarElem = function (template, elemName)
         type = `std::vector<${type}>`;
     }
 
-    return GXTinyXml.genHeaderFileStructVar(type, elemName);
+    return GXCodeScheme.genHeaderFileStructVar(type, elemName);
 }
 
 GXCodeGenerator.prototype.genHeaderStructVarAttr = function (attrName, attr) {
@@ -134,7 +134,7 @@ GXCodeGenerator.prototype.genHeaderStructVarAttr = function (attrName, attr) {
     else {
         type = attr.type;
     }
-    return GXTinyXml.genHeaderFileStructVar(type, attrName);
+    return GXCodeScheme.genHeaderFileStructVar(type, attrName);
 }
 
 GXCodeGenerator.prototype.genSourceElem = function (template, elemName, isRoot) {
@@ -161,7 +161,7 @@ GXCodeGenerator.prototype.genSourceElem = function (template, elemName, isRoot) 
 
     if (elem.children) {
         elem.children.forEach(childName => {
-            loadContent += GXTinyXml.genSourceFileLoadVar(childName);
+            loadContent += GXCodeScheme.genSourceFileLoadVar(childName);
         });
     }
 
@@ -170,21 +170,21 @@ GXCodeGenerator.prototype.genSourceElem = function (template, elemName, isRoot) 
         for (const attrName in elem.attributes) {
             const attr = elem.attributes[attrName];
 
-            constructorContent += GXTinyXml.genSourceFileCtorVar(attrName, attr.default, isFirst);
+            constructorContent += GXCodeScheme.genSourceFileCtorVar(attrName, attr.default, isFirst);
             isFirst = false;
 
-            loadContent += GXTinyXml.genSourceFileLoadVar(attrName);
+            loadContent += GXCodeScheme.genSourceFileLoadVar(attrName);
         }
     }
 
     if (isRoot) {
-        content += GXTinyXml.genSourceFileCtor('Config', constructorContent);
-        content += GXTinyXml.genSourceFileLoad('Config', loadContent);
-        content += GXTinyXml.genSourceFileParse(elemName);
-        content += GXTinyXml.genSourceFileLoadFile(elemName);
+        content += GXCodeScheme.genSourceFileCtor('Config', constructorContent);
+        content += GXCodeScheme.genSourceFileLoad('Config', loadContent);
+        content += GXCodeScheme.genSourceFileParse(elemName);
+        content += GXCodeScheme.genSourceFileLoadFile(elemName);
     } else {
-        content += GXTinyXml.genSourceFileCtor(elemStructName, constructorContent);
-        content += GXTinyXml.genSourceFileLoad(elemStructName, loadContent);
+        content += GXCodeScheme.genSourceFileCtor(elemStructName, constructorContent);
+        content += GXCodeScheme.genSourceFileLoad(elemStructName, loadContent);
     }
     return content;
 }

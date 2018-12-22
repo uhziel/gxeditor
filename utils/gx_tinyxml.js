@@ -1,10 +1,10 @@
 'use strict';
 
-let GXTinyXml = {};
-
+let GXCodeScheme = {};
+  
 //////////////////////////////////////////////////
 // HeaderFile
-GXTinyXml.genHeaderFile = (tmplNamespace, content, includeDirectives) => `
+GXCodeScheme.genHeaderFile = (tmplNamespace, content, includeDirectives) => `
 #ifndef __${tmplNamespace}__HEADER__
 #define __${tmplNamespace}__HEADER__
 
@@ -17,7 +17,7 @@ ${content}
 #endif
 `;
 
-GXTinyXml.genHeaderFileStruct = (elemStructName, content) => `
+GXCodeScheme.genHeaderFileStruct = (elemStructName, content) => `
 struct ${elemStructName}
 {
     ${elemStructName}();
@@ -27,7 +27,7 @@ ${content}
 };
 `;
 
-GXTinyXml.genHeaderFileStructRoot = (content) => `
+GXCodeScheme.genHeaderFileStructRoot = (content) => `
 struct Config
 {
     Config();
@@ -39,13 +39,13 @@ ${content}
 };
 `;
 
-GXTinyXml.genHeaderFileStructVar = (type, variable) =>
+GXCodeScheme.genHeaderFileStructVar = (type, variable) =>
 `    ${type} ${variable};
 `;
 
 //////////////////////////////////////////////////
 // SourceFile
-GXTinyXml.genSourceFile = (fileBaseName, tmplNamespace, content) => `
+GXCodeScheme.genSourceFile = (fileBaseName, tmplNamespace, content) => `
 #include "${fileBaseName}.h"
 
 namespace ${tmplNamespace} {
@@ -53,26 +53,26 @@ ${content}
 }
 `;
 
-GXTinyXml.genSourceFileCtor = (elemStructName, content) => `
+GXCodeScheme.genSourceFileCtor = (elemStructName, content) => `
 ${elemStructName}::${elemStructName}()
 ${content}{}
 `;
 
-GXTinyXml.genSourceFileCtorVar = (variable, defaultValue, isFirst) => 
+GXCodeScheme.genSourceFileCtorVar = (variable, defaultValue, isFirst) => 
 `    ${isFirst ? ':' : ','} ${variable}(${typeof defaultValue==='string' ? '\"'+defaultValue+'\"':defaultValue})
 `;
 
-GXTinyXml.genSourceFileLoad = (elemStructName, content) => `
+GXCodeScheme.genSourceFileLoad = (elemStructName, content) => `
 void ${elemStructName}::Load(TiXmlElement* node)
 {
 ${content}}
 `;
 
-GXTinyXml.genSourceFileLoadVar = (variable) =>
+GXCodeScheme.genSourceFileLoadVar = (variable) =>
 `    ::Read(node, "${variable}", ${variable});
 `;
 
-GXTinyXml.genSourceFileParse = (elemName) => `
+GXCodeScheme.genSourceFileParse = (elemName) => `
 void Config::Parse(const char* content)
 {
     if (NULL == content)
@@ -98,7 +98,7 @@ void Config::Parse(const char* content)
 }
 `;
 
-GXTinyXml.genSourceFileLoadFile = (elemName) => `
+GXCodeScheme.genSourceFileLoadFile = (elemName) => `
 void Config::LoadFile(const char* filename)
 {
     if (NULL == filename)
@@ -123,4 +123,4 @@ void Config::LoadFile(const char* filename)
 }
 `;
 
-module.exports = GXTinyXml;
+module.exports = GXCodeScheme;
