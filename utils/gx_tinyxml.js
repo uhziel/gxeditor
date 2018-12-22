@@ -4,8 +4,8 @@ let GXCodeScheme = {};
   
 //////////////////////////////////////////////////
 // HeaderFile
-GXCodeScheme.genHeaderFile = (tmplNamespace, content, includeDirectives) => `
-#ifndef __${tmplNamespace}__HEADER__
+GXCodeScheme.genHeaderFile = (tmplNamespace, content, includeDirectives) =>
+`#ifndef __${tmplNamespace}__HEADER__
 #define __${tmplNamespace}__HEADER__
 
 #include "ixmlread.h"
@@ -45,8 +45,8 @@ GXCodeScheme.genHeaderFileStructVar = (type, variable) =>
 
 //////////////////////////////////////////////////
 // SourceFile
-GXCodeScheme.genSourceFile = (fileBaseName, tmplNamespace, content) => `
-#include "${fileBaseName}.h"
+GXCodeScheme.genSourceFile = (fileBaseName, tmplNamespace, content) =>
+`#include "${fileBaseName}.h"
 
 namespace ${tmplNamespace} {
 ${content}
