@@ -74,12 +74,12 @@ Xonomy.js2xml=function(js) {
 	if(js.type=="text") {
 		return Xonomy.xmlEscape(js.value);
 	} else if(js.type=="attribute") {
-		return js.name+"='"+Xonomy.xmlEscape(js.value)+"'";
+		return js.name+'="'+Xonomy.xmlEscape(js.value)+'"';
 	} else if(js.type=="element") {
 		var xml="<"+js.name;
 		for(var i=0; i<js.attributes.length; i++) {
 			var att=js.attributes[i];
-			xml+=" "+att.name+"='"+Xonomy.xmlEscape(att.value)+"'";
+			xml+=" "+att.name+'="'+Xonomy.xmlEscape(att.value)+'"';
 		}
 		if(js.children.length>0) {
 			var hasText=false;
@@ -87,7 +87,7 @@ Xonomy.js2xml=function(js) {
 				var child=js.children[i];
 				if(child.type=="text") hasText=true;
 			}
-			if(hasText) xml+=" xml:space='preserve'";
+			if(hasText) xml+=' xml:space="preserve"';
 			xml+=">";
 			for(var i=0; i<js.children.length; i++) {
 				var child=js.children[i];
