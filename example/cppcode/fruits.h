@@ -1,4 +1,3 @@
-
 #ifndef __GXFruits__HEADER__
 #define __GXFruits__HEADER__
 
