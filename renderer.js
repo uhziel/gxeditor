@@ -109,9 +109,9 @@ function saveCurrentDoc() {
 function askSaveIfNeed() {
     if (gxpage.isCurFileSaved) return;
     const response = remote.dialog.showMessageBox(remote.getCurrentWindow(), {
-        message: 'Do you want to save the current document?',
+        message: '你想要保存当前文档吗？',
         type: 'question',
-        buttons: ['Yes', 'No']
+        buttons: ['是', '否']
     });
     if (response == 0) saveCurrentDoc();
 }
