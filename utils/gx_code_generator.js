@@ -34,10 +34,6 @@ GXCodeGenerator.prototype.gen = function () {
         const codeGenerator = new GXCodeGenerator(child, true);
         codeGenerator.gen();
     }
-
-    if (!this.sharedTemplate) {
-        shell.showItemInFolder(this.cppCodePath);
-    }
 }
 
 GXCodeGenerator.prototype.genFromTemplate = function (tmplFilePath) {
@@ -62,6 +58,10 @@ GXCodeGenerator.prototype.genFromTemplate = function (tmplFilePath) {
 
     fs.writeFileSync(headerFilePath, headerContent);
     fs.writeFileSync(sourceFilePath, sourceContent);
+
+    if (!this.sharedTemplate) {
+        shell.showItemInFolder(headerFilePath);
+    }
 }
 
 GXCodeGenerator.prototype.genHeaderStruct = function (template, elemName, isRoot)
