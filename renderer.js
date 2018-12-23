@@ -157,7 +157,7 @@ function fileOnLoad() {
         Xonomy.render(xmlText, editor, spec);
     } catch(error) {
         editor.innerHTML = "";
-        remote.dialog.showErrorBox('xml文件解析错误', 'xml文件解析出错，请在浏览器中打开检查具体错误问题。当前路径已拷贝到剪切板。');
+        remote.dialog.showErrorBox('xml文件解析错误', '请在浏览器中打开当前文件检查具体问题。文件路径已拷贝到剪切板。');
         clipboard.writeText(currentFilePath);
         console.error(error);
     }
