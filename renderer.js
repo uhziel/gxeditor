@@ -2,7 +2,7 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 
-const { ipcRenderer, remote } = require('electron');
+const { ipcRenderer, remote, clipboard } = require('electron');
 const { Menu } = remote;
 const GXTemplate = require('./utils/gx_template');
 const GXPage = require('./gxpage.js');
@@ -95,7 +95,12 @@ function saveCurrentDoc() {
     let curFilePath = gxpage.curProjectConfig.get('curFilePath');
     if (curFilePath) {
         const txtSave = Xonomy.harvest();
-        gxeditor.writeXMLToFile(curFilePath, txtSave);
+        const writeResult = gxeditor.writeXMLToFile(curFilePath, txtSave);
+        if (!writeResult) {
+            remote.dialog.showErrorBox('保存文件失败', '请先将当前文件改为可写或版本工具解锁。文件路径已拷贝到剪切板。');
+            clipboard.writeText(curFilePath);
+            return;
+        }
         gxpage.isCurFileSaved = true;
         document.title = gxpage.genAppTitle();
     }

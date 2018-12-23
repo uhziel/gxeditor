@@ -17,8 +17,13 @@ gxeditor.writeXMLToFile = function (filename, content) {
     let beautifulText = format(content, { eol: "\r\n" });
     let buffer = iconv.encode(beautifulText, 'gbk');
     let head = '<?xml version="1.0" encoding="GB2312"?>\n';
-    fs.writeFileSync(filename, head, { flag: 'w' });
-    fs.writeFileSync(filename, buffer, { flag: 'a' });
+    try {
+        fs.writeFileSync(filename, head, { flag: 'w' });
+        fs.writeFileSync(filename, buffer, { flag: 'a' });
+        return true;
+    } catch(err) {
+        return false;
+    }
 }
 
 ///////////////////////////////////////
