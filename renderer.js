@@ -117,15 +117,15 @@ function askSaveIfNeed() {
 }
 
 function fileOnLoad() {
-    const currentFile = gxpage.curProjectConfig.get('curFilePath');
-    if (typeof currentFile !== 'string') {
-        let editor = document.getElementById("editor");
+    let editor = document.getElementById("editor");
+    const currentFilePath = gxpage.curProjectConfig.get('curFilePath');
+    if (typeof currentFilePath !== 'string') {
         editor.innerHTML = "";
         return;
     }
-    const xmlText = gxeditor.readXMLFromFile(currentFile);
+    const xmlText = gxeditor.readXMLFromFile(currentFilePath);
 
-    const tmplFilePath = gxpage.getTemplatePath(currentFile);
+    const tmplFilePath = gxpage.getTemplatePath(currentFilePath);
     const templateConfig = new GXTemplate(tmplFilePath);
    
     const spec = gxeditor.genDocSpec(templateConfig.data);
@@ -152,7 +152,13 @@ function fileOnLoad() {
         };
     }
 
-    let editor = document.getElementById("editor");
     gxeditor.setViewModeEasy();
-    Xonomy.render(xmlText, editor, spec);
+    try {
+        Xonomy.render(xmlText, editor, spec);
+    } catch(error) {
+        editor.innerHTML = "";
+        remote.dialog.showErrorBox('xml文件解析错误', 'xml文件解析出错，请在浏览器中打开检查具体错误问题。当前路径已拷贝到剪切板。');
+        clipboard.writeText(currentFilePath);
+        console.error(error);
+    }
 }
