@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const GXCodeScheme = require('./gx_tinyxml');
-const {shell} = require('electron');
+const {ipcRenderer} = require('electron');
 const GXTemplate = require('./gx_template');
 
 //gx_editor -> GxEditor
@@ -60,7 +60,7 @@ GXCodeGenerator.prototype.genFromTemplate = function (tmplFilePath) {
     fs.writeFileSync(sourceFilePath, sourceContent);
 
     if (!this.sharedTemplate) {
-        shell.showItemInFolder(headerFilePath);
+        ipcRenderer.send('reqaction', 'showItemInFolder', headerFilePath);
     }
 }
 

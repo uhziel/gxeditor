@@ -1,6 +1,6 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow } = require('electron')
-const { Menu, ipcMain } = require('electron');
+const { Menu, ipcMain, shell } = require('electron');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -178,6 +178,9 @@ ipcMain.on('reqaction', (event, arg, arg1, arg2) => {
     case 'exit':
       safeExit = true;
       app.quit();//退出程序
+      break;
+    case 'showItemInFolder':
+      shell.showItemInFolder(arg1);
       break;
   }
 });
