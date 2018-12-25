@@ -1,5 +1,5 @@
 {
-    "example": {
+    "test": {
         "cnName": "示例",
         "desc": "属性展示了目前支持的各数据类型。",
         "children": [ "commodities", "items" ],
@@ -36,10 +36,12 @@
                 "default": 1
             },
             "file": {
-                "type": "FILE"
+                "type": "FILE",
+                "default": ""
             },
             "sound": {
-                "type": "SOUND"
+                "type": "SOUND",
+                "default": ""
             }
         }
     },
@@ -87,6 +89,7 @@
             "icon": {
                 "cnName": "图标",
                 "type": "IMAGE",
+                "default": "",
                 "optional": true
             }
         }

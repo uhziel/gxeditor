@@ -122,10 +122,11 @@ GXCodeGenerator.prototype.genHeaderStructVarElem = function (template, elemName)
 
 GXCodeGenerator.prototype.genHeaderStructVarAttr = function (attrName, attr) {
     let type = '';
-    if (attr.type == 'INT') {
+    if (attr.type == 'INT' || attr.type == 'ENUM' || attr.type == 'REF') {
         type = 'int';
     }
-    else if (attr.type == 'STRING') {
+    else if (attr.type == 'STRING' || attr.type == 'IMAGE' || attr.type == 'FILE'
+    || attr.type == 'SOUND' || attr.type == 'DATETIME') {
         type = 'std::string';
     }
     else if (attr.type == 'DOUBLE') {
