@@ -3,6 +3,7 @@
         "${templateDirPath}/__share__/fruit.json"
     ],
     "fruits": {
+        "cnName": "水果s",
         "children": [ "fruit" ]
     }
 } 

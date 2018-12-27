@@ -1,37 +1,46 @@
 {
     "fruit": {
+        "cnName": "水果",
+        "desc": "即将上架的水果",
         "children": [ "energy" ],
         "multi": true,
         "optional": true,
         "attributes": {
             "name": {
+                "cnName": "名字",
                 "type": "STRING",
                 "default": ""
             },
             "price": {
+                "cnName": "价格",
                 "type": "INT",
                 "default": 1,
                 "min": 1
             },
             "per_sale_time": {
+                "cnName": "预售时间",
                 "type": "DATETIME",
                 "default": ""
             }
         }
     },
     "energy": {
+        "cnName": "热量",
         "attributes": {
             "carbohydrates": {
+                "cnName": "碳水化合物",
                 "type": "DOUBLE",
                 "default": 0.0,
                 "precision": 0.01
             },
             "fat": {
+                "cnName": "脂肪",
                 "type": "DOUBLE",
                 "default": 0.0,
                 "precision": 0.01
             },
             "protein": {
+                "cnName": "蛋白质",
                 "type": "DOUBLE",
                 "default": 0.0,
                 "precision": 0.01
