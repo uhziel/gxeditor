@@ -1,7 +1,7 @@
 #ifndef __GXShare__HEADER__
 #define __GXShare__HEADER__
 
-#include "ixmlread.h"
+#include "gx_utils.h"
 
 namespace GXShare {
 
@@ -23,6 +23,7 @@ struct Fruit
     Energy energy;
     std::string name;
     int price;
+    GXDateTime per_sale_time;
 
     void Load(TiXmlElement* node);
 };

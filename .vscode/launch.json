@@ -12,6 +12,19 @@
         },
         "args" : ["."],
         "env": {"GXEDITOR_DEBUG": "1"}
-      }
+      },
+      {
+        "name": "(lldb) Launch",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/example/proj_read_config/read_config",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${workspaceFolder}/example/proj_read_config/",
+        "environment": [],
+        "externalConsole": true,
+        "MIMode": "lldb",
+        "miDebuggerPath": "/Applications/Xcode.app/Contents/Developer/usr/bin/lldb-mi"
+    }
     ]
   }
