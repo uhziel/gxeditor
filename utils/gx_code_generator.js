@@ -133,7 +133,7 @@ GXCodeGenerator.prototype.genHeaderStructVarAttr = function (attrName, attr) {
         type = 'double';
     }
     else if (attr.type == 'DATETIME') {
-        time = 'GXDateTime';
+        type = 'GXDateTime';
     }
     else {
         type = attr.type;
