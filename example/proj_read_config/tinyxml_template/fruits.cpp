@@ -1,4 +1,3 @@
-
 #include "fruits.h"
 
 namespace GXFruits {

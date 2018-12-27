@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="GB2312"?>
 <fruits>
-    <fruit name='banana' price='10'>
-        <energy carbohydrates='22.84' fat='0.33' protein='1.09' />
+    <fruit name="香蕉" price="10" per_sale_time="2018-12-27 00:11:01">
+        <energy carbohydrates="22.84" fat="0.33" protein="1.09" />
     </fruit>
-    <fruit name='pear' price='9' />
+    <fruit name="苹果" price="9">
+        <energy carbohydrates="0" fat="0" protein="0" />
+    </fruit>
 </fruits>

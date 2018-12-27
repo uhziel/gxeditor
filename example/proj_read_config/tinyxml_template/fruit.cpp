@@ -1,4 +1,3 @@
-
 #include "fruit.h"
 
 namespace GXShare {

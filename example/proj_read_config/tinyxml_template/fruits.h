@@ -1,8 +1,7 @@
-
 #ifndef __GXFruits__HEADER__
 #define __GXFruits__HEADER__
 
-#include "ixmlread.h"
+#include "gx_utils.h"
 #include "fruit.h"
 
 namespace GXFruits {

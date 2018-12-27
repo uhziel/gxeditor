@@ -12,6 +12,10 @@
                 "type": "INT",
                 "default": 1,
                 "min": 1
+            },
+            "per_sale_time": {
+                "type": "DATETIME",
+                "default": ""
             }
         }
     },

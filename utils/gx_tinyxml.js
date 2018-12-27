@@ -8,7 +8,7 @@ GXCodeScheme.genHeaderFile = (tmplNamespace, content, includeDirectives) =>
 `#ifndef __${tmplNamespace}__HEADER__
 #define __${tmplNamespace}__HEADER__
 
-#include "ixmlread.h"
+#include "gx_utils.h"
 ${includeDirectives}
 namespace ${tmplNamespace} {
 ${content}

@@ -126,11 +126,14 @@ GXCodeGenerator.prototype.genHeaderStructVarAttr = function (attrName, attr) {
         type = 'int';
     }
     else if (attr.type == 'STRING' || attr.type == 'IMAGE' || attr.type == 'FILE'
-    || attr.type == 'SOUND' || attr.type == 'DATETIME') {
+    || attr.type == 'SOUND') {
         type = 'std::string';
     }
     else if (attr.type == 'DOUBLE') {
         type = 'double';
+    }
+    else if (attr.type == 'DATETIME') {
+        time = 'GXDateTime';
     }
     else {
         type = attr.type;

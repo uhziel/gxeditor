@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="GB2312"?>
 <fruits>
-    <fruit name="香蕉" price="10">
+    <fruit name="香蕉" price="10" per_sale_time="2018-12-27 00:11:01">
         <energy carbohydrates="22.84" fat="0.33" protein="1.09" />
     </fruit>
     <fruit name="苹果" price="9">

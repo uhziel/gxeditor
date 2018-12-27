@@ -1,9 +1,20 @@
-#ifndef IXML_READ
-#define IXML_READ
+#ifndef __GX_UTILS_HEADER__
+#define __GX_UTILS_HEADER__
 
 #include "tinyxml/tinyxml.h"
 #include <string>
 #include <vector>
+#include <ctime>
+
+struct GXDateTime
+{
+    GXDateTime();
+    GXDateTime(const std::string& _str);
+    void Set(const std::string& _str);
+
+    std::string str;
+    time_t value;
+};
 
 inline void Read(TiXmlElement* node, const char* name, int& value)
 {
@@ -36,6 +47,17 @@ inline void Read(TiXmlElement* node, const char* name, double& value)
     }
 
     value = atof(str);
+}
+
+inline void Read(TiXmlElement* node, const char* name, GXDateTime& value)
+{
+    const char* str = node->Attribute(name);
+    if (NULL == str)
+    {
+        return;
+    }
+
+    value.Set(str);
 }
 
 template <typename T>

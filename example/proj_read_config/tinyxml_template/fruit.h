@@ -1,4 +1,3 @@
-
 #ifndef __GXShare__HEADER__
 #define __GXShare__HEADER__
 
