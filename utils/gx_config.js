@@ -4,9 +4,12 @@ const fs = require('fs');
 
 function GXConfig(path) {
     this.path = path;
+    this.data = {};
 
-    const text = fs.readFileSync(path, "utf8");
-    this.data = JSON.parse(text);
+    if (fs.existsSync(path)) {
+        const text = fs.readFileSync(path, "utf8");
+        this.data = JSON.parse(text);
+    }
 }
 
 GXConfig.prototype.get = function (key) {

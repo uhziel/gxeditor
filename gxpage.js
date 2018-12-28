@@ -2,16 +2,17 @@
 
 const path = require('path');
 const fs = require('fs');
-const Config = require('./utils/gx_config');
+const GXConfig = require('./utils/gx_config');
+const { remote } = require('electron');
 
 function GXPage() {
-    const configPath = path.join(__dirname, `config.json`);
-    this.config = new Config(configPath);
+    const configPath = path.join(remote.app.getPath('userData'), `config.json`);
+    this.config = new GXConfig(configPath);
     const curProjectPath = this.config.get('projectPath');
 
     if (typeof curProjectPath === 'string') {
         const curProjectConfigPath = path.join(curProjectPath, 'gxproject.json');
-        this.curProjectConfig = new Config(curProjectConfigPath);
+        this.curProjectConfig = new GXConfig(curProjectConfigPath);
     } else {
         this.curProjectConfig = null;
     }
@@ -24,14 +25,25 @@ GXPage.prototype.switchProject = function (projectPath) {
     if (!fs.existsSync(curProjectConfigPath)) {
         return false;
     }
-    this.curProjectConfig = new Config(curProjectConfigPath);
+    this.curProjectConfig = new GXConfig(curProjectConfigPath);
     this.config.set('projectPath', projectPath);
+    this.config.set('curFilePath', null);
     this.isCurFileSaved = true;
     return true;
 }
 
 GXPage.prototype.switchFile = function (filePath) {
+    if (!this.config) {
+        return false;
+    }
 
+    if (!this.config.get('projectPath')) {
+        return false;
+    }
+
+    this.config.set('curFilePath', filePath);
+    this.isCurFileSaved = true;
+    return true;
 }
 
 GXPage.prototype.genAppTitle = function () {
@@ -42,7 +54,7 @@ GXPage.prototype.genAppTitle = function () {
     if (typeof curProjectPath === 'string') {
         projectName = path.basename(curProjectPath);
 
-        const curFilePath = this.curProjectConfig.get('curFilePath');
+        const curFilePath = this.config.get('curFilePath');
         if (typeof curFilePath === 'string') {
             fileName = curFilePath;
         }
@@ -75,6 +87,14 @@ GXPage.prototype.getDataDirPath = function () {
 
     const dataDirPath = path.join(curProjectPath, this.curProjectConfig.get('dataPath'));
     return dataDirPath;
+}
+
+GXPage.prototype.getCurFilePath = function () {
+    if (!this.config) {
+        return null;
+    }
+
+    return this.config.get('curFilePath');
 }
 
 module.exports = GXPage;

@@ -41,13 +41,18 @@ ipcRenderer.on('action', (event, arg) => {
                     fileOnLoad();
                     document.title = gxpage.genAppTitle(); 
                 } else {
-                    remote.dialog.showErrorBox('错误', '不是合法的工程目录，目录内必须带gxproject.json。');
+                    remote.dialog.showErrorBox('打开工程错误', '不是合法的工程目录，目录内必须带gxproject.json。');
                 }              
             }
             break;
         }
         case 'open':
+        {
             askSaveIfNeed();
+            if (!gxpage.curProjectConfig) {
+                remote.dialog.showErrorBox('打开文件错误', '请先打开项目(项目文件夹下需带gxproject.json)。');
+                break;
+            }
             const files = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
                 defaultPath: gxpage.getDataDirPath(),
                 filters: [
@@ -56,15 +61,15 @@ ipcRenderer.on('action', (event, arg) => {
                 properties: ['openFile']
             });
             if (files) {
-                gxpage.curProjectConfig.set('curFilePath', files[0]);
-                gxpage.isCurFileSaved = true;
-
-                fileOnLoad();
-                document.title = gxpage.genAppTitle();                
+                if (gxpage.switchFile(files[0])) {
+                    fileOnLoad();
+                    document.title = gxpage.genAppTitle();  
+                }  
             }
             break;
+        }
         case 'save':
-            saveCurrentDoc();
+            saveCurDoc();
             break;
         case 'exiting':
             askSaveIfNeed();
@@ -78,21 +83,23 @@ ipcRenderer.on('action', (event, arg) => {
             break;
         case 'genCppCode':
         {
-            const currentFilePath = gxpage.curProjectConfig.get('curFilePath');
-            const templatePath = gxpage.getTemplatePath(currentFilePath);
-            const generator = new CodeGenerator(templatePath);
-            generator.gen();
+            const curFilePath = gxpage.getCurFilePath();
+            if (curFilePath) {
+                const templatePath = gxpage.getTemplatePath(curFilePath);
+                const generator = new CodeGenerator(templatePath);
+                generator.gen();
+            }
             break;
         }
     }
 });
 
 //保存当前文档
-function saveCurrentDoc() {
+function saveCurDoc() {
     if (gxpage.isCurFileSaved) {
         return;
     }
-    let curFilePath = gxpage.curProjectConfig.get('curFilePath');
+    let curFilePath = gxpage.getCurFilePath();
     if (curFilePath) {
         const txtSave = Xonomy.harvest();
         const writeResult = gxeditor.writeXMLToFile(curFilePath, txtSave);
@@ -113,19 +120,19 @@ function askSaveIfNeed() {
         type: 'question',
         buttons: ['是', '否']
     });
-    if (response == 0) saveCurrentDoc();
+    if (response == 0) saveCurDoc();
 }
 
 function fileOnLoad() {
     let editor = document.getElementById("editor");
-    const currentFilePath = gxpage.curProjectConfig.get('curFilePath');
-    if (typeof currentFilePath !== 'string') {
+    const curFilePath = gxpage.getCurFilePath();
+    if (!curFilePath) {
         editor.innerHTML = "";
         return;
     }
-    const xmlText = gxeditor.readXMLFromFile(currentFilePath);
+    const xmlText = gxeditor.readXMLFromFile(curFilePath);
 
-    const tmplFilePath = gxpage.getTemplatePath(currentFilePath);
+    const tmplFilePath = gxpage.getTemplatePath(curFilePath);
 
     let templateConfig = null;
     try {
@@ -168,7 +175,7 @@ function fileOnLoad() {
     } catch(error) {
         editor.innerHTML = "";
         remote.dialog.showErrorBox('xml文件解析错误', '请在浏览器中打开当前文件检查具体问题。文件路径已拷贝到剪切板。');
-        clipboard.writeText(currentFilePath);
+        clipboard.writeText(curFilePath);
         console.error(error);
         return;
     }
