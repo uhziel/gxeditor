@@ -489,6 +489,9 @@ Xonomy.render=function(data, editor, docSpec) { //renders the contents of an edi
 	//Clear namespace cache:
 	Xonomy.namespaces={};
 
+	//Reset data
+	Xonomy.reset();
+
 	//Convert doc to a JavaScript object, if it isn't a JavaScript object already:
 	if(typeof(data)=="string") data=$.parseXML(data);
 	if(data.documentElement) data=Xonomy.xml2js(data);
@@ -1138,7 +1141,6 @@ Xonomy.toggleSubmenu=function(menuItem){
 	else { $menuItem.find(".submenu").first().slideDown("fast", function(){$menuItem.addClass("expanded");}); };
 }
 Xonomy.internalMenu=function(htmlID, items, harvest, getter, indices) {
-	Xonomy.harvestCache={};
 	indices = indices || [];
 	var fragments = items.map(function (item, i) {
 		Xonomy.verifyDocSpecMenuItem(item);
@@ -1172,7 +1174,6 @@ Xonomy.internalMenu=function(htmlID, items, harvest, getter, indices) {
 		: "";
 };
 Xonomy.attributeMenu=function(htmlID) {
-	Xonomy.harvestCache={};
 	var name=$("#"+htmlID).attr("data-name"); //obtain attribute's name
 	var elName=$("#"+htmlID).closest(".element").attr("data-name"); //obtain element's name
 	Xonomy.verifyDocSpecAttribute(elName, name);
@@ -1183,7 +1184,6 @@ Xonomy.attributeMenu=function(htmlID) {
 	return Xonomy.internalMenu(htmlID, spec.menu, Xonomy.harvestAttribute, getter);
 };
 Xonomy.elementMenu=function(htmlID) {
-	Xonomy.harvestCache={};
 	var elName=$("#"+htmlID).attr("data-name"); //obtain element's name
 	var spec=Xonomy.docSpec.elements[elName];
 	function getter(indices) {
@@ -1192,7 +1192,6 @@ Xonomy.elementMenu=function(htmlID) {
 	return Xonomy.internalMenu(htmlID, spec.menu, Xonomy.harvestElement, getter);
 };
 Xonomy.inlineMenu=function(htmlID) {
-	Xonomy.harvestCache={};
 	var elName=$("#"+htmlID).attr("data-name"); //obtain element's name
 	var spec=Xonomy.docSpec.elements[elName];
 	function getter(indices) {
@@ -1924,6 +1923,30 @@ Xonomy.goLeft=function(){
 //Self defined
 Xonomy.getDescendantElements = function(elemName) {
 	return Xonomy.harvestCache["xonomy1"].getDescendantElements(elemName);
+}
+Xonomy.reset = function() {
+	Xonomy.namespaces={};
+
+	Xonomy.lastIDNum=0;
+
+	Xonomy.harvestCache={};
+
+	Xonomy.lastClickWhat="";
+	Xonomy.notclick=false;
+	Xonomy.clearChars=false;
+
+	Xonomy.lastAskerParam=null;
+
+	Xonomy.wycLastID=0;
+	Xonomy.wycCache={};
+
+	Xonomy.draggingID=null;
+
+	Xonomy.warnings=[];
+
+	Xonomy.currentHtmlId=null;
+	Xonomy.currentFocus=null;
+	Xonomy.keyNav=false;
 }
 
 module.exports = Xonomy;
