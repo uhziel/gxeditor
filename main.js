@@ -45,6 +45,21 @@ function genMenu() {
     {
       label: '编辑',
       submenu: [
+        {
+          label: "撤销",
+          click() {
+            mainWindow.webContents.send('action', 'undo');
+          },
+          accelerator: 'CmdOrCtrl+Z'
+        },
+        {
+          label: "重做",
+          click() {
+            mainWindow.webContents.send('action', 'redo');
+          },
+          accelerator: 'CmdOrCtrl+Shift+Z'
+        },
+        { type: 'separator' },
         { label: "剪切", role: 'cut' },
         { label: "复制", role: 'copy' },
         { label: "粘贴", role: 'paste' },

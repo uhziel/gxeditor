@@ -69,18 +69,26 @@ ipcRenderer.on('action', (event, arg) => {
             break;
         }
         case 'save':
+        {
             saveCurDoc();
             break;
+        }
         case 'exiting':
+        {
             askSaveIfNeed();
             ipcRenderer.sendSync('reqaction', 'exit');
             break;
+        }
         case 'setViewModeRaw':
+        {
             gxeditor.setViewModeRaw();
             break;
+        }
         case 'setViewModeEasy':
+        {
             gxeditor.setViewModeEasy();
             break;
+        }
         case 'genCppCode':
         {
             const curFilePath = gxpage.getCurFilePath();
@@ -89,6 +97,16 @@ ipcRenderer.on('action', (event, arg) => {
                 const generator = new CodeGenerator(templatePath);
                 generator.gen();
             }
+            break;
+        }
+        case 'undo':
+        {
+            remote.getCurrentWindow().webContents.undo();
+            break;
+        }
+        case 'redo':
+        {
+            remote.getCurrentWindow().webContents.redo();
             break;
         }
     }
