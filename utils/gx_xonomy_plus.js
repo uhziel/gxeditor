@@ -44,6 +44,19 @@ Xonomy.deleteElementPlus = function(htmlID) {
     });
 };
 
+Xonomy.duplicateElementPlus = function(htmlID) {
+    const restoreInfo = Xonomy.duplicateElement(htmlID);
+
+    undoManager.add({
+        undo: function() {
+            Xonomy.deleteElement(restoreInfo.newHtmlID);
+        },
+        redo: function() {
+            Xonomy.duplicateElement(htmlID);
+        }
+    });
+};
+
 Xonomy.newAttributePlus = function(htmlID, parameter) {
     const restoreInfo = Xonomy.newAttribute(htmlID, parameter);
 

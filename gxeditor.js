@@ -346,7 +346,7 @@ gxeditor.genElementMenu = function (spec, elemName, elemSpec) {
     //action: 克隆
     elemSpec.menu.push({
         caption: "克隆",
-        action: Xonomy.duplicateElement,
+        action: Xonomy.duplicateElementPlus,
         actionParameter: null,
         hideIf: function (jsElement) {
             return tmpl.multi !== true;

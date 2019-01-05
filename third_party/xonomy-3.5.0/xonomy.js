@@ -1425,6 +1425,10 @@ Xonomy.duplicateElement=function(htmlID) {
 	Xonomy.changed();
 	$html.fadeIn();
 	window.setTimeout(function(){ Xonomy.setFocus($html.prop("id"), "openingTagName"); }, 100);
+	const restoreInfo = {
+		newHtmlID: 'd_' + htmlID
+	}
+	return restoreInfo;
 };
 Xonomy.moveElementUp=function(htmlID){
 	Xonomy.clickoff();
