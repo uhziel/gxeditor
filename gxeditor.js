@@ -227,7 +227,7 @@ gxeditor.genAttrMenu = function (attrName, attrSpec) {
     if (typeof tmpl !== 'undefined' && tmpl.optional === true) {
         attrSpec.menu.push({
             caption: "删除",
-            action: Xonomy.deleteAttribute,
+            action: Xonomy.deleteAttributePlus,
             actionParameter: null,
             hideIf: function (jsAttribute) { return false }
         });
@@ -334,7 +334,7 @@ gxeditor.genElementMenu = function (spec, elemName, elemSpec) {
             const attrCnName = gxeditor.getCnName(attrName, attrSpec.tmpl);
             let menuAction = {
                 caption: `en: 添加属性 ${attrName}|cn: 添加属性 ${attrCnName}`,
-                action: Xonomy.newAttribute,
+                action: Xonomy.newAttributePlus,
                 actionParameter: { name: attrName, value: defaultString },
                 hideIf: function (jsElement) { return jsElement.hasAttribute(attrName); }
             };

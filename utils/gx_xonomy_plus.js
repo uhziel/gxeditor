@@ -31,6 +31,32 @@ Xonomy.deleteElementPlus = function(htmlID) {
     });
 }
 
+Xonomy.newAttributePlus = function(htmlID, parameter) {
+    const restoreInfo = Xonomy.newAttribute(htmlID, parameter);
+
+    undoManager.add({
+        undo: function() {
+            Xonomy.deleteAttribute(restoreInfo.childHtmlID);
+        },
+        redo: function() {
+            Xonomy.newAttribute(htmlID, restoreInfo.html);
+        }
+    });
+}
+
+Xonomy.deleteAttributePlus = function(htmlID) {
+    const restoreInfo = Xonomy.deleteAttribute(htmlID);
+
+    undoManager.add({
+        undo: function() {
+            Xonomy.newAttribute(restoreInfo.parentHtmlID, restoreInfo.html);
+        },
+        redo: function() {
+            Xonomy.deleteAttribute(htmlID);
+        }
+    });
+}
+
 Xonomy.undo = function() {
     undoManager.undo();
 }

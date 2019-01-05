@@ -1218,6 +1218,12 @@ Xonomy.deleteAttribute=function(htmlID, parameter) {
 	obj.parentNode.removeChild(obj);
 	Xonomy.changed();
 	window.setTimeout(function(){ Xonomy.setFocus(parentID, "openingTagName"); }, 100);
+
+	const restoreInfo = {
+		parentHtmlID: parentID,
+		html: obj.outerHTML
+	};
+	return restoreInfo;
 };
 Xonomy.deleteElement=function(htmlID, parameter) {
 	Xonomy.clickoff();
@@ -1239,18 +1245,37 @@ Xonomy.deleteElement=function(htmlID, parameter) {
 };
 Xonomy.newAttribute=function(htmlID, parameter) {
 	Xonomy.clickoff();
+	var jsElement=Xonomy.harvestElement(document.getElementById(htmlID));
 	var $element=$("#"+htmlID);
-	var html=Xonomy.renderAttribute({type: "attribute", name: parameter.name, value: parameter.value}, $element.data("name"));
+	var jsAttribute = null;
+	var html = null;
+	var isParaHtml = Xonomy.isHtml(parameter);
+	if (isParaHtml) {
+		html = parameter;
+		jsAttribute = Xonomy.harvestAttribute($(html)[0], jsElement);
+	} else {
+		jsAttribute = {type: "attribute", name: parameter.name, value: parameter.value};
+		html = Xonomy.renderAttribute(jsAttribute, $element.data("name"));
+	}
 	$("#"+htmlID+" > .tag.opening > .attributes").append(html);
 	Xonomy.changed();
-	//if the attribute we have just added is shy, force rollout:
-	if($("#"+htmlID+" > .tag.opening > .attributes").children("[data-name='"+parameter.name+"'].shy").toArray().length>0) {
-		if( !$("#"+htmlID).children(".tag.opening").children(".rollouter").hasClass("rolledout") ) {
-			$("#"+htmlID).children(".tag.opening").children(".rollouter").addClass("rolledout");
-			$("#"+htmlID).children(".tag.opening").children(".attributes").addClass("rolledout").hide().slideDown("fast");
+
+	if (!isParaHtml) {
+		//if the attribute we have just added is shy, force rollout:
+		if($("#"+htmlID+" > .tag.opening > .attributes").children("[data-name='"+parameter.name+"'].shy").toArray().length>0) {
+			if( !$("#"+htmlID).children(".tag.opening").children(".rollouter").hasClass("rolledout") ) {
+				$("#"+htmlID).children(".tag.opening").children(".rollouter").addClass("rolledout");
+				$("#"+htmlID).children(".tag.opening").children(".attributes").addClass("rolledout").hide().slideDown("fast");
+			}
 		}
+		if(parameter.value=="") Xonomy.click($(html).prop("id"), "attributeValue"); else Xonomy.setFocus($(html).prop("id"), "attributeValue");
 	}
-	if(parameter.value=="") Xonomy.click($(html).prop("id"), "attributeValue"); else Xonomy.setFocus($(html).prop("id"), "attributeValue");
+
+	const restoreInfo = {
+		childHtmlID: jsAttribute.htmlID,
+		html: html
+	}
+	return restoreInfo;
 };
 Xonomy.newElementChild=function(htmlID, parameter) {
 	Xonomy.clickoff();
@@ -1258,10 +1283,10 @@ Xonomy.newElementChild=function(htmlID, parameter) {
 	var jsChild = null;
 	var html = null;
 	var $html = null;
-	if (Xonomy.getDocumentType(parameter) === Xonomy.documentType.Html) {
+	if (Xonomy.isHtml(parameter)) {
 		html = parameter;
 		$html = $(html).hide();
-		jsChild = Xonomy.harvestElement($html[0]);
+		jsChild = Xonomy.harvestElement($html[0], jsElement);
 	} else {
 		jsChild = Xonomy.xml2js(parameter, jsElement);
 		html=Xonomy.renderElement(jsChild);
@@ -1975,16 +2000,8 @@ Xonomy.hasBubble = function() {
 	return document.getElementById("xonomyBubble") !== null;
 }
 
-Xonomy.documentType = {
-	Xml: 0,
-	Html: 1
-}
-Xonomy.getDocumentType = function(xml_as_string) {
-	if (xml_as_string.indexOf('xonomy') === -1) {
-		return Xonomy.documentType.Xml;
-	} else {
-		return Xonomy.documentType.Html;
-	}
+Xonomy.isHtml = function(parameter) {
+	return typeof parameter === 'string' && parameter.indexOf('xonomy') > -1;
 }
 
 module.exports = Xonomy;

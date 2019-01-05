@@ -5,7 +5,7 @@
         <commodity item_id="2" buy_price="100" sell_price="80" />
     </commodities>
     <items>
-        <item id="1" name="Ð¡ºìÒ©" icon="icons/potions (1).png" />
+        <item id="1" name="Ð¡ºìÒ©" />
         <item id="2" name="Ð¡À¶Ò©" icon="icons/blue1.png" />
         <item id="3" name="ÖÐºìÒ©" icon="icons/potions (5).png" />
         <item id="4" name="ÖÐÀ¶Ò©" icon="icons/potions (1).png" />
