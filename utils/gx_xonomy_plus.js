@@ -57,6 +57,33 @@ Xonomy.deleteAttributePlus = function(htmlID) {
     });
 }
 
+Xonomy.modifyAttributeValue = function(htmlID, val) {
+    const obj=document.getElementById(htmlID);
+    obj.setAttribute('data-value', val);
+    const oldVal = obj.getElementsByClassName('value')[0].textContent;
+    obj.getElementsByClassName('value')[0].textContent = val;
+    Xonomy.changed();
+    window.setTimeout(function(){Xonomy.clickoff(); Xonomy.setFocus(htmlID, 'attributeValue')}, 100);
+    
+    const restoreInfo = {
+        oldVal: oldVal
+    };
+    return restoreInfo;
+}
+
+Xonomy.modifyAttributeValuePlus = function(htmlID, val) {
+    const restoreInfo = Xonomy.modifyAttributeValue(htmlID, val);
+
+    undoManager.add({
+        undo: function() {
+            Xonomy.modifyAttributeValue(htmlID, restoreInfo.oldVal);
+        },
+        redo: function() {
+            Xonomy.modifyAttributeValue(htmlID, val);
+        }
+    });
+}
+
 Xonomy.undo = function() {
     undoManager.undo();
 }

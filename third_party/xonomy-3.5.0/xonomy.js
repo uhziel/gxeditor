@@ -865,11 +865,7 @@ Xonomy.click=function(htmlID, what) {
 				document.body.appendChild(Xonomy.makeBubble(content)); //create bubble
 				Xonomy.showBubble($("#"+htmlID+" > .valueContainer > .value")); //anchor bubble to value
 				Xonomy.answer=function(val) {
-					var obj=document.getElementById(htmlID);
-					var html=Xonomy.renderAttribute({type: "attribute", name: name, value: val}, elName);
-					$(obj).replaceWith(html);
-					Xonomy.changed();
-					window.setTimeout(function(){Xonomy.clickoff(); Xonomy.setFocus($(html).prop("id"), what)}, 100);
+					Xonomy.modifyAttributeValuePlus(htmlID, val);
 				};
 			}
 		}
