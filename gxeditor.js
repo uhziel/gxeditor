@@ -356,7 +356,7 @@ gxeditor.genElementMenu = function (spec, elemName, elemSpec) {
     //action: 
     elemSpec.menu.push({
         caption: "注释",
-        action: Xonomy.newElementChildAtTop,
+        action: Xonomy.newElementChildAtTopPlus,
         actionParameter: `<comment>你的注释</comment>`,
         hideIf: function (jsElement) {
             return jsElement.hasChildElement("comment");
@@ -457,7 +457,7 @@ gxeditor.genDocSpec = function (xmlTmpl) {
         menu: [
             {
                 caption: "删除",
-                action: Xonomy.deleteElement,
+                action: Xonomy.deleteElementPlus,
                 actionParameter: null
             }
         ],

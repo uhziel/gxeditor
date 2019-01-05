@@ -1305,15 +1305,33 @@ Xonomy.newElementChild=function(htmlID, parameter) {
 Xonomy.newElementChildAtTop=function(htmlID, parameter) {
 	Xonomy.clickoff();
 	var jsElement=Xonomy.harvestElement(document.getElementById(htmlID));
-	var html=Xonomy.renderElement(Xonomy.xml2js(parameter, jsElement));
-	var $html=$(html).hide();
+	var jsChild = null;
+	var html = null;
+	var $html = null;
+	if (Xonomy.isHtml(parameter)) {
+		html = parameter;
+		$html = $(html).hide();
+		jsChild = Xonomy.harvestElement($html[0], jsElement);
+	} else {
+		jsChild = Xonomy.xml2js(parameter, jsElement);
+		html=Xonomy.renderElement(jsChild);
+		$html=$(html).hide();
+	}
+
 	$("#"+htmlID+" > .children").prepend($html);
 	Xonomy.plusminus(htmlID, true);
 	Xonomy.elementReorder($html.attr("id"));
 	Xonomy.changed();
 	$html.fadeIn();
 	window.setTimeout(function(){ Xonomy.setFocus($html.prop("id"), "openingTagName"); }, 100);
+
+	const restoreInfo = {
+		childHtmlID: jsChild.htmlID,
+		html: html
+	}
+	return restoreInfo;
 };
+
 Xonomy.elementReorder=function(htmlID){
 	var that=document.getElementById(htmlID);
 	var elSpec=Xonomy.docSpec.elements[that.getAttribute("data-name")];
@@ -1966,7 +1984,8 @@ Xonomy.goLeft=function(){
 //Self defined
 Xonomy.getDescendantElements = function(elemName) {
 	return Xonomy.harvestCache["xonomy1"].getDescendantElements(elemName);
-}
+};
+
 Xonomy.reset = function() {
 	Xonomy.namespaces={};
 
@@ -1990,14 +2009,14 @@ Xonomy.reset = function() {
 	Xonomy.currentHtmlId=null;
 	Xonomy.currentFocus=null;
 	Xonomy.keyNav=false;
-}
+};
 
 Xonomy.hasBubble = function() {
 	return document.getElementById("xonomyBubble") !== null;
-}
+};
 
 Xonomy.isHtml = function(parameter) {
 	return typeof parameter === 'string' && parameter.indexOf('xonomy') > -1;
-}
+};
 
 module.exports = Xonomy;
