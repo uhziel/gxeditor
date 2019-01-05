@@ -101,12 +101,20 @@ ipcRenderer.on('action', (event, arg) => {
         }
         case 'undo':
         {
-            remote.getCurrentWindow().webContents.undo();
+            if (Xonomy.hasBubble()) {
+                remote.getCurrentWindow().webContents.undo();
+            } else {
+                Xonomy.undo();
+            }
             break;
         }
         case 'redo':
         {
-            remote.getCurrentWindow().webContents.redo();
+            if (Xonomy.hasBubble()) {
+                remote.getCurrentWindow().webContents.redo();
+            } else {
+                Xonomy.redo();
+            }
             break;
         }
     }
@@ -190,6 +198,15 @@ function fileOnLoad() {
     gxeditor.setViewModeEasy();
     try {
         Xonomy.render(xmlText, editor, spec);
+        let mo = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                console.log(mutation);
+            })
+        });
+        mo.observe(editor, {
+            childList: true,
+            subtree: true
+        });
     } catch(error) {
         editor.innerHTML = "";
         remote.dialog.showErrorBox('xml文件解析错误', '请在浏览器中打开当前文件检查具体问题。文件路径已拷贝到剪切板。');

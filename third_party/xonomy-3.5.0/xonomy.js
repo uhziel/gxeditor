@@ -1231,6 +1231,11 @@ Xonomy.deleteElement=function(htmlID, parameter) {
 			window.setTimeout(function(){ Xonomy.setFocus(parentID, "openingTagName");  }, 100);
 		}
 	});
+	let restoreInfo = {
+		parentHtmlID: parentID,
+		html: obj.outerHTML
+	}
+	return restoreInfo;
 };
 Xonomy.newAttribute=function(htmlID, parameter) {
 	Xonomy.clickoff();
@@ -1250,14 +1255,31 @@ Xonomy.newAttribute=function(htmlID, parameter) {
 Xonomy.newElementChild=function(htmlID, parameter) {
 	Xonomy.clickoff();
 	var jsElement=Xonomy.harvestElement(document.getElementById(htmlID));
-	var html=Xonomy.renderElement(Xonomy.xml2js(parameter, jsElement));
-	var $html=$(html).hide();
+	var jsChild = null;
+	var html = null;
+	var $html = null;
+	if (Xonomy.getDocumentType(parameter) === Xonomy.documentType.Html) {
+		html = parameter;
+		$html = $(html).hide();
+		jsChild = Xonomy.harvestElement($html[0]);
+	} else {
+		jsChild = Xonomy.xml2js(parameter, jsElement);
+		html=Xonomy.renderElement(jsChild);
+		$html=$(html).hide();
+	}
+
 	$("#"+htmlID+" > .children").append($html);
 	Xonomy.plusminus(htmlID, true);
 	Xonomy.elementReorder($html.attr("id"));
 	Xonomy.changed();
 	$html.fadeIn();
 	window.setTimeout(function(){ Xonomy.setFocus($html.prop("id"), "openingTagName"); }, 100);
+
+	const restoreInfo = {
+		childHtmlID: jsChild.htmlID,
+		html: html
+	}
+	return restoreInfo;
 };
 Xonomy.newElementChildAtTop=function(htmlID, parameter) {
 	Xonomy.clickoff();
@@ -1947,6 +1969,22 @@ Xonomy.reset = function() {
 	Xonomy.currentHtmlId=null;
 	Xonomy.currentFocus=null;
 	Xonomy.keyNav=false;
+}
+
+Xonomy.hasBubble = function() {
+	return document.getElementById("xonomyBubble") !== null;
+}
+
+Xonomy.documentType = {
+	Xml: 0,
+	Html: 1
+}
+Xonomy.getDocumentType = function(xml_as_string) {
+	if (xml_as_string.indexOf('xonomy') === -1) {
+		return Xonomy.documentType.Xml;
+	} else {
+		return Xonomy.documentType.Html;
+	}
 }
 
 module.exports = Xonomy;
