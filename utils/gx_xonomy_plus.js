@@ -97,6 +97,35 @@ Xonomy.modifyAttributeValuePlus = function(htmlID, val) {
     });
 };
 
+Xonomy.modifyText = function(htmlID, val) {
+    const obj=document.getElementById(htmlID);
+    const parentElem=obj.parentNode.parentNode;
+    const oldVal = obj.getAttribute('data-value');
+    obj.setAttribute('data-value', val);
+    $(obj.getElementsByClassName('word')[0]).replaceWith(Xonomy.chewText(val));
+
+    Xonomy.changed(Xonomy.harvestText(obj,Xonomy.harvestElement(parentElem)));
+    window.setTimeout(function(){Xonomy.clickoff(); Xonomy.setFocus(htmlID, 'text')}, 100);
+
+    const restoreInfo = {
+        oldVal: oldVal
+    };
+    return restoreInfo;
+};
+
+Xonomy.modifyTextPlus = function(htmlID, val) {
+    const restoreInfo = Xonomy.modifyText(htmlID, val);
+
+    undoManager.add({
+        undo: function() {
+            Xonomy.modifyText(htmlID, restoreInfo.oldVal);
+        },
+        redo: function() {
+            Xonomy.modifyText(htmlID, val);
+        }
+    });
+};
+
 Xonomy.undo = function() {
     undoManager.undo();
 };

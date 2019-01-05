@@ -883,12 +883,7 @@ Xonomy.click=function(htmlID, what) {
 				document.body.appendChild(Xonomy.makeBubble(content)); //create bubble
 				Xonomy.showBubble($("#"+htmlID+" > .value")); //anchor bubble to value
 				Xonomy.answer=function(val) {
-					var obj=document.getElementById(htmlID);
-					var jsText = {type: "text", value: val};
-					var html=Xonomy.renderText(jsText);
-					$(obj).replaceWith(html);
-					Xonomy.changed(Xonomy.harvestText(document.getElementById(jsText.htmlID)));
-					window.setTimeout(function(){Xonomy.clickoff(); Xonomy.setFocus($(html).prop("id"), what)}, 100);
+					Xonomy.modifyTextPlus(htmlID, val);
 				};
 			}
 		}
