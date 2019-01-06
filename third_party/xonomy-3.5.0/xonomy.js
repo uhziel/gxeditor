@@ -1965,31 +1965,6 @@ Xonomy.getDescendantElements = function(elemName) {
 	return Xonomy.harvestCache["xonomy1"].getDescendantElements(elemName);
 };
 
-Xonomy.reset = function() {
-	Xonomy.namespaces={};
-
-	Xonomy.lastIDNum=0;
-
-	Xonomy.harvestCache={};
-
-	Xonomy.lastClickWhat="";
-	Xonomy.notclick=false;
-	Xonomy.clearChars=false;
-
-	Xonomy.lastAskerParam=null;
-
-	Xonomy.wycLastID=0;
-	Xonomy.wycCache={};
-
-	Xonomy.draggingID=null;
-
-	Xonomy.warnings=[];
-
-	Xonomy.currentHtmlId=null;
-	Xonomy.currentFocus=null;
-	Xonomy.keyNav=false;
-};
-
 Xonomy.hasBubble = function() {
 	return document.getElementById("xonomyBubble") !== null;
 };

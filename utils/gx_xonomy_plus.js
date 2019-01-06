@@ -2,8 +2,34 @@
 
 const Xonomy = require('../third_party/xonomy-3.5.0/xonomy.js');
 const UndoManager = require('undo-manager');
-
 let undoManager = new UndoManager();
+
+Xonomy.reset = function() {
+	Xonomy.namespaces={};
+
+	Xonomy.lastIDNum=0;
+
+	Xonomy.harvestCache={};
+
+	Xonomy.lastClickWhat="";
+	Xonomy.notclick=false;
+	Xonomy.clearChars=false;
+
+	Xonomy.lastAskerParam=null;
+
+	Xonomy.wycLastID=0;
+	Xonomy.wycCache={};
+
+	Xonomy.draggingID=null;
+
+	Xonomy.warnings=[];
+
+	Xonomy.currentHtmlId=null;
+	Xonomy.currentFocus=null;
+    Xonomy.keyNav=false;
+    
+    undoManager.clear();
+};
 
 Xonomy.newElementChildPlus = function(htmlID, parameter) {
     const restoreInfo = Xonomy.newElementChild(htmlID, parameter);
