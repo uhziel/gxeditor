@@ -1661,9 +1661,7 @@ Xonomy.drop=function(ev) {
 	ev.preventDefault();
 	var node=document.getElementById(Xonomy.draggingID); //the thing we are moving
 	if($(ev.currentTarget).hasClass("layby")) {
-		$(node).hide();
-		$(".xonomy .layby > .content").append(node);
-		$(node).fadeIn(function(){ Xonomy.changed(); });
+		Xonomy.insertBeforePlus(node, null, $(".xonomy .layby > .content")[0]);
 	} else {
 		const referenceNode = ev.target.parentNode.nextSibling;
 		const referenceParentNode = ev.target.parentNode.parentNode;

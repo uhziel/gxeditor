@@ -29,14 +29,13 @@
   * Xonomy.newAttribute
   * Xonomy.newElementChild
   * Xonomy.newElementChildAtTop 这个是我加的
-  * Xonomy.newElementBefore
-  * Xonomy.newElementAfter
-  * Xonomy.replace
+  * Xonomy.newElementBefore 没实现undo
+  * Xonomy.newElementAfter 没实现undo
   * Xonomy.duplicateElement
-  * Xonomy.moveElementUp
-  * Xonomy.moveElementDown
-  * Xonomy.mergeWithPrevious
-  * Xonomy.mergeWithNext
+  * Xonomy.moveElementUp 没实现undo
+  * Xonomy.moveElementDown 没实现undo
+  * Xonomy.mergeWithPrevious 没实现undo
+  * Xonomy.mergeWithNext 没实现undo
 * 数据
   * Xonomy.docSpec 文档的规格
   * Xonomy.harvestCache js_surrogate的缓存
