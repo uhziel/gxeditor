@@ -4,9 +4,9 @@ let GXCodeScheme = {};
   
 //////////////////////////////////////////////////
 // HeaderFile
-GXCodeScheme.genHeaderFile = (tmplNamespace, content, includeDirectives) =>
-`#ifndef __${tmplNamespace}__HEADER__
-#define __${tmplNamespace}__HEADER__
+GXCodeScheme.genHeaderFile = (fileBaseName, tmplNamespace, content, includeDirectives) =>
+`#ifndef __${fileBaseName}__GXHEADER__
+#define __${fileBaseName}__GXHEADER__
 
 #include "gx_utils.h"
 ${includeDirectives}

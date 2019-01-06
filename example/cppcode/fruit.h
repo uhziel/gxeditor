@@ -1,5 +1,5 @@
-#ifndef __GXShare__HEADER__
-#define __GXShare__HEADER__
+#ifndef __fruit__GXHEADER__
+#define __fruit__GXHEADER__
 
 #include "gx_utils.h"
 

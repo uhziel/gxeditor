@@ -1,5 +1,5 @@
-#ifndef __GXFruits__HEADER__
-#define __GXFruits__HEADER__
+#ifndef __fruits__GXHEADER__
+#define __fruits__GXHEADER__
 
 #include "gx_utils.h"
 #include "fruit.h"

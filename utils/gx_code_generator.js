@@ -34,7 +34,7 @@ GXCodeGenerator.prototype.gen = function () {
         const codeGenerator = new GXCodeGenerator(child, true);
         codeGenerator.gen();
     }
-}
+};
 
 GXCodeGenerator.prototype.genFromTemplate = function (tmplFilePath) {
     const template = new GXTemplate(tmplFilePath);
@@ -48,10 +48,12 @@ GXCodeGenerator.prototype.genFromTemplate = function (tmplFilePath) {
     const isRoot = (this.sharedTemplate) ? false : true;
     const structContent = this.genHeaderStruct(template.data, fileBaseName, isRoot);
     const includeDirectives = getIncludeDirectives(template.data.__include__);
-    const headerContent = GXCodeScheme.genHeaderFile(tmplNamespace, structContent, includeDirectives);
+    const headerContent = GXCodeScheme.genHeaderFile(fileBaseName,
+        tmplNamespace, structContent, includeDirectives);
 
     const elemContent = this.genSourceElem(template.data, fileBaseName, isRoot);
-    const sourceContent = GXCodeScheme.genSourceFile(fileBaseName, tmplNamespace, elemContent);
+    const sourceContent = GXCodeScheme.genSourceFile(fileBaseName,
+        tmplNamespace, elemContent);
 
     const headerFilePath = path.resolve(this.cppCodePath, `${fileBaseName}.h`);
     const sourceFilePath = path.resolve(this.cppCodePath, `${fileBaseName}.cpp`);
@@ -62,7 +64,7 @@ GXCodeGenerator.prototype.genFromTemplate = function (tmplFilePath) {
     if (!this.sharedTemplate) {
         ipcRenderer.send('reqaction', 'showItemInFolder', headerFilePath);
     }
-}
+};
 
 GXCodeGenerator.prototype.genHeaderStruct = function (template, elemName, isRoot)
 {
@@ -105,7 +107,7 @@ GXCodeGenerator.prototype.genHeaderStruct = function (template, elemName, isRoot
     }
     
     return content;
-}
+};
 
 GXCodeGenerator.prototype.genHeaderStructVarElem = function (template, elemName) {
     let type = toPascal(elemName);
@@ -118,7 +120,7 @@ GXCodeGenerator.prototype.genHeaderStructVarElem = function (template, elemName)
     }
 
     return GXCodeScheme.genHeaderFileStructVar(type, elemName);
-}
+};
 
 GXCodeGenerator.prototype.genHeaderStructVarAttr = function (attrName, attr) {
     let type = '';
@@ -139,7 +141,7 @@ GXCodeGenerator.prototype.genHeaderStructVarAttr = function (attrName, attr) {
         type = attr.type;
     }
     return GXCodeScheme.genHeaderFileStructVar(type, attrName);
-}
+};
 
 GXCodeGenerator.prototype.genSourceElem = function (template, elemName, isRoot) {
     let content = '';
@@ -191,12 +193,12 @@ GXCodeGenerator.prototype.genSourceElem = function (template, elemName, isRoot) 
         content += GXCodeScheme.genSourceFileLoad(elemStructName, loadContent);
     }
     return content;
-}
+};
 
 function getTemplateDirPath(templatePath) {
     const index = templatePath.indexOf(templateDirName);
     return templatePath.slice(0, index + templateDirName.length);
-}
+};
 
 function getIncludeDirectives(__include__) {
     let includeDirectives = '';
@@ -210,6 +212,6 @@ function getIncludeDirectives(__include__) {
         includeDirectives += `#include "${basename}.h"\n`
     });
     return includeDirectives;
-}
+};
 
 module.exports = GXCodeGenerator;
