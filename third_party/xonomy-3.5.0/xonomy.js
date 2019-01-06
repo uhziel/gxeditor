@@ -1383,17 +1383,6 @@ Xonomy.newElementAfter=function(htmlID, parameter) {
 	$html.fadeIn();
 	window.setTimeout(function(){ Xonomy.setFocus($html.prop("id"), "openingTagName"); }, 100);
 };
-Xonomy.replace=function(htmlID, jsNode) {
-	var what=Xonomy.currentFocus;
-	Xonomy.clickoff();
-	var html="";
-	if(jsNode.type=="element") html=Xonomy.renderElement(jsNode);
-	if(jsNode.type=="attribute") html=Xonomy.renderAttribute(jsNode);
-	if(jsNode.type=="text") html=Xonomy.renderText(jsNode);
-	$("#"+htmlID).replaceWith(html);
-	Xonomy.changed();
-	window.setTimeout(function(){ Xonomy.setFocus($(html).prop("id"), what); }, 100);
-};
 Xonomy.editRaw=function(htmlID, parameter) {
 	var div=document.getElementById(htmlID);
 	var jsElement=Xonomy.harvestElement(div);
@@ -1676,9 +1665,10 @@ Xonomy.drop=function(ev) {
 		$(".xonomy .layby > .content").append(node);
 		$(node).fadeIn(function(){ Xonomy.changed(); });
 	} else {
-		$(node).hide();
-		$(ev.target.parentNode).replaceWith(node);
-		$(node).fadeIn(function(){ Xonomy.changed(); });
+		const referenceNode = ev.target.parentNode.nextSibling;
+		const referenceParentNode = ev.target.parentNode.parentNode;
+		Xonomy.insertBeforePlus(node, referenceNode, referenceParentNode);
+		$(ev.target.parentNode).remove();
 	}
 	Xonomy.openCloseLayby();
 	Xonomy.recomputeLayby();

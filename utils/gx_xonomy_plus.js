@@ -139,6 +139,27 @@ Xonomy.modifyTextPlus = function(htmlID, val) {
     });
 };
 
+Xonomy.insertBefore = function(node, referenceNode, referenceParentNode) {
+    $(node).hide();
+    referenceParentNode.insertBefore(node, referenceNode);
+    $(node).fadeIn(function(){ Xonomy.changed(); });
+};
+
+Xonomy.insertBeforePlus = function(node, referenceNode, referenceParentNode) {
+    let nextSibling = node.nextSibling;
+    let parentNode = node.parentNode;
+    Xonomy.insertBefore(node, referenceNode, referenceParentNode);
+
+    undoManager.add({
+        undo: function() {
+            Xonomy.insertBefore(node, nextSibling, parentNode);
+        },
+        redo: function() {
+            Xonomy.insertBefore(node, referenceNode, referenceParentNode);
+        }
+    });   
+};
+
 Xonomy.undo = function() {
     undoManager.undo();
 };
