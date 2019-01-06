@@ -792,13 +792,15 @@ Xonomy.plusminus=function(htmlID, forceExpand) {
 		if($element.hasClass("oneliner")) $children.fadeOut("fast", function(){ $element.addClass("collapsed"); });
 		else $children.slideUp("fast", function(){ $element.addClass("collapsed"); });
 	}
-	window.setTimeout(function(){
-		if($("#"+Xonomy.currentHtmlId+" .opening:visible").length>0) {
-			Xonomy.setFocus(Xonomy.currentHtmlId, "openingTagName");
-		} else {
-			Xonomy.setFocus(Xonomy.currentHtmlId, "childrenCollapsed");
-		}
-	}, 300);
+	if (Xonomy.keyNav) {
+		window.setTimeout(function(){
+			if($("#"+Xonomy.currentHtmlId+" > .opening:visible").length>0) {
+				Xonomy.setFocus(Xonomy.currentHtmlId, "openingTagName");
+			} else {
+				Xonomy.setFocus(Xonomy.currentHtmlId, "childrenCollapsed");
+			}
+		}, 300);
+	}
 };
 Xonomy.updateCollapsoid=function(htmlID) {
 	var $element=$("#"+htmlID);
