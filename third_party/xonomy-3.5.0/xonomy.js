@@ -1222,6 +1222,7 @@ Xonomy.deleteElement=function(htmlID, parameter) {
 	Xonomy.clickoff();
 	var obj=document.getElementById(htmlID);
 	var parentID=obj.parentNode.parentNode.id;
+	var nextSiblingHtmlID = Xonomy.getNextSiblingHtmlID(htmlID);
 	$(obj).fadeOut(function(){
 		var parentNode=obj.parentNode;
 		parentNode.removeChild(obj);
@@ -1232,7 +1233,8 @@ Xonomy.deleteElement=function(htmlID, parameter) {
 	});
 	let restoreInfo = {
 		parentHtmlID: parentID,
-		html: obj.outerHTML
+		html: obj.outerHTML,
+		anchorHtmlID: nextSiblingHtmlID
 	}
 	return restoreInfo;
 };
@@ -1270,7 +1272,11 @@ Xonomy.newAttribute=function(htmlID, parameter) {
 	}
 	return restoreInfo;
 };
-Xonomy.newElementChild=function(htmlID, parameter) {
+Xonomy.newElementChild=function(htmlID, parameter, anchorHtmlID) {
+	if (typeof anchorHtmlID === 'undefined') {
+		anchorHtmlID = null;
+	}
+
 	Xonomy.clickoff();
 	var jsElement=Xonomy.harvestElement(document.getElementById(htmlID));
 	var jsChild = null;
@@ -1286,36 +1292,12 @@ Xonomy.newElementChild=function(htmlID, parameter) {
 		$html=$(html).hide();
 	}
 
-	$("#"+htmlID+" > .children").append($html);
-	Xonomy.plusminus(htmlID, true);
-	Xonomy.elementReorder($html.attr("id"));
-	Xonomy.changed();
-	$html.fadeIn();
-	window.setTimeout(function(){ Xonomy.setFocus($html.prop("id"), "openingTagName"); }, 100);
-
-	const restoreInfo = {
-		childHtmlID: jsChild.htmlID,
-		html: html
-	}
-	return restoreInfo;
-};
-Xonomy.newElementChildAtTop=function(htmlID, parameter) {
-	Xonomy.clickoff();
-	var jsElement=Xonomy.harvestElement(document.getElementById(htmlID));
-	var jsChild = null;
-	var html = null;
-	var $html = null;
-	if (Xonomy.isHtml(parameter)) {
-		html = parameter;
-		$html = $(html).hide();
-		jsChild = Xonomy.harvestElement($html[0], jsElement);
+	if (document.getElementById(anchorHtmlID)) {
+		$("#"+anchorHtmlID).before($html);
 	} else {
-		jsChild = Xonomy.xml2js(parameter, jsElement);
-		html=Xonomy.renderElement(jsChild);
-		$html=$(html).hide();
+		$("#"+htmlID+" > .children").append($html);
 	}
-
-	$("#"+htmlID+" > .children").prepend($html);
+	
 	Xonomy.plusminus(htmlID, true);
 	Xonomy.elementReorder($html.attr("id"));
 	Xonomy.changed();

@@ -28,7 +28,6 @@
   * Xonomy.deleteElement
   * Xonomy.newAttribute
   * Xonomy.newElementChild
-  * Xonomy.newElementChildAtTop 这个是我加的
   * Xonomy.newElementBefore 没实现undo
   * Xonomy.newElementAfter 没实现undo
   * Xonomy.duplicateElement

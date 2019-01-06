@@ -45,14 +45,15 @@ Xonomy.newElementChildPlus = function(htmlID, parameter) {
 };
 
 Xonomy.newElementChildAtTopPlus = function(htmlID, parameter) {
-    const restoreInfo = Xonomy.newElementChildAtTop(htmlID, parameter);
+    const firstChildHtmlID = Xonomy.getFirstChildHtmlID(htmlID);
+    const restoreInfo = Xonomy.newElementChild(htmlID, parameter, firstChildHtmlID);
 
     undoManager.add({
         undo: function() {
             Xonomy.deleteElement(restoreInfo.childHtmlID);
         },
         redo: function() {
-            Xonomy.newElementChildAtTop(htmlID, restoreInfo.html);
+            Xonomy.newElementChild(htmlID, restoreInfo.html, firstChildHtmlID);
         }
     });
 };
@@ -62,7 +63,8 @@ Xonomy.deleteElementPlus = function(htmlID) {
 
     undoManager.add({
         undo: function() {
-            Xonomy.newElementChild(restoreInfo.parentHtmlID, restoreInfo.html);
+            Xonomy.newElementChild(restoreInfo.parentHtmlID, restoreInfo.html,
+                restoreInfo.anchorHtmlID);
         },
         redo: function() {
             Xonomy.deleteElement(htmlID);
@@ -193,5 +195,31 @@ Xonomy.undo = function() {
 Xonomy.redo = function() {
     undoManager.redo();
 };
+
+Xonomy.getNextSiblingHtmlID = function(htmlID) {
+	const obj=document.getElementById(htmlID);
+	const jsElement = Xonomy.harvestElement(obj);
+    const jsNextSibling = jsElement.getFollowingSibling();
+    if (jsNextSibling) {
+        return jsNextSibling.htmlID;
+    } else {
+        return null;
+    }
+};
+
+Xonomy.getFirstChildHtmlID = function(htmlID) {
+	const obj=document.getElementById(htmlID);
+    const jsElement = Xonomy.harvestElement(obj);
+    if (!jsElement) {
+        return null;
+    }
+    if (!jsElement.children) {
+        return null;
+    }
+    if (jsElement.children.length <= 0) {
+        return null;
+    }
+    return jsElement.children[0].htmlID;
+}
 
 module.exports = Xonomy;
