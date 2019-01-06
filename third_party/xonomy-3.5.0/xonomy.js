@@ -1643,11 +1643,13 @@ Xonomy.drop=function(ev) {
 	ev.preventDefault();
 	var node=document.getElementById(Xonomy.draggingID); //the thing we are moving
 	if($(ev.currentTarget).hasClass("layby")) {
-		Xonomy.insertBeforePlus(node, null, $(".xonomy .layby > .content")[0]);
+		Xonomy.insertBeforePlus(Xonomy.draggingID, null, null);
 	} else {
-		const referenceNode = ev.target.parentNode.nextSibling;
-		const referenceParentNode = ev.target.parentNode.parentNode;
-		Xonomy.insertBeforePlus(node, referenceNode, referenceParentNode);
+		const anchorNode = ev.target.parentNode.nextSibling;
+		const anchorHtmlID = anchorNode ? anchorNode.id : null;
+		const anchorParentNode = ev.target.parentNode.parentNode.parentNode;
+		const anchorParentHtmlID = anchorParentNode ? anchorParentNode.id : null;
+		Xonomy.insertBeforePlus(Xonomy.draggingID, anchorHtmlID, anchorParentHtmlID);
 		$(ev.target.parentNode).remove();
 	}
 	Xonomy.openCloseLayby();

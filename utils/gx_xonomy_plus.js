@@ -167,23 +167,28 @@ Xonomy.modifyTextPlus = function(htmlID, val) {
     });
 };
 
-Xonomy.insertBefore = function(node, referenceNode, referenceParentNode) {
-    $(node).hide();
-    referenceParentNode.insertBefore(node, referenceNode);
-    $(node).fadeIn(function(){ Xonomy.changed(); });
+Xonomy.insertBefore = function(htmlID, anchorHtmlID, anchorParentHtmlID) {
+    const $node = $(`#${htmlID}`);
+    const anchorNode = anchorHtmlID ? $(`#${anchorHtmlID}`)[0] : null;
+    const anchorParentNode = anchorParentHtmlID ? $(`#${anchorParentHtmlID} > .children`)[0] :
+        $(".xonomy .layby > .content")[0];
+
+    $node.hide();
+    anchorParentNode.insertBefore($node[0], anchorNode);
+    $node.fadeIn(function(){ Xonomy.changed(); });
 };
 
-Xonomy.insertBeforePlus = function(node, referenceNode, referenceParentNode) {
-    let nextSibling = node.nextSibling;
-    let parentNode = node.parentNode;
-    Xonomy.insertBefore(node, referenceNode, referenceParentNode);
+Xonomy.insertBeforePlus = function(htmlID, anchorHtmlID, anchorParentHtmlID) {
+    const nextSilbingHtmlID = Xonomy.getNextSiblingHtmlID(htmlID);
+    const parentHtmlID = Xonomy.getParentHtmlID(htmlID);
+    Xonomy.insertBefore(htmlID, anchorHtmlID, anchorParentHtmlID);
 
     undoManager.add({
         undo: function() {
-            Xonomy.insertBefore(node, nextSibling, parentNode);
+            Xonomy.insertBefore(htmlID, nextSilbingHtmlID, parentHtmlID);
         },
         redo: function() {
-            Xonomy.insertBefore(node, referenceNode, referenceParentNode);
+            Xonomy.insertBefore(htmlID, anchorHtmlID, anchorParentHtmlID);
         }
     });   
 };
@@ -196,8 +201,8 @@ Xonomy.redo = function() {
     undoManager.redo();
 };
 
-Xonomy.getNextSiblingHtmlID = function(htmlID) {
-	const obj=document.getElementById(htmlID);
+Xonomy.getNextSiblingHtmlID = function(elemHtmlID) {
+	const obj=document.getElementById(elemHtmlID);
 	const jsElement = Xonomy.harvestElement(obj);
     const jsNextSibling = jsElement.getFollowingSibling();
     if (jsNextSibling) {
@@ -207,8 +212,8 @@ Xonomy.getNextSiblingHtmlID = function(htmlID) {
     }
 };
 
-Xonomy.getFirstChildHtmlID = function(htmlID) {
-	const obj=document.getElementById(htmlID);
+Xonomy.getFirstChildHtmlID = function(elemHtmlID) {
+	const obj=document.getElementById(elemHtmlID);
     const jsElement = Xonomy.harvestElement(obj);
     if (!jsElement) {
         return null;
@@ -220,6 +225,11 @@ Xonomy.getFirstChildHtmlID = function(htmlID) {
         return null;
     }
     return jsElement.children[0].htmlID;
-}
+};
+
+Xonomy.getParentHtmlID = function(elemHtmlID) {
+    const obj=document.getElementById(elemHtmlID);
+    return obj.parentNode.parentNode.id;
+};
 
 module.exports = Xonomy;
