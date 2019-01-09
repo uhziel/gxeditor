@@ -63,10 +63,28 @@ Xonomy.xml2js=function(xml, jsParent) {
 		if(child.nodeType==1) { //element node
 			js["children"].push(Xonomy.xml2js(child, js));
 		}
-		if(child.nodeType==3) { //text node
+		else if(child.nodeType==3) { //text node
 			js["children"].push({type: "text", value: child.nodeValue, htmlID: "", parent: function(){return js}, });
 		}
+		else if(child.nodeType==8) { //comment
+			js["children"].push(Xonomy.comment2js(child, js));
+		}
 	}
+	js=Xonomy.enrichElement(js);
+	return js;
+};
+Xonomy.comment2js=function(commentNode, jsParent) {
+	var js=new Xonomy.surrogate(jsParent);
+	js.type="element";
+	js.name="comment";
+	js.htmlID="";
+	js.attributes=[];
+	js.children=[{
+		type: "text",
+		value: commentNode.nodeValue,
+		htmlID: "",
+		parent: function(){return js}
+	}];
 	js=Xonomy.enrichElement(js);
 	return js;
 };
