@@ -229,7 +229,7 @@ gxeditor.genAttrMenu = function (attrName, attrSpec) {
             caption: "删除",
             action: Xonomy.deleteAttributePlus,
             actionParameter: null,
-            hideIf: function (jsAttribute) { return false }
+            hideIf: function (jsAttribute) { return false; }
         });
     }
 
@@ -451,6 +451,70 @@ gxeditor.genDocSpec = function (xmlTmpl) {
     }
 
     gxeditor.genDocSpecFullInfo(spec);
+    spec.elements.comment = {
+        displayName: "注释",
+        backgroundColour: "#D3D3D3",
+        menu: [
+            {
+                caption: "删除",
+                action: Xonomy.deleteElementPlus,
+                actionParameter: null
+            }
+        ],
+        oneliner: true,
+        hasText: true
+    };
+
+    return spec;
+}
+
+gxeditor.genDefaultDocSpec = function (xmlTmpl) {
+    const spec = {
+        elements: {}
+    };
+
+    spec.unknownElement = {
+        menu: [
+            {
+                caption: "克隆",
+                action: Xonomy.duplicateElementPlus,
+                actionParameter: null
+            },
+            {
+                caption: "注释",
+                action: Xonomy.newElementChildAtTopPlus,
+                actionParameter: `<comment>你的注释</comment>`,
+                hideIf: function (jsElement) {
+                    return jsElement.hasChildElement("comment");
+                }
+            },
+            {
+                caption: "删除",
+                action: Xonomy.deleteElementPlus,
+                actionParameter: null,
+                hideIf: function (jsElement) {
+                    const parentElement = jsElement.parent();
+                    if (parentElement === null) {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        ]
+    };
+
+    spec.unknownAttribute = {
+        menu: [
+            {
+                caption: "删除",
+                action: Xonomy.deleteAttributePlus,
+                actionParameter: null,
+                hideIf: function (jsAttribute) { return false; }
+            }
+        ],
+        asker: Xonomy.askString
+    };
+
     spec.elements.comment = {
         displayName: "注释",
         backgroundColour: "#D3D3D3",
