@@ -476,12 +476,20 @@ gxeditor.genDefaultDocSpec = function (xmlTmpl) {
     spec.unknownElement = {
         menu: [
             {
-                caption: "克隆",
+                caption: '编辑',
+                action: Xonomy.editRaw,
+                actionParameter: {
+                    fromXml: function(xml) { return xml; },
+                    toXml: function(txt, origElement) { return txt; }
+                }
+            },
+            {
+                caption: '克隆',
                 action: Xonomy.duplicateElementPlus,
                 actionParameter: null
             },
             {
-                caption: "注释",
+                caption: '注释',
                 action: Xonomy.newElementChildAtTopPlus,
                 actionParameter: `<comment>你的注释</comment>`,
                 hideIf: function (jsElement) {
@@ -489,7 +497,7 @@ gxeditor.genDefaultDocSpec = function (xmlTmpl) {
                 }
             },
             {
-                caption: "删除",
+                caption: '删除',
                 action: Xonomy.deleteElementPlus,
                 actionParameter: null,
                 hideIf: function (jsElement) {

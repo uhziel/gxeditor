@@ -72,6 +72,19 @@ Xonomy.deleteElementPlus = function(htmlID) {
     });
 };
 
+Xonomy.replaceHtmlPlus = function(htmlID, html) {
+    const restoreInfo = Xonomy.replaceHtml(htmlID, html);
+
+    undoManager.add({
+        undo: function() {
+            Xonomy.replaceHtml(restoreInfo.newHtmlID, restoreInfo.oldHtml);
+        },
+        redo: function() {
+            Xonomy.replaceHtml(restoreInfo.oldHtmlID, restoreInfo.newHtml);
+        }
+    });
+}
+
 Xonomy.duplicateElementPlus = function(htmlID) {
     const restoreInfo = Xonomy.duplicateElement(htmlID);
 

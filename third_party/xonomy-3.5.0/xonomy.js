@@ -1396,15 +1396,25 @@ Xonomy.editRaw=function(htmlID, parameter) {
 		if(parameter.toJs) jsNewElement=parameter.toJs(val, jsElement);
 		else if(parameter.toXml) jsNewElement=Xonomy.xml2js(parameter.toXml(val, jsElement), jsElement.parent());
 		else jsNewElement=Xonomy.xml2js(val, jsElement.parent());
-
-		var obj=document.getElementById(htmlID);
-		var html=Xonomy.renderElement(jsNewElement);
-		$(obj).replaceWith(html);
-		Xonomy.clickoff();
-		Xonomy.changed();
-		window.setTimeout(function(){ Xonomy.setFocus($(html).prop("id"), "openingTagName"); }, 100);
+	    var html=Xonomy.renderElement(jsNewElement);
+		Xonomy.replaceHtmlPlus(htmlID, html);
 	};
 };
+Xonomy.replaceHtml=function(htmlID, html) {
+	Xonomy.clickoff();
+	var obj=document.getElementById(htmlID);
+	$(obj).replaceWith(html);
+	Xonomy.changed();
+	var newHtmlID = $(html).prop("id");
+	window.setTimeout(function(){ Xonomy.setFocus(newHtmlID, "openingTagName"); }, 100);
+	const restoreInfo = {
+		oldHtmlID: htmlID,
+		oldHtml: obj.outerHTML,
+		newHtmlID: newHtmlID,
+		newHtml: html
+	};
+	return restoreInfo;
+}
 Xonomy.duplicateElement=function(htmlID) {
 	Xonomy.clickoff();
 	var html=document.getElementById(htmlID).outerHTML;
