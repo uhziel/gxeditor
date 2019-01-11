@@ -63,7 +63,7 @@ Xonomy.xml2js=function(xml, jsParent) {
 		if(child.nodeType==1) { //element node
 			js["children"].push(Xonomy.xml2js(child, js));
 		}
-		else if(child.nodeType==3) { //text node
+		else if(child.nodeType==3 && child.nodeValue.trim().length > 0) { //text node
 			js["children"].push({type: "text", value: child.nodeValue, htmlID: "", parent: function(){return js}, });
 		}
 		else if(child.nodeType==8) { //comment
