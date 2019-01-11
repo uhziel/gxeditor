@@ -2,24 +2,32 @@
   "name": "gxeditor",
   "version": "0.0.1",
   "description": "game xml editor",
+  "homepage": "https://github.com/uhziel/gxeditor",
   "main": "main.js",
   "scripts": {
     "test": "none",
     "start": "electron .",
     "debug": "GXEDITOR_DEBUG=1 electron .",
-    "packwin": "electron-packager . --overwrite --icon=gxeditor.ico --prune=true"
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.uhziel.gxeditor"
   },
   "repository": {
     "type": "git",
-    "url": "https://gitee.com/uhziel/gxeditor.git"
+    "url": "https://github.com/uhziel/gxeditor.git"
   },
   "keywords": [
     "game",
     "xml",
     "editor"
   ],
-  "author": "zhulei",
-  "license": "ISC",
+  "author": {
+    "name": "uhziel",
+    "email": "uhziel@gmail.com"
+  },
+  "license": "BSD-3-Clause",
   "dependencies": {
     "iconv-lite": "^0.4.24",
     "js-beautify": "^1.8.8",
@@ -27,6 +35,6 @@
   },
   "devDependencies": {
     "electron": "^3.0.9",
-    "electron-packager": "^12.2.0"
+    "electron-builder": "^20.38.4"
   }
 }

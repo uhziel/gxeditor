@@ -6,3 +6,4 @@ Release
 *.ncb
 *.suo
 *.vcproj.*
+dist
