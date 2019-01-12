@@ -157,6 +157,11 @@ function fileOnLoad() {
         editor.innerHTML = "";
         return;
     }
+    if (!fs.existsSync(curFilePath)) {
+        gxpage.switchFile(null);
+        editor.innerHTML = "";
+        return;
+    }
     const xmlText = gxeditor.readXMLFromFile(curFilePath);
 
     const tmplFilePath = gxpage.getTemplatePath(curFilePath);
