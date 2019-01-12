@@ -17,6 +17,10 @@
       "app/**/*",
       "node_modules/**/*",
       "package.json"
+    ],
+    "extraFiles": [
+      "example",
+      "!example/proj_read_config/read_config*"
     ]
   },
   "repository": {
