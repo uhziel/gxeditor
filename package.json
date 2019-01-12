@@ -12,7 +12,7 @@
     "dist": "electron-builder"
   },
   "build": {
-    "appId": "com.uhziel.gxeditor",
+    "appId": "org.uhziel.gxeditor",
     "files": [
       "app/**/*",
       "node_modules/**/*",
@@ -21,7 +21,12 @@
     "extraFiles": [
       "example",
       "!example/proj_read_config/read_config*"
-    ]
+    ],
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true
+    }
   },
   "repository": {
     "type": "git",
