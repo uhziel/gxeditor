@@ -25,9 +25,9 @@ npm start
   * cppcode 被生成的cpp代码放这里。
   * proj_read_config cpp读取配置的示例工程。现支持 vs2008、clang+Makefile。
 
-#### 打包
+#### 打包和发布
 
 ```bash
-# 仅windows下使用
-npm run pacwim
+npm run pack
+npm run dist
 ```
