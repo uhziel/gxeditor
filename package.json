@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "game xml editor",
   "homepage": "https://github.com/uhziel/gxeditor",
-  "main": "main.js",
+  "main": "app/main.js",
   "scripts": {
     "test": "none",
     "start": "electron .",
@@ -12,7 +12,12 @@
     "dist": "electron-builder"
   },
   "build": {
-    "appId": "com.uhziel.gxeditor"
+    "appId": "com.uhziel.gxeditor",
+    "files": [
+      "app/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ]
   },
   "repository": {
     "type": "git",

@@ -130,7 +130,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({ width: 800, height: 600 })
 
   // and load the index.html of the app.
-  mainWindow.loadFile('index.html')
+  mainWindow.loadFile('app/index.html')
 
   // Open the DevTools.
   //mainWindow.webContents.openDevTools()
@@ -204,7 +204,7 @@ function newSearchWindow(parentWindow) {
   searchWindow = new BrowserWindow({parent: parentWindow});
   let {x, y, width} = parentWindow.getContentBounds();
   searchWindow.setBounds({ x: x+width-300, y: y, width: 300, height: 100 });
-  searchWindow.webContents.loadFile('search_text_box.html');
+  searchWindow.webContents.loadFile('app/search_text_box.html');
   //searchWindow.webContents.openDevTools(); 
   searchWindow.on('closed', () => {
     mainWindow.webContents.stopFindInPage('clearSelection');
