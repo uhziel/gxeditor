@@ -4,7 +4,7 @@ const { Menu, ipcMain, shell, dialog } = require('electron');
 const {autoUpdater} = require("electron-updater");
 const logger = require("electron-log");
 const package = require("../package.json");
-const gxStrings = require("./utils/gx_strings.js");
+const gxStrings = require("./utils/gx_strings");
 
 autoUpdater.logger = logger;
 autoUpdater.logger.transports.file.level = 'info';

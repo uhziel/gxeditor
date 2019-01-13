@@ -8,6 +8,7 @@ const GXTemplate = require('./utils/gx_template');
 const GXPage = require('./gxpage.js');
 const CodeGenerator = require('./utils/gx_code_generator');
 const fs = require('fs');
+const gxStrings = require("./utils/gx_strings");
 
 let gxpage = new GXPage();
 
@@ -15,11 +16,11 @@ fileOnLoad();
 document.title = gxpage.genAppTitle();
 
 const contextMenuTemplate = [
-    { label: "剪切", role: 'cut' },
-    { label: "复制", role: 'copy' },
-    { label: "粘贴", role: 'paste' },
+    { label: gxStrings.appMenuCut, role: 'cut' },
+    { label: gxStrings.appMenuCopy, role: 'copy' },
+    { label: gxStrings.appMenuPaste, role: 'paste' },
     { type: 'separator' },
-    { label: "全选", role: 'selectall' }
+    { label: gxStrings.appMenuSelectAll, role: 'selectall' }
 ];
 
 const contextMenu = Menu.buildFromTemplate(contextMenuTemplate);
