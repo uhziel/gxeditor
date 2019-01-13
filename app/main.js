@@ -2,7 +2,11 @@
 const { app, BrowserWindow } = require('electron')
 const { Menu, ipcMain, shell, dialog } = require('electron');
 const {autoUpdater} = require("electron-updater");
+const logger = require("electron-log");
 const package = require("../package.json");
+
+autoUpdater.logger = logger;
+autoUpdater.logger.transports.file.level = 'info';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.

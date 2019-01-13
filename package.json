@@ -28,9 +28,11 @@
       "perMachine": true,
       "allowToChangeInstallationDirectory": true
     },
-    "publish": [{
-      "provider": "github"
-    }]
+    "publish": [
+      {
+        "provider": "github"
+      }
+    ]
   },
   "repository": {
     "type": "git",
@@ -47,6 +49,7 @@
   },
   "license": "BSD-3-Clause",
   "dependencies": {
+    "electron-log": "^2.2.17",
     "electron-updater": "^4.0.6",
     "iconv-lite": "^0.4.24",
     "js-beautify": "^1.8.8",
