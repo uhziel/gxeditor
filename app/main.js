@@ -1,7 +1,8 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow } = require('electron')
-const { Menu, ipcMain, shell } = require('electron');
+const { Menu, ipcMain, shell, dialog } = require('electron');
 const {autoUpdater} = require("electron-updater");
+const package = require("../package.json");
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -109,12 +110,22 @@ function genMenu() {
       ]
     },
     {
-      label: '帮助',
-      role: 'help',
+      label: "帮助",
+      role: "help",
       submenu: [
         {
-          label: '主页',
-          click() { require('electron').shell.openExternal('http://www.qq.com'); }
+          label: "主页",
+          click() { shell.openExternal(package.homepage); }
+        },
+        {
+          label: "关于",
+          click() {
+            dialog.showMessageBox(mainWindow, {
+              buttons: ["确认"],
+              title: "关于",
+              message: `版本 v${package.version}`,
+            });
+          }
         }
       ]
     }
