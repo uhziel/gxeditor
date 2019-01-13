@@ -114,7 +114,7 @@ function genMenu() {
       submenu: [
         {
           label: '主页',
-          click() { require('electron').shell.openExternal('http://www.baidu.com'); }
+          click() { require('electron').shell.openExternal('http://www.qq.com'); }
         }
       ]
     }
