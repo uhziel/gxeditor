@@ -4,6 +4,7 @@ const { Menu, ipcMain, shell, dialog } = require('electron');
 const {autoUpdater} = require("electron-updater");
 const logger = require("electron-log");
 const package = require("../package.json");
+const gxStrings = require("./utils/gx_strings.js");
 
 autoUpdater.logger = logger;
 autoUpdater.logger.transports.file.level = 'info';
@@ -17,23 +18,23 @@ let safeExit = false;
 function genMenu() {
   var appMenuTemplate = [
     {
-      label: '文件',
+      label: gxStrings.appMenuFile,
       submenu: [
         {
-          label: "打开项目",
+          label: gxStrings.appMenuOpenProject,
           click() {
             mainWindow.webContents.send('action', 'openProject');
           }
         },
         {
-          label: "打开",
+          label: gxStrings.appMenuOpenFile,
           click() {
             mainWindow.webContents.send('action', 'open');
           },
           accelerator: 'CmdOrCtrl+O'
         },
         {
-          label: "保存",
+          label: gxStrings.appMenuSaveFile,
           click() {
             mainWindow.webContents.send('action', 'save');
           },
@@ -43,35 +44,35 @@ function genMenu() {
           type: 'separator'
         },
         {
-          label: "退出",
+          label: gxStrings.appMenuQuit,
           role: 'quit'
         }
       ]
     },
     {
-      label: '编辑',
+      label: gxStrings.appMenuEdit,
       submenu: [
         {
-          label: "撤销",
+          label: gxStrings.appMenuUndo,
           click() {
             mainWindow.webContents.send('action', 'undo');
           },
           accelerator: 'CmdOrCtrl+Z'
         },
         {
-          label: "重做",
+          label: gxStrings.appMenuRedo,
           click() {
             mainWindow.webContents.send('action', 'redo');
           },
           accelerator: 'CmdOrCtrl+Shift+Z'
         },
         { type: 'separator' },
-        { label: "剪切", role: 'cut' },
-        { label: "复制", role: 'copy' },
-        { label: "粘贴", role: 'paste' },
+        { label: gxStrings.appMenuCut, role: 'cut' },
+        { label: gxStrings.appMenuCopy, role: 'copy' },
+        { label: gxStrings.appMenuPaste, role: 'paste' },
         { type: 'separator' },
         {
-          label: "搜索",
+          label: gxStrings.appMenuFind,
           click() {
             if (searchWindow === null) {
               newSearchWindow(mainWindow);
@@ -80,21 +81,21 @@ function genMenu() {
           accelerator: 'CmdOrCtrl+F'
         },
         { type: 'separator' },
-        { label: "全选", role: 'selectall' }
+        { label: gxStrings.appMenuSelectAll, role: 'selectall' }
       ]
     },
     {
-      label: '查看',
+      label: gxStrings.appMenuView,
       submenu: [
         {
-          label: "易读",
+          label: gxStrings.appMenuModeEasy,
           type: "radio",
           click() {
             mainWindow.webContents.send('action', 'setViewModeEasy');
           }
         },
         {
-          label: "原生",
+          label: gxStrings.appMenuModeRaw,
           type: "radio",
           click() {
             mainWindow.webContents.send('action', 'setViewModeRaw');
@@ -103,10 +104,10 @@ function genMenu() {
       ]
     },
     {
-      label: '工具',
+      label: gxStrings.appMenuTools,
       submenu: [
         {
-          label: "生成cpp代码",
+          label: gxStrings.appMenuGenCppCode,
           click() {
             mainWindow.webContents.send('action', 'genCppCode');
           }
@@ -114,20 +115,20 @@ function genMenu() {
       ]
     },
     {
-      label: "帮助",
+      label: gxStrings.appMenuHelp,
       role: "help",
       submenu: [
         {
-          label: "主页",
+          label: gxStrings.appMenuHomepage,
           click() { shell.openExternal(package.homepage); }
         },
         {
-          label: "关于",
+          label: gxStrings.appMenuAbout,
           click() {
             dialog.showMessageBox(mainWindow, {
-              buttons: ["确认"],
-              title: "关于",
-              message: `版本 v${package.version}`,
+              buttons: [gxStrings.ok],
+              title: gxStrings.appMenuAbout,
+              message: gxStrings.appMenuAboutMessage + package.version,
             });
           }
         }
