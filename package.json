@@ -28,7 +28,9 @@
       "perMachine": true,
       "allowToChangeInstallationDirectory": true
     },
-    "provider": "github"
+    "publish": [{
+      "provider": "github"
+    }]
   },
   "repository": {
     "type": "git",
