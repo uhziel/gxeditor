@@ -122,7 +122,7 @@ function genMenu() {
           click() {
             dialog.showMessageBox(mainWindow, {
               buttons: ["确认"],
-              title: "关于",
+              title: "关于",
               message: `版本 v${package.version}`,
             });
           }
