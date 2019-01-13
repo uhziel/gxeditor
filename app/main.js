@@ -1,13 +1,22 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow } = require('electron')
 const { Menu, ipcMain, shell, dialog } = require('electron');
+const path = require("path");
 const {autoUpdater} = require("electron-updater");
 const logger = require("electron-log");
 const package = require("../package.json");
 const gxStrings = require("./utils/gx_strings");
+const GXConfig = require("./utils/gx_config");
 
 autoUpdater.logger = logger;
 autoUpdater.logger.transports.file.level = 'info';
+
+const configPath = path.join(app.getPath('userData'), `config.json`);
+const config = new GXConfig(configPath);
+
+global.sharedObject = {
+  config : config
+};
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.

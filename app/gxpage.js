@@ -6,8 +6,7 @@ const GXConfig = require('./utils/gx_config');
 const { remote } = require('electron');
 
 function GXPage() {
-    const configPath = path.join(remote.app.getPath('userData'), `config.json`);
-    this.config = new GXConfig(configPath);
+    this.config = remote.getGlobal("sharedObject").config;
     const curProjectPath = this.config.get('projectPath');
 
     if (typeof curProjectPath === 'string') {
