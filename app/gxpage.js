@@ -6,10 +6,10 @@ const GXConfig = require('./utils/gx_config');
 const { remote } = require('electron');
 
 function GXPage() {
-    this.config = remote.getGlobal("sharedObject").config;
-    const curProjectPath = this.config.get('projectPath');
+    this.appConfig = remote.getGlobal("sharedObject").appConfig;
+    const curProjectPath = this.appConfig.getCurProjectPath();
 
-    if (typeof curProjectPath === 'string') {
+    if (curProjectPath) {
         const curProjectConfigPath = path.join(curProjectPath, 'gxproject.json');
         this.curProjectConfig = new GXConfig(curProjectConfigPath);
     } else {
@@ -25,22 +25,15 @@ GXPage.prototype.switchProject = function (projectPath) {
         return false;
     }
     this.curProjectConfig = new GXConfig(curProjectConfigPath);
-    this.config.set('projectPath', projectPath);
-    this.config.set('curFilePath', null);
+    this.appConfig.switchProject(projectPath);
     this.isCurFileSaved = true;
     return true;
 }
 
 GXPage.prototype.switchFile = function (filePath) {
-    if (!this.config) {
+    if (!this.appConfig.switchFile(filePath)) {
         return false;
     }
-
-    if (!this.config.get('projectPath')) {
-        return false;
-    }
-
-    this.config.set('curFilePath', filePath);
     this.isCurFileSaved = true;
     return true;
 }
@@ -49,12 +42,12 @@ GXPage.prototype.genAppTitle = function () {
     let projectName = '无项目';
     let fileName = 'Untitled';
 
-    const curProjectPath = this.config.get('projectPath');
-    if (typeof curProjectPath === 'string') {
+    const curProjectPath = this.appConfig.getCurProjectPath();
+    if (curProjectPath) {
         projectName = path.basename(curProjectPath);
 
-        const curFilePath = this.config.get('curFilePath');
-        if (typeof curFilePath === 'string') {
+        const curFilePath = this.appConfig.getCurFilePath();
+        if (curFilePath) {
             fileName = curFilePath;
         }
     }
@@ -69,8 +62,8 @@ GXPage.prototype.genAppTitle = function () {
 
 GXPage.prototype.getTemplatePath = function (dataPath) {
     const basename = path.basename(dataPath, ".xml");
-    const curProjectPath = this.config.get('projectPath');
-    if (typeof curProjectPath !== 'string') {
+    const curProjectPath = this.appConfig.getCurProjectPath();
+    if (!curProjectPath) {
         return null;
     }
 
@@ -79,8 +72,8 @@ GXPage.prototype.getTemplatePath = function (dataPath) {
 }
 
 GXPage.prototype.getDataDirPath = function () {
-    const curProjectPath = this.config.get('projectPath');
-    if (typeof curProjectPath !== 'string') {
+    const curProjectPath = this.appConfig.getCurProjectPath();
+    if (!curProjectPath) {
         return null;
     }
 
@@ -89,11 +82,7 @@ GXPage.prototype.getDataDirPath = function () {
 }
 
 GXPage.prototype.getCurFilePath = function () {
-    if (!this.config) {
-        return null;
-    }
-
-    return this.config.get('curFilePath');
+    return this.appConfig.getCurFilePath();
 }
 
 module.exports = GXPage;
