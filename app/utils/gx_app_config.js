@@ -42,13 +42,14 @@ gxAppConfig.switchProject = function(projectPath) {
         }
     } else if (i === 0) {
         //如果就是当前打开的项目，不做任何处理
-        return;
+        return false;
     } else {
         //如果是已打开的其他项目，移到数组头
         const project = recent.projects.splice(i, 1)[0];
         recent.projects.unshift(project);
     }
     gxAppConfig.config.set("recent", recent);
+    return true;
 }
 
 gxAppConfig.switchFile = function(filePath) {
@@ -84,7 +85,7 @@ gxAppConfig.switchFile = function(filePath) {
 }
 
 gxAppConfig.getCurProjectPath = function() {
-    let recent = gxAppConfig.config.get("recent");
+    const recent = gxAppConfig.config.get("recent");
     if (recent.projects.length === 0) {
         return null;
     }
@@ -93,7 +94,7 @@ gxAppConfig.getCurProjectPath = function() {
 }
 
 gxAppConfig.getCurFilePath = function() {
-    let recent = gxAppConfig.config.get("recent");
+    const recent = gxAppConfig.config.get("recent");
     if (recent.projects.length === 0) {
         return null;
     }
@@ -103,6 +104,10 @@ gxAppConfig.getCurFilePath = function() {
     }
 
     return curProject.files[0];
+}
+
+gxAppConfig.getRecent = function() {
+    return gxAppConfig.config.get("recent");
 }
 
 module.exports = gxAppConfig;

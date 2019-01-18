@@ -22,10 +22,13 @@ function GXPage() {
 GXPage.prototype.switchProject = function (projectPath) {
     const curProjectConfigPath = path.join(projectPath, 'gxproject.json');
     if (!fs.existsSync(curProjectConfigPath)) {
+        remote.dialog.showErrorBox('打开工程错误', '不是合法的工程目录，目录内必须带gxproject.json。');
+        return false;
+    }
+    if (!this.appConfig.switchProject(projectPath)) {
         return false;
     }
     this.curProjectConfig = new GXConfig(curProjectConfigPath);
-    this.appConfig.switchProject(projectPath);
     this.isCurFileSaved = true;
     return true;
 }

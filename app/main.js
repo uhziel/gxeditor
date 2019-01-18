@@ -1,26 +1,26 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow } = require('electron');
-const { Menu, ipcMain, shell, dialog } = require('electron');
+const { Menu, MenuItem, ipcMain, shell, dialog } = require('electron');
 const {autoUpdater} = require("electron-updater");
 const logger = require("electron-log");
 const package = require("../package.json");
 const gxStrings = require("./utils/gx_strings");
-const appConfig = require("./utils/gx_app_config");
+const gxAppConfig = require("./utils/gx_app_config");
 
 autoUpdater.logger = logger;
 autoUpdater.logger.transports.file.level = 'info';
 
 global.sharedObject = {
-  appConfig : appConfig
+  appConfig : gxAppConfig
 };
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
+let mainWindow = null;
 let searchWindow = null;
 let safeExit = false;
 
-function genMenu() {
+function refreshAppMenu() {
   var appMenuTemplate = [
     {
       label: gxStrings.appMenuFile,
@@ -37,6 +37,11 @@ function genMenu() {
             mainWindow.webContents.send('action', 'open');
           },
           accelerator: 'CmdOrCtrl+O'
+        },
+        {
+          label: gxStrings.appMenuOpenRecent,
+          id: "appMenuOpenRecent",
+          submenu: []
         },
         {
           label: gxStrings.appMenuSaveFile,
@@ -56,6 +61,7 @@ function genMenu() {
     },
     {
       label: gxStrings.appMenuEdit,
+      id: "appMenuEdit",
       submenu: [
         {
           label: gxStrings.appMenuUndo,
@@ -140,10 +146,55 @@ function genMenu() {
       ]
     }
   ];
-  if (process.env.GXEDITOR_DEBUG) {
-    appMenuTemplate[1].submenu.push({ role: 'toggleDevTools' });
-  }
+
   const appMenu = Menu.buildFromTemplate(appMenuTemplate);
+
+  //开发环境时，加上开关 DevTools 菜单选项
+  if (process.env.GXEDITOR_DEBUG) {
+    const editMenuItem = appMenu.getMenuItemById("appMenuEdit");
+    editMenuItem.submenu.append(new MenuItem({ role: 'toggleDevTools' }));
+  }
+
+  //添加下默认的"打开最近"菜单
+  const recent = gxAppConfig.getRecent();
+  const openRecentMenuItem = appMenu.getMenuItemById("appMenuOpenRecent");
+  const emptyProject = (recent.projects.length === 0);
+  if (emptyProject) {
+    openRecentMenuItem.submenu.append(new MenuItem({
+      label: gxStrings.appMenuEmptyProject,
+      enabled: false
+    }));
+  } else {
+    for (let i = 0; i < recent.projects.length; i++) {
+      const path = recent.projects[i].path;
+      openRecentMenuItem.submenu.append(new MenuItem({
+        label: path,
+        click() {
+          mainWindow.webContents.send("action", "openProject", path);
+        }
+      })); 
+    }
+  }
+  openRecentMenuItem.submenu.append(new MenuItem({ type: 'separator' }));
+  const emptyFile = emptyProject || (recent.projects[0].files.length === 0);
+  if (emptyFile) {
+    openRecentMenuItem.submenu.append(new MenuItem({
+      label: gxStrings.appMenuEmptyFile,
+      enabled: false
+    }));
+  } else {
+    const curProject = recent.projects[0];
+    for (let i = 0; i < curProject.files.length; i++) {
+      const path = curProject.files[i];
+      openRecentMenuItem.submenu.append(new MenuItem({
+        label: path,
+        click() {
+          mainWindow.webContents.send("action", "open", path);
+        }
+      })); 
+    }
+  }
+
   Menu.setApplicationMenu(appMenu);
 }
 
@@ -176,7 +227,7 @@ function createWindow() {
     searchWindow.send('notifyFoundInPage', `(${result.activeMatchOrdinal},${result.matches})`);
   });
 
-  genMenu();
+  refreshAppMenu();
 }
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -211,19 +262,32 @@ app.on('activate', function () {
 //监听与渲染进程的通信
 ipcMain.on('reqaction', (event, arg, arg1, arg2) => {
   switch (arg) {
-    case 'search':
+    case "search":
+    {
       mainWindow.webContents.findInPage(arg1, {forward: arg2});
       break;
-    case 'stopSearch':
+    }
+    case "stopSearch":
+    {
       searchWindow.close();
       break;
-    case 'exit':
+    }
+    case "exit":
+    {
       safeExit = true;
       app.quit();//退出程序
       break;
-    case 'showItemInFolder':
+    }
+    case "showItemInFolder":
+    {
       shell.showItemInFolder(arg1);
       break;
+    }
+    case "refreshAppMenu":
+    {
+      refreshAppMenu();
+      break;
+    }
   }
 });
 

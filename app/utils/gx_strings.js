@@ -3,8 +3,9 @@
 const gxStrings = {
     ok: "确认",
     appMenuFile: "文件",
-    appMenuOpenProject: "打开项目",
-    appMenuOpenFile: "打开",
+    appMenuOpenProject: "打开项目...",
+    appMenuOpenFile: "打开...",
+    appMenuOpenRecent: "打开最近",
     appMenuSaveFile: "保存",
     appMenuQuit: "退出",
     appMenuEdit: "编辑",
@@ -23,7 +24,9 @@ const gxStrings = {
     appMenuHelp: "帮助",
     appMenuHomepage: "主页",
     appMenuAbout: "关于",
-    appMenuAboutMessage: "版本 v"
+    appMenuAboutMessage: "版本 v",
+    appMenuEmptyProject: "空项目",
+    appMenuEmptyFile: "空文件",
 }
 
 module.exports = gxStrings;

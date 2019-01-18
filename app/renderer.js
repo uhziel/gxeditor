@@ -30,21 +30,25 @@ editor.addEventListener('contextmenu', (e) => {
 });
 
 //监听与主进程的通信
-ipcRenderer.on('action', (event, arg) => {
+ipcRenderer.on('action', (event, arg, arg1) => {
     switch (arg) {
         case 'openProject':
         {
             askSaveIfNeed();
-            const files = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
-                properties: ['openDirectory']
-            });
-            if (files) {
-                if (gxpage.switchProject(files[0])) {
+            let path = null;
+            if (arg1) {
+                path = arg1;
+            } else {
+                path = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
+                    properties: ['openDirectory']
+                })[0];
+            }
+            if (path) {
+                if (gxpage.switchProject(path)) {
                     fileOnLoad();
                     document.title = gxpage.genAppTitle(); 
-                } else {
-                    remote.dialog.showErrorBox('打开工程错误', '不是合法的工程目录，目录内必须带gxproject.json。');
-                }              
+                    ipcRenderer.send('reqaction', 'refreshAppMenu');
+                }
             }
             break;
         }
@@ -55,17 +59,23 @@ ipcRenderer.on('action', (event, arg) => {
                 remote.dialog.showErrorBox('打开文件错误', '请先打开项目(项目文件夹下需带gxproject.json)。');
                 break;
             }
-            const files = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
-                defaultPath: gxpage.getDataDirPath(),
-                filters: [
-                    { name: "Xml Files", extensions: ['xml'] },
-                    { name: 'All Files', extensions: ['*'] }],
-                properties: ['openFile']
-            });
-            if (files) {
-                if (gxpage.switchFile(files[0])) {
+            let path = null;
+            if (arg1) {
+                path = arg1;
+            } else {
+                path = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
+                    defaultPath: gxpage.getDataDirPath(),
+                    filters: [
+                        { name: "Xml Files", extensions: ['xml'] },
+                        { name: 'All Files', extensions: ['*'] }],
+                    properties: ['openFile']
+                })[0];
+            }
+            if (path) {
+                if (gxpage.switchFile(path)) {
                     fileOnLoad();
                     document.title = gxpage.genAppTitle();  
+                    ipcRenderer.send('reqaction', 'refreshAppMenu');
                 }  
             }
             break;
