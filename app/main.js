@@ -33,6 +33,7 @@ function refreshAppMenu() {
         },
         {
           label: gxStrings.appMenuOpenFile,
+          id: "appMenuOpenFile",
           click() {
             mainWindow.webContents.send('action', 'open');
           },
@@ -148,6 +149,16 @@ function refreshAppMenu() {
   ];
 
   const appMenu = Menu.buildFromTemplate(appMenuTemplate);
+  const recent = gxAppConfig.getRecent();
+  const emptyProject = (recent.projects.length === 0);
+
+  //只有已打开项目，才允许打开文件
+  const openMenuItem = appMenu.getMenuItemById("appMenuOpenFile");
+  if (emptyProject) {
+    openMenuItem.enabled = false;
+  } else {
+    openMenuItem.enabled = true;
+  }
 
   //开发环境时，加上开关 DevTools 菜单选项
   if (process.env.GXEDITOR_DEBUG) {
@@ -156,9 +167,7 @@ function refreshAppMenu() {
   }
 
   //添加下默认的"打开最近"菜单
-  const recent = gxAppConfig.getRecent();
   const openRecentMenuItem = appMenu.getMenuItemById("appMenuOpenRecent");
-  const emptyProject = (recent.projects.length === 0);
   if (emptyProject) {
     openRecentMenuItem.submenu.append(new MenuItem({
       label: gxStrings.appMenuEmptyProject,

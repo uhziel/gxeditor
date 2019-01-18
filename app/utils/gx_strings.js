@@ -27,6 +27,10 @@ const gxStrings = {
     appMenuAboutMessage: "版本 v",
     appMenuEmptyProject: "空项目",
     appMenuEmptyFile: "空文件",
+    parseTmplFail: "模版文件解析失败",
+    parseTmplFailDetail: "请在编辑器中打开模版文件检查具体问题。文件路径已拷贝到剪切板。",
+    openProjectFail: "打开工程错误",
+    openProjectFailDetail: "不是合法的工程目录，目录内必须带gxproject.json。"
 }
 
 module.exports = gxStrings;

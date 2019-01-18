@@ -184,7 +184,7 @@ function fileOnLoad() {
             templateConfig = new GXTemplate(tmplFilePath);
         } catch(error) {
             editor.innerHTML = "";
-            remote.dialog.showErrorBox('模版文件解析失败', `请在编辑器中打开模版文件检查具体问题。文件路径已拷贝到剪切板。`);
+            remote.dialog.showErrorBox(gxStrings.parseTmplFail, gxStrings.parseTmplFailDetail);
             clipboard.writeText(tmplFilePath);
             console.error(error);
             return;

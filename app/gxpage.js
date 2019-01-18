@@ -1,9 +1,10 @@
 'use strict';
 
-const path = require('path');
-const fs = require('fs');
-const GXConfig = require('./utils/gx_config');
-const { remote } = require('electron');
+const path = require("path");
+const fs = require("fs");
+const GXConfig = require("./utils/gx_config");
+const { remote } = require("electron");
+const gxStrings = require("./utils/gx_strings");
 
 function GXPage() {
     this.appConfig = remote.getGlobal("sharedObject").appConfig;
@@ -22,7 +23,7 @@ function GXPage() {
 GXPage.prototype.switchProject = function (projectPath) {
     const curProjectConfigPath = path.join(projectPath, 'gxproject.json');
     if (!fs.existsSync(curProjectConfigPath)) {
-        remote.dialog.showErrorBox('打开工程错误', '不是合法的工程目录，目录内必须带gxproject.json。');
+        remote.dialog.showErrorBox(gxStrings.openProjectFail, gxStrings.openProjectFailDetail);
         return false;
     }
     if (!this.appConfig.switchProject(projectPath)) {
