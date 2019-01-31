@@ -2,7 +2,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const GXCodeScheme = require('./gx_tinyxml');
 const {ipcRenderer} = require('electron');
 const GXTemplate = require('./gx_template');
 
@@ -20,10 +19,19 @@ function GXCodeGenerator(templatePath, sharedTemplate) {
     this.sharedTemplate = (sharedTemplate) ? true : false;
     this.path = templatePath;
     this.templateDirPath = getTemplateDirPath(templatePath);
-    this.cppCodePath = path.resolve(this.templateDirPath, '../cppcode');
+    this.cppCodePath = path.resolve(this.templateDirPath, "../cppcode");
+
     if (!fs.existsSync(this.cppCodePath)) {
         fs.mkdirSync(this.cppCodePath);
     }
+
+    const cppTmplJsPath = path.resolve(this.templateDirPath, "../cpp_tmpl.js");
+    if (fs.existsSync(cppTmplJsPath)) {
+        this.cppTmpl = require(cppTmplJsPath);
+    } else {
+        this.cppTmpl = require("./gx_tinyxml");
+    }
+
     this.childTmplFilePaths = {};
 }
 
@@ -48,11 +56,11 @@ GXCodeGenerator.prototype.genFromTemplate = function (tmplFilePath) {
     const isRoot = (this.sharedTemplate) ? false : true;
     const structContent = this.genHeaderStruct(template.data, fileBaseName, isRoot);
     const includeDirectives = getIncludeDirectives(template.data.__include__);
-    const headerContent = GXCodeScheme.genHeaderFile(fileBaseName,
+    const headerContent = this.cppTmpl.genHeaderFile(fileBaseName,
         tmplNamespace, structContent, includeDirectives);
 
     const elemContent = this.genSourceElem(template.data, fileBaseName, isRoot);
-    const sourceContent = GXCodeScheme.genSourceFile(fileBaseName,
+    const sourceContent = this.cppTmpl.genSourceFile(fileBaseName,
         tmplNamespace, elemContent);
 
     const headerFilePath = path.resolve(this.cppCodePath, `${fileBaseName}.h`);
@@ -101,9 +109,9 @@ GXCodeGenerator.prototype.genHeaderStruct = function (template, elemName, isRoot
     }
 
     if (isRoot) {
-        content += GXCodeScheme.genHeaderFileStructRoot(varContent);
+        content += this.cppTmpl.genHeaderFileStructRoot(varContent);
     } else {
-        content += GXCodeScheme.genHeaderFileStruct(toPascal(elemName), varContent);
+        content += this.cppTmpl.genHeaderFileStruct(toPascal(elemName), varContent);
     }
     
     return content;
@@ -119,7 +127,7 @@ GXCodeGenerator.prototype.genHeaderStructVarElem = function (template, elemName)
         type = `std::vector<${type}>`;
     }
 
-    return GXCodeScheme.genHeaderFileStructVar(type, elemName);
+    return this.cppTmpl.genHeaderFileStructVar(type, elemName);
 };
 
 GXCodeGenerator.prototype.genHeaderStructVarAttr = function (attrName, attr) {
@@ -140,7 +148,7 @@ GXCodeGenerator.prototype.genHeaderStructVarAttr = function (attrName, attr) {
     else {
         type = attr.type;
     }
-    return GXCodeScheme.genHeaderFileStructVar(type, attrName);
+    return this.cppTmpl.genHeaderFileStructVar(type, attrName);
 };
 
 GXCodeGenerator.prototype.genSourceElem = function (template, elemName, isRoot) {
@@ -167,7 +175,7 @@ GXCodeGenerator.prototype.genSourceElem = function (template, elemName, isRoot) 
 
     if (elem.children) {
         elem.children.forEach(childName => {
-            loadContent += GXCodeScheme.genSourceFileLoadVar(childName);
+            loadContent += this.cppTmpl.genSourceFileLoadVar(childName);
         });
     }
 
@@ -176,21 +184,21 @@ GXCodeGenerator.prototype.genSourceElem = function (template, elemName, isRoot) 
         for (const attrName in elem.attributes) {
             const attr = elem.attributes[attrName];
 
-            constructorContent += GXCodeScheme.genSourceFileCtorVar(attrName, attr.default, isFirst);
+            constructorContent += this.cppTmpl.genSourceFileCtorVar(attrName, attr.default, isFirst);
             isFirst = false;
 
-            loadContent += GXCodeScheme.genSourceFileLoadVar(attrName);
+            loadContent += this.cppTmpl.genSourceFileLoadVar(attrName);
         }
     }
 
     if (isRoot) {
-        content += GXCodeScheme.genSourceFileCtor('Config', constructorContent);
-        content += GXCodeScheme.genSourceFileLoad('Config', loadContent);
-        content += GXCodeScheme.genSourceFileParse(elemName);
-        content += GXCodeScheme.genSourceFileLoadFile(elemName);
+        content += this.cppTmpl.genSourceFileCtor('Config', constructorContent);
+        content += this.cppTmpl.genSourceFileLoad('Config', loadContent);
+        content += this.cppTmpl.genSourceFileParse(elemName);
+        content += this.cppTmpl.genSourceFileLoadFile(elemName);
     } else {
-        content += GXCodeScheme.genSourceFileCtor(elemStructName, constructorContent);
-        content += GXCodeScheme.genSourceFileLoad(elemStructName, loadContent);
+        content += this.cppTmpl.genSourceFileCtor(elemStructName, constructorContent);
+        content += this.cppTmpl.genSourceFileLoad(elemStructName, loadContent);
     }
     return content;
 };
