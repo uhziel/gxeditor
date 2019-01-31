@@ -1,10 +1,10 @@
 'use strict';
 
-let GXCodeScheme = {};
+let cppTmpl = {};
   
 //////////////////////////////////////////////////
 // HeaderFile
-GXCodeScheme.genHeaderFile = (fileBaseName, tmplNamespace, content, includeDirectives) =>
+cppTmpl.genHeaderFile = (fileBaseName, tmplNamespace, content, includeDirectives) =>
 `#ifndef __${fileBaseName}__GXHEADER__
 #define __${fileBaseName}__GXHEADER__
 
@@ -17,7 +17,7 @@ ${content}
 #endif
 `;
 
-GXCodeScheme.genHeaderFileStruct = (elemStructName, content) => `
+cppTmpl.genHeaderFileStruct = (elemStructName, content) => `
 struct ${elemStructName}
 {
     ${elemStructName}();
@@ -27,7 +27,7 @@ ${content}
 };
 `;
 
-GXCodeScheme.genHeaderFileStructRoot = (content) => `
+cppTmpl.genHeaderFileStructRoot = (content) => `
 struct Config
 {
     Config();
@@ -39,13 +39,13 @@ ${content}
 };
 `;
 
-GXCodeScheme.genHeaderFileStructVar = (type, variable) =>
+cppTmpl.genHeaderFileStructVar = (type, variable) =>
 `    ${type} ${variable};
 `;
 
 //////////////////////////////////////////////////
 // SourceFile
-GXCodeScheme.genSourceFile = (fileBaseName, tmplNamespace, content) =>
+cppTmpl.genSourceFile = (fileBaseName, tmplNamespace, content) =>
 `#include "${fileBaseName}.h"
 
 namespace ${tmplNamespace} {
@@ -53,26 +53,26 @@ ${content}
 }
 `;
 
-GXCodeScheme.genSourceFileCtor = (elemStructName, content) => `
+cppTmpl.genSourceFileCtor = (elemStructName, content) => `
 ${elemStructName}::${elemStructName}()
 ${content}{}
 `;
 
-GXCodeScheme.genSourceFileCtorVar = (variable, defaultValue, isFirst) => 
+cppTmpl.genSourceFileCtorVar = (variable, defaultValue, isFirst) => 
 `    ${isFirst ? ':' : ','} ${variable}(${typeof defaultValue==='string' ? '\"'+defaultValue+'\"':defaultValue})
 `;
 
-GXCodeScheme.genSourceFileLoad = (elemStructName, content) => `
+cppTmpl.genSourceFileLoad = (elemStructName, content) => `
 void ${elemStructName}::Load(TiXmlElement* node)
 {
 ${content}}
 `;
 
-GXCodeScheme.genSourceFileLoadVar = (variable) =>
+cppTmpl.genSourceFileLoadVar = (variable) =>
 `    ::Read(node, "${variable}", ${variable});
 `;
 
-GXCodeScheme.genSourceFileParse = (elemName) => `
+cppTmpl.genSourceFileParse = (elemName) => `
 void Config::Parse(const char* content)
 {
     if (NULL == content)
@@ -98,7 +98,7 @@ void Config::Parse(const char* content)
 }
 `;
 
-GXCodeScheme.genSourceFileLoadFile = (elemName) => `
+cppTmpl.genSourceFileLoadFile = (elemName) => `
 void Config::LoadFile(const char* filename)
 {
     if (NULL == filename)
@@ -123,4 +123,4 @@ void Config::LoadFile(const char* filename)
 }
 `;
 
-module.exports = GXCodeScheme;
+module.exports = cppTmpl;
