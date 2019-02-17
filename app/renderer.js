@@ -2,6 +2,8 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 
+'use strict';
+
 const { ipcRenderer, remote, clipboard } = require('electron');
 const { Menu } = remote;
 const GXTemplate = require('./utils/gx_template');
@@ -32,103 +34,80 @@ editor.addEventListener('contextmenu', (e) => {
 //监听与主进程的通信
 ipcRenderer.on('action', (event, arg, arg1) => {
     switch (arg) {
-        case 'openProject':
-        {
-            askSaveIfNeed();
-            let path = null;
-            if (arg1) {
-                path = arg1;
-            } else {
-                path = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
-                    properties: ['openDirectory']
-                })[0];
-            }
-            if (path) {
-                if (gxpage.switchProject(path)) {
-                    fileOnLoad();
-                    document.title = gxpage.genAppTitle(); 
-                    ipcRenderer.send('reqaction', 'refreshAppMenu');
+        case "openProject":
+            {
+                askSaveIfNeed();
+                let path = null;
+                if (arg1) {
+                    path = arg1;
+                } else {
+                    path = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
+                        properties: ['openDirectory']
+                    })[0];
                 }
-            }
-            break;
-        }
-        case 'open':
-        {
-            askSaveIfNeed();
-            if (!gxpage.curProjectConfig) {
-                remote.dialog.showErrorBox('打开文件错误', '请先打开项目(项目文件夹下需带gxproject.json)。');
+                if (path) {
+                    if (gxpage.switchProject(path)) {
+                        fileOnLoad();
+                        document.title = gxpage.genAppTitle();
+                        ipcRenderer.send('reqaction', 'refreshAppMenu');
+                    }
+                }
                 break;
             }
-            let path = null;
-            if (arg1) {
-                path = arg1;
-            } else {
-                path = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
-                    defaultPath: gxpage.getDataDirPath(),
-                    filters: [
-                        { name: "Xml Files", extensions: ['xml'] },
-                        { name: 'All Files', extensions: ['*'] }],
-                    properties: ['openFile']
-                })[0];
+        case "open":
+            {
+                onActionOpen(arg1);
+                break;
             }
-            if (path) {
-                if (gxpage.switchFile(path)) {
-                    fileOnLoad();
-                    document.title = gxpage.genAppTitle();  
-                    ipcRenderer.send('reqaction', 'refreshAppMenu');
-                }  
+        case "save":
+            {
+                saveCurDoc();
+                break;
             }
-            break;
-        }
-        case 'save':
-        {
-            saveCurDoc();
-            break;
-        }
-        case 'exiting':
-        {
-            askSaveIfNeed();
-            ipcRenderer.sendSync('reqaction', 'exit');
-            break;
-        }
-        case 'setViewModeRaw':
-        {
-            gxeditor.setViewModeRaw();
-            break;
-        }
-        case 'setViewModeEasy':
-        {
-            gxeditor.setViewModeEasy();
-            break;
-        }
-        case 'genCppCode':
-        {
-            const curFilePath = gxpage.getCurFilePath();
-            if (curFilePath) {
-                const templatePath = gxpage.getTemplatePath(curFilePath);
-                const generator = new CodeGenerator(templatePath);
-                generator.gen();
+        case "exiting":
+            {
+                askSaveIfNeed();
+                ipcRenderer.sendSync('reqaction', 'exit');
+                break;
             }
-            break;
-        }
-        case 'undo':
-        {
-            if (Xonomy.hasBubble()) {
-                remote.getCurrentWindow().webContents.undo();
-            } else {
-                Xonomy.undo();
+        case "setViewModeRaw":
+            {
+                gxeditor.setViewModeRaw();
+                break;
             }
-            break;
-        }
-        case 'redo':
-        {
-            if (Xonomy.hasBubble()) {
-                remote.getCurrentWindow().webContents.redo();
-            } else {
-                Xonomy.redo();
+        case "setViewModeEasy":
+            {
+                gxeditor.setViewModeEasy();
+                break;
             }
-            break;
-        }
+        case "genCppCode":
+            {
+                const curFilePath = gxpage.getCurFilePath();
+                if (curFilePath) {
+                    const templatePath = gxpage.getTemplatePath(curFilePath);
+                    const generator = new CodeGenerator(templatePath);
+                    generator.gen();
+                }
+                break;
+            }
+        case "undo":
+            {
+                if (Xonomy.hasBubble()) {
+                    remote.getCurrentWindow().webContents.undo();
+                } else {
+                    Xonomy.undo();
+                }
+                break;
+            }
+        case "redo":
+            {
+                if (Xonomy.hasBubble()) {
+                    remote.getCurrentWindow().webContents.redo();
+                } else {
+                    Xonomy.redo();
+                }
+                break;
+            }
     }
 });
 
@@ -182,7 +161,7 @@ function fileOnLoad() {
         let templateConfig = null;
         try {
             templateConfig = new GXTemplate(tmplFilePath);
-        } catch(error) {
+        } catch (error) {
             editor.innerHTML = "";
             remote.dialog.showErrorBox(gxStrings.parseTmplFail, gxStrings.parseTmplFailDetail);
             clipboard.writeText(tmplFilePath);
@@ -220,7 +199,7 @@ function fileOnLoad() {
     gxeditor.setViewModeEasy();
     try {
         Xonomy.render(xmlText, editor, spec);
-    } catch(error) {
+    } catch (error) {
         editor.innerHTML = "";
         remote.dialog.showErrorBox('xml文件解析错误', '请在浏览器中打开当前文件检查具体问题。文件路径已拷贝到剪切板。');
         clipboard.writeText(curFilePath);
@@ -228,3 +207,46 @@ function fileOnLoad() {
         return;
     }
 }
+
+function onActionOpen(arg) {
+    askSaveIfNeed();
+    if (!gxpage.curProjectConfig) {
+        remote.dialog.showErrorBox('打开文件错误', '请先打开项目(项目文件夹下需带gxproject.json)。');
+        return;
+    }
+    let path = null;
+    if (arg) {
+        path = arg;
+    } else {
+        path = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
+            defaultPath: gxpage.getDataDirPath(),
+            filters: [
+                { name: "Xml Files", extensions: ['xml'] },
+                { name: 'All Files', extensions: ['*'] }],
+            properties: ['openFile']
+        })[0];
+    }
+    if (path) {
+        if (gxpage.switchFile(path)) {
+            fileOnLoad();
+            document.title = gxpage.genAppTitle();
+            ipcRenderer.send('reqaction', 'refreshAppMenu');
+        }
+    }
+}
+
+document.addEventListener('dragover', function (event) {
+    event.preventDefault();
+}, false);
+
+document.addEventListener('drop', function (event) {
+    event.preventDefault();
+    if (event.dataTransfer.files.length === 0) {
+        return;
+    }
+    const path = event.dataTransfer.files[0].path;
+    if (!path.match("xml")) {
+        return;
+    }
+    onActionOpen(path);
+}, false);
