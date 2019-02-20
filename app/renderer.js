@@ -33,6 +33,7 @@ const contextMenuTemplate = [
         }
     },
     {
+        id: "openInWiki",
         label: gxStrings.openInWiki,
         click() {
             const curFilePath = gxpage.getCurFilePath();
@@ -48,6 +49,12 @@ const contextMenuTemplate = [
 const contextMenu = Menu.buildFromTemplate(contextMenuTemplate);
 editor.addEventListener('contextmenu', (e) => {
     e.preventDefault();
+    let menuItem = contextMenu.getMenuItemById("openInWiki");
+    if (gxpage.getWikiPage()) {
+        menuItem.visible = true;
+    } else {
+        menuItem.visible = false;
+    }
     contextMenu.popup(remote.getCurrentWindow());
 });
 
