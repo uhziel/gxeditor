@@ -4,12 +4,13 @@
 
 'use strict';
 
-const { ipcRenderer, remote, clipboard } = require('electron');
+const { ipcRenderer, remote, clipboard, shell } = require("electron");
 const { Menu } = remote;
-const GXTemplate = require('./utils/gx_template');
-const GXPage = require('./gxpage.js');
-const CodeGenerator = require('./utils/gx_code_generator');
-const fs = require('fs');
+const GXTemplate = require("./utils/gx_template");
+const GXPage = require("./gxpage.js");
+const CodeGenerator = require("./utils/gx_code_generator");
+const fs = require("fs");
+const path = require("path");
 const gxStrings = require("./utils/gx_strings");
 
 let gxpage = new GXPage();
@@ -22,7 +23,26 @@ const contextMenuTemplate = [
     { label: gxStrings.appMenuCopy, role: 'copy' },
     { label: gxStrings.appMenuPaste, role: 'paste' },
     { type: 'separator' },
-    { label: gxStrings.appMenuSelectAll, role: 'selectall' }
+    { label: gxStrings.appMenuSelectAll, role: 'selectall' },
+    { type: 'separator' },
+    {
+        label: gxStrings.revealInExplorer,
+        click() {
+            const curFilePath = gxpage.getCurFilePath();
+            ipcRenderer.send('reqaction', 'showItemInFolder', curFilePath);
+        }
+    },
+    {
+        label: gxStrings.openInWiki,
+        click() {
+            const curFilePath = gxpage.getCurFilePath();
+            const basename = path.basename(curFilePath);
+            const wikiPage = gxpage.getWikiPage(basename);
+            if (wikiPage) {
+                shell.openExternal(wikiPage);
+            }
+        }
+    }
 ];
 
 const contextMenu = Menu.buildFromTemplate(contextMenuTemplate);

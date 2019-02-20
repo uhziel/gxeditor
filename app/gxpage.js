@@ -76,13 +76,30 @@ GXPage.prototype.getTemplatePath = function (dataPath) {
 }
 
 GXPage.prototype.getDataDirPath = function () {
+    if (!this.curProjectConfig) {
+        return null;
+    }
+
     const curProjectPath = this.appConfig.getCurProjectPath();
     if (!curProjectPath) {
         return null;
     }
 
-    const dataDirPath = path.join(curProjectPath, this.curProjectConfig.get('dataPath'));
+    const dataDirPath = path.join(curProjectPath, this.curProjectConfig.get("dataDirPath"));
     return dataDirPath;
+}
+
+GXPage.prototype.getWikiPage = function (dataBasename) {
+    if (!this.curProjectConfig) {
+        return null;
+    }
+
+    const wikiPage = this.curProjectConfig.get("wikiPage");
+    if (!wikiPage) {
+        return null;
+    }
+
+    return wikiPage.replace("${dataBasename}", dataBasename);
 }
 
 GXPage.prototype.getCurFilePath = function () {
