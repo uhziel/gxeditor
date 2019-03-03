@@ -32,7 +32,8 @@ const gxStrings = {
     openProjectFail: "打开工程错误",
     openProjectFailDetail: "不是合法的工程目录，目录内必须带gxproject.json。",
     revealInExplorer: "打开所在文件夹",
-    openInWiki: "打开wiki"
+    openInWiki: "打开wiki",
+    genDefaultTemplate: "生成默认模版",
 }
 
 module.exports = gxStrings;

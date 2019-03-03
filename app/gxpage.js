@@ -64,14 +64,21 @@ GXPage.prototype.genAppTitle = function () {
     return appTitle;
 }
 
-GXPage.prototype.getTemplatePath = function (dataPath) {
-    const basename = path.basename(dataPath, ".xml");
+GXPage.prototype.getCurTemplatePath = function () {
+    const curFilePath = this.getCurFilePath();
+    if (!curFilePath) {
+        return null;
+    }
+    const basename = path.basename(curFilePath, ".xml");
     const curProjectPath = this.appConfig.getCurProjectPath();
     if (!curProjectPath) {
         return null;
     }
 
     const templatePath = path.join(curProjectPath, `template/${basename}.json`);
+    if (!fs.existsSync(templatePath)) {
+        return null;
+    }
     return templatePath;
 }
 

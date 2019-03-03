@@ -43,18 +43,37 @@ const contextMenuTemplate = [
                 shell.openExternal(wikiPage);
             }
         }
+    },
+    {
+        id: "genDefaultTemplate",
+        label: gxStrings.genDefaultTemplate,
+        click() {
+            //TODO
+        }
     }
 ];
 
 const contextMenu = Menu.buildFromTemplate(contextMenuTemplate);
 editor.addEventListener('contextmenu', (e) => {
     e.preventDefault();
-    let menuItem = contextMenu.getMenuItemById("openInWiki");
-    if (gxpage.getWikiPage()) {
-        menuItem.visible = true;
-    } else {
-        menuItem.visible = false;
+    {
+        let menuItem = contextMenu.getMenuItemById("openInWiki");
+        if (gxpage.getWikiPage()) {
+            menuItem.visible = true;
+        } else {
+            menuItem.visible = false;
+        }
     }
+
+    {
+        let menuItem = contextMenu.getMenuItemById("genDefaultTemplate");
+        if (gxpage.getCurTemplatePath()) {
+            menuItem.visible = false;
+        } else {
+            menuItem.visible = true;
+        }
+    }
+
     contextMenu.popup(remote.getCurrentWindow());
 });
 
@@ -109,9 +128,8 @@ ipcRenderer.on('action', (event, arg, arg1) => {
             }
         case "genCppCode":
             {
-                const curFilePath = gxpage.getCurFilePath();
-                if (curFilePath) {
-                    const templatePath = gxpage.getTemplatePath(curFilePath);
+                const templatePath = gxpage.getCurTemplatePath();
+                if (templatePath) {
                     const generator = new CodeGenerator(templatePath);
                     generator.gen();
                 }
@@ -181,10 +199,10 @@ function fileOnLoad() {
     }
     const xmlText = gxeditor.readXMLFromFile(curFilePath);
 
-    const tmplFilePath = gxpage.getTemplatePath(curFilePath);
+    const tmplFilePath = gxpage.getCurTemplatePath();
 
     let spec = null;
-    if (fs.existsSync(tmplFilePath)) {
+    if (tmplFilePath) {
         let templateConfig = null;
         try {
             templateConfig = new GXTemplate(tmplFilePath);
