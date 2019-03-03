@@ -197,8 +197,8 @@ function fileOnLoad() {
         editor.innerHTML = "";
         return;
     }
-    const xmlText = gxeditor.readXMLFromFile(curFilePath);
 
+    const xmlText = gxeditor.readXMLFromFile(curFilePath);
     const tmplFilePath = gxpage.getCurTemplatePath();
 
     let spec = null;
@@ -215,7 +215,8 @@ function fileOnLoad() {
         }
         spec = gxeditor.genDocSpec(templateConfig.data);
     } else {
-        spec = gxeditor.genDefaultDocSpec();
+        const defaultTmpl = gxeditor.genDefaultTemplate(xmlText);
+        spec = gxeditor.genDocSpec(defaultTmpl);
     }
 
     spec.onchange = function () {

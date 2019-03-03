@@ -468,76 +468,54 @@ gxeditor.genDocSpec = function (xmlTmpl) {
     return spec;
 }
 
-gxeditor.genDefaultDocSpec = function (xmlTmpl) {
-    const spec = {
-        elements: {}
-    };
+function _genDefaultTemplate (defaultTemplate, elem) {
+    const elemName = elem.tagName;
 
-    spec.unknownElement = {
-        menu: [
-            {
-                caption: '编辑',
-                action: Xonomy.editRaw,
-                actionParameter: {
-                    fromXml: function(xml) { return xml; },
-                    toXml: function(txt, origElement) { return txt; }
-                }
-            },
-            {
-                caption: '克隆',
-                action: Xonomy.duplicateElementPlus,
-                actionParameter: null
-            },
-            {
-                caption: '注释',
-                action: Xonomy.newElementChildAtTopPlus,
-                actionParameter: `<comment>你的注释</comment>`,
-                hideIf: function (jsElement) {
-                    return jsElement.hasChildElement("comment");
-                }
-            },
-            {
-                caption: '删除',
-                action: Xonomy.deleteElementPlus,
-                actionParameter: null,
-                hideIf: function (jsElement) {
-                    const parentElement = jsElement.parent();
-                    if (parentElement === null) {
-                        return true;
-                    }
-                    return false;
-                }
-            }
-        ]
-    };
+    if (!defaultTemplate[elemName]) {
+        defaultTemplate[elemName] = {
+            "cnName": elemName,
+            "desc": `对于 ${elemName} 的描述`,
+            "multi": true,
+            "optional": false,
+            "children": [],
+            "attributes": []
+        };
+    }
+    
+    for (let i = 0; i < elem.children.length; i++) {
+        const childElem = elem.children[i];
+        const childElemName = childElem.tagName;
+        if (childElemName == "comment") {
+            continue;
+        }
 
-    spec.unknownAttribute = {
-        menu: [
-            {
-                caption: "删除",
-                action: Xonomy.deleteAttributePlus,
-                actionParameter: null,
-                hideIf: function (jsAttribute) { return false; }
-            }
-        ],
-        asker: Xonomy.askString
-    };
+        if (!defaultTemplate[elemName].children.includes(childElemName)) {
+            defaultTemplate[elemName].children.push(childElemName);
+        }
 
-    spec.elements.comment = {
-        displayName: "注释",
-        backgroundColour: "#D3D3D3",
-        menu: [
-            {
-                caption: "删除",
-                action: Xonomy.deleteElementPlus,
-                actionParameter: null
-            }
-        ],
-        oneliner: true,
-        hasText: true
-    };
+        _genDefaultTemplate(defaultTemplate, childElem);
+    }
 
-    return spec;
+    for (let i = 0; i < elem.attributes.length; i++) {
+        const attr = elem.attributes[i];
+
+        defaultTemplate[elemName].attributes[attr.name] = {
+            "cnName": attr.name,
+            "desc": `对于 ${attr.name} 的描述`,
+            "type": "STRING",
+            "optional": false,
+            "default": ""
+        };
+    }
+}
+
+gxeditor.genDefaultTemplate = function (xml_as_string) {
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xml_as_string, "application/xml");
+
+    let defaultTemplate = {};
+    _genDefaultTemplate(defaultTemplate, xmlDoc.documentElement);
+    return defaultTemplate;
 }
 
 gxeditor.setViewModeRaw = function () {
