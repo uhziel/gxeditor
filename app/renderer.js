@@ -48,7 +48,17 @@ const contextMenuTemplate = [
         id: "genDefaultTemplate",
         label: gxStrings.genDefaultTemplate,
         click() {
-            //TODO
+            saveCurDocDefaultTmpl();
+        }
+    },
+    {
+        id: "tmplRevealInExplorer",
+        label: gxStrings.tmplRevealInExplorer,
+        click() {
+            const curTemplatePath = gxpage.getCurTemplatePath();
+            if (curTemplatePath) {
+                ipcRenderer.send('reqaction', 'showItemInFolder', curTemplatePath);
+            }
         }
     }
 ];
@@ -66,11 +76,14 @@ editor.addEventListener('contextmenu', (e) => {
     }
 
     {
-        let menuItem = contextMenu.getMenuItemById("genDefaultTemplate");
+        let genMenuItem = contextMenu.getMenuItemById("genDefaultTemplate");
+        let tmplMenuItem = contextMenu.getMenuItemById("tmplRevealInExplorer");
         if (gxpage.getCurTemplatePath()) {
-            menuItem.visible = false;
+            genMenuItem.visible = false;
+            tmplMenuItem.visible = true;
         } else {
-            menuItem.visible = true;
+            genMenuItem.visible = true;
+            tmplMenuItem.visible = false;
         }
     }
 
@@ -163,15 +176,31 @@ function saveCurDoc() {
     }
     let curFilePath = gxpage.getCurFilePath();
     if (curFilePath) {
-        const txtSave = Xonomy.harvest();
-        const writeResult = gxeditor.writeXMLToFile(curFilePath, txtSave);
+        const xmlAsString = Xonomy.harvest();
+        const writeResult = gxeditor.writeXMLToFile(curFilePath, xmlAsString);
         if (!writeResult) {
-            remote.dialog.showErrorBox('保存文件失败', '请先将当前文件改为可写或版本工具解锁。文件路径已拷贝到剪切板。');
+            remote.dialog.showErrorBox(gxStrings.saveDataFileFail, gxStrings.saveDataFileFailDetail);
             clipboard.writeText(curFilePath);
             return;
         }
         gxpage.isCurFileSaved = true;
         document.title = gxpage.genAppTitle();
+    }
+}
+
+//保存当前文档的缺省模版
+function saveCurDocDefaultTmpl() {
+    const templatePath = gxpage.getTemplatePath();
+    if (templatePath) {
+        const xmlAsString = Xonomy.harvest();
+        const defaultTemplte = gxeditor.genDefaultTemplate(xmlAsString);
+        const tmplAsString = JSON.stringify(defaultTemplte, null, 4);
+        const writeResult = gxeditor.writeTmplToFile(templatePath, tmplAsString);
+        if (!writeResult) {
+            remote.dialog.showErrorBox(gxStrings.saveTmplFileFail, gxStrings.saveTmplFileFailDetail);
+            return;
+        }
+        ipcRenderer.send('reqaction', 'showItemInFolder', templatePath);
     }
 }
 

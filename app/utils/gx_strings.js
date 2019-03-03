@@ -34,6 +34,11 @@ const gxStrings = {
     revealInExplorer: "打开所在文件夹",
     openInWiki: "打开wiki",
     genDefaultTemplate: "生成默认模版",
+    saveDataFileFail: "保存文件失败",
+    saveDataFileFailDetail: "请先将当前文件改为可写或版本工具解锁。文件路径已拷贝到剪切板。",
+    saveTmplFileFail: "保存模版文件失败",
+    saveTmplFileFailDetail: "可能该文件已经存在并且只读，或者硬盘空间不够。",
+    tmplRevealInExplorer: "打开模版所在文件夹"
 }
 
 module.exports = gxStrings;

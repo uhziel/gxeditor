@@ -26,6 +26,15 @@ gxeditor.writeXMLToFile = function (filename, content) {
     }
 }
 
+gxeditor.writeTmplToFile = function (filename, content) {
+    try {
+        fs.writeFileSync(filename, content, { flag: 'w' });
+        return true;
+    } catch(err) {
+        return false;
+    }
+}
+
 ///////////////////////////////////////
 // Num
 gxeditor.askNum = function (defaultString, tmpl) {
@@ -478,7 +487,7 @@ function _genDefaultTemplate (defaultTemplate, elem) {
             "multi": true,
             "optional": false,
             "children": [],
-            "attributes": []
+            "attributes": {}
         };
     }
     
@@ -509,9 +518,9 @@ function _genDefaultTemplate (defaultTemplate, elem) {
     }
 }
 
-gxeditor.genDefaultTemplate = function (xml_as_string) {
+gxeditor.genDefaultTemplate = function (xmlAsString) {
     const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xml_as_string, "application/xml");
+    const xmlDoc = parser.parseFromString(xmlAsString, "application/xml");
 
     let defaultTemplate = {};
     _genDefaultTemplate(defaultTemplate, xmlDoc.documentElement);

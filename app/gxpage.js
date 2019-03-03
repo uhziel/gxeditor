@@ -64,7 +64,8 @@ GXPage.prototype.genAppTitle = function () {
     return appTitle;
 }
 
-GXPage.prototype.getCurTemplatePath = function () {
+//只是根据getCurFilePath计算，并不会判断template文件本身是否存在
+GXPage.prototype.getTemplatePath = function () {
     const curFilePath = this.getCurFilePath();
     if (!curFilePath) {
         return null;
@@ -76,6 +77,11 @@ GXPage.prototype.getCurTemplatePath = function () {
     }
 
     const templatePath = path.join(curProjectPath, `template/${basename}.json`);
+    return templatePath;
+}
+
+GXPage.prototype.getCurTemplatePath = function () {
+    const templatePath = this.getTemplatePath();
     if (!fs.existsSync(templatePath)) {
         return null;
     }
