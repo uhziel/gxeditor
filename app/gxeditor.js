@@ -477,7 +477,34 @@ gxeditor.genDocSpec = function (xmlTmpl) {
     return spec;
 }
 
-function _genDefaultTemplate (defaultTemplate, elem) {
+function _genDefautTmplAttr(attr) {
+    const attrName = attr.name;
+    const attrValue = attr.value;
+
+    const attrTmpl = {
+        "cnName": attrName,
+        "desc": `对于 ${attrName} 的描述`,
+        "type": "STRING",
+        "optional": false,
+        "default": ""
+    };
+
+    const num = Number(attrValue);
+    if (!Number.isNaN(num)) {
+        if (num % 1 === 0) {
+            attrTmpl.type = "INT";
+            attrTmpl.default = "0";
+        } else {
+            attrTmpl.type = "DOUBLE";
+            attrTmpl.precision = 0.01;
+            attrTmpl.default = "0.0";
+        }
+    }
+
+    return attrTmpl;
+}
+
+function _genDefaultTemplate(defaultTemplate, elem) {
     const elemName = elem.tagName;
 
     if (!defaultTemplate[elemName]) {
@@ -507,14 +534,7 @@ function _genDefaultTemplate (defaultTemplate, elem) {
 
     for (let i = 0; i < elem.attributes.length; i++) {
         const attr = elem.attributes[i];
-
-        defaultTemplate[elemName].attributes[attr.name] = {
-            "cnName": attr.name,
-            "desc": `对于 ${attr.name} 的描述`,
-            "type": "STRING",
-            "optional": false,
-            "default": ""
-        };
+        defaultTemplate[elemName].attributes[attr.name] = _genDefautTmplAttr(attr);
     }
 }
 
