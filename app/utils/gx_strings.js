@@ -19,8 +19,6 @@ const gxStrings = {
     appMenuView: "查看",
     appMenuModeEasy: "易读",
     appMenuModeRaw: "原生",
-    appMenuTools: "工具",
-    appMenuGenCppCode: "生成cpp代码",
     appMenuHelp: "帮助",
     appMenuHomepage: "主页",
     appMenuAbout: "关于",
@@ -38,7 +36,8 @@ const gxStrings = {
     saveDataFileFailDetail: "请先将当前文件改为可写或版本工具解锁。文件路径已拷贝到剪切板。",
     saveTmplFileFail: "保存模版文件失败",
     saveTmplFileFailDetail: "可能该文件已经存在并且只读，或者硬盘空间不够。",
-    tmplRevealInExplorer: "打开模版所在文件夹"
+    tmplRevealInExplorer: "打开模版所在文件夹",
+    genCppCode: "生成cpp代码",
 }
 
 module.exports = gxStrings;

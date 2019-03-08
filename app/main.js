@@ -116,17 +116,6 @@ function refreshAppMenu() {
       ]
     },
     {
-      label: gxStrings.appMenuTools,
-      submenu: [
-        {
-          label: gxStrings.appMenuGenCppCode,
-          click() {
-            mainWindow.webContents.send('action', 'genCppCode');
-          }
-        }
-      ]
-    },
-    {
       label: gxStrings.appMenuHelp,
       role: "help",
       submenu: [

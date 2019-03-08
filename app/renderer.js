@@ -60,7 +60,18 @@ const contextMenuTemplate = [
                 ipcRenderer.send('reqaction', 'showItemInFolder', curTemplatePath);
             }
         }
-    }
+    },
+    {
+        id: "genCppCode",
+        label: gxStrings.genCppCode,
+        click() {
+            const curTemplatePath = gxpage.getCurTemplatePath();
+            if (curTemplatePath) {
+                const generator = new CodeGenerator(curTemplatePath);
+                generator.gen();
+            }
+        }
+    }, 
 ];
 
 const contextMenu = Menu.buildFromTemplate(contextMenuTemplate);
@@ -78,12 +89,15 @@ editor.addEventListener('contextmenu', (e) => {
     {
         let genMenuItem = contextMenu.getMenuItemById("genDefaultTemplate");
         let tmplMenuItem = contextMenu.getMenuItemById("tmplRevealInExplorer");
+        let genCppCodeMenuItem = contextMenu.getMenuItemById("genCppCode");
         if (gxpage.getCurTemplatePath()) {
             genMenuItem.visible = false;
             tmplMenuItem.visible = true;
+            genCppCodeMenuItem.visible = true;
         } else {
             genMenuItem.visible = true;
             tmplMenuItem.visible = false;
+            genCppCodeMenuItem.visible = false;
         }
     }
 
@@ -137,15 +151,6 @@ ipcRenderer.on('action', (event, arg, arg1) => {
         case "setViewModeEasy":
             {
                 gxeditor.setViewModeEasy();
-                break;
-            }
-        case "genCppCode":
-            {
-                const templatePath = gxpage.getCurTemplatePath();
-                if (templatePath) {
-                    const generator = new CodeGenerator(templatePath);
-                    generator.gen();
-                }
                 break;
             }
         case "undo":
