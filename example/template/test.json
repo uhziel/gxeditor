@@ -91,6 +91,12 @@
                 "type": "IMAGE",
                 "default": "",
                 "optional": true
+            },
+            "__text__": {
+                "cnName": "无意义",
+                "type": "INT",
+                "default": "11",
+                "optional": false
             }
         }
     }

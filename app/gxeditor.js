@@ -229,6 +229,50 @@ gxeditor.getCnName = function (name, tmpl) {
 }
 ///////////////////////////////////////
 /// genMenu
+gxeditor.setAsker = function (tmpl, spec) {
+    // 添加修改属性的ask方法
+    if (tmpl.type === "INT") {
+        spec.asker = gxeditor.askNum;
+    }
+    else if (tmpl.type === "DOUBLE") {
+        spec.asker = gxeditor.askNum;
+    }
+    else if (tmpl.type === "ENUM") {
+        spec.asker = gxeditor.askEnum;
+    }
+    else if (tmpl.type === "STRING") {
+        spec.asker = Xonomy.askString;
+    }
+    else if (tmpl.type == "DATETIME") {
+        spec.asker = gxeditor.askDateTime;
+    }
+    else if (tmpl.type == "REF") {
+        spec.asker = gxeditor.askRef;
+    }
+    else if (tmpl.type == "IMAGE") {
+        spec.asker = gxeditor.askImage;
+    }
+    else if (tmpl.type == "FILE") {
+        spec.asker = gxeditor.askFile;
+    }
+    else if (tmpl.type == "SOUND") {
+        spec.asker = gxeditor.askSound;
+    }
+    else {
+        spec.asker = Xonomy.askString;
+    }
+    spec.askerParameter = tmpl;   
+}
+
+gxeditor.genTextMenu = function (attrName, attrSpec, elemSpec) {
+    const tmpl = attrSpec.tmpl;
+
+    gxeditor.setAsker(tmpl, elemSpec);
+    elemSpec.hasText = true;
+
+    gxeditor.fillCnNameInfo(attrName, attrSpec, tmpl);
+}
+
 gxeditor.genAttrMenu = function (attrName, attrSpec) {
     attrSpec.menu = [];
     const tmpl = attrSpec.tmpl;
@@ -243,44 +287,15 @@ gxeditor.genAttrMenu = function (attrName, attrSpec) {
     }
 
     // 添加修改属性的ask方法
-    if (tmpl.type === "INT") {
-        attrSpec.asker = gxeditor.askNum;
-    }
-    else if (tmpl.type === "DOUBLE") {
-        attrSpec.asker = gxeditor.askNum;
-    }
-    else if (tmpl.type === "ENUM") {
-        attrSpec.asker = gxeditor.askEnum;
-    }
-    else if (tmpl.type === "STRING") {
-        attrSpec.asker = Xonomy.askString;
-    }
-    else if (tmpl.type == "DATETIME") {
-        attrSpec.asker = gxeditor.askDateTime;
-    }
-    else if (tmpl.type == "REF") {
-        attrSpec.asker = gxeditor.askRef;
-    }
-    else if (tmpl.type == "IMAGE") {
-        attrSpec.asker = gxeditor.askImage;
-    }
-    else if (tmpl.type == "FILE") {
-        attrSpec.asker = gxeditor.askFile;
-    }
-    else if (tmpl.type == "SOUND") {
-        attrSpec.asker = gxeditor.askSound;
-    }
-    else {
-        attrSpec.asker = Xonomy.askString;
-    }
-    attrSpec.askerParameter = tmpl;
+    gxeditor.setAsker(tmpl, attrSpec);
     attrSpec.title = tmpl.desc;
 
     gxeditor.fillCnNameInfo(attrName, attrSpec, tmpl);
 }
 
 gxeditor.getNewElementParam = function (spec, elemName) {
-    var param = '<' + elemName;
+    let param = "<" + elemName;
+    let textParam = "";
     const element = spec.elements[elemName];
     for (const key in element.attributes) {
         const attr = element.attributes[key];
@@ -288,11 +303,15 @@ gxeditor.getNewElementParam = function (spec, elemName) {
         if (typeof attr.tmpl.default !== 'undefined') {
             defaultString = attr.tmpl.default;
         }
-        if (attr.tmpl.optional !== true) {
-            param += ` ${key}="${defaultString}"`;
+        if (key === "__text__") {
+            textParam += `${defaultString}`;
+        } else {
+            if (attr.tmpl.optional !== true) {
+                param += ` ${key}="${defaultString}"`;
+            }
         }
     }
-    param += ' >';
+    param += " >";
     for (const key in element.tmpl.children) {
         const childName = element.tmpl.children[key];
         const childElem = spec.elements[childName];
@@ -300,7 +319,8 @@ gxeditor.getNewElementParam = function (spec, elemName) {
             param += gxeditor.getNewElementParam(spec, childName);
         }
     }
-    param += `</${elemName}>`
+    param += textParam;
+    param += `</${elemName}>`;
     return param;
 }
 
@@ -335,6 +355,9 @@ gxeditor.genElementMenu = function (spec, elemName, elemSpec) {
     //action: 添加属性
     if (typeof elemSpec.attributes === 'object') {
         for (const attrName in elemSpec.attributes) {
+            if (attrName === "__text__") {
+                continue;
+            }
             let attrSpec = elemSpec.attributes[attrName];
             let defaultString = "";
             if (typeof attrSpec.tmpl.default !== 'undefined') {
@@ -404,7 +427,11 @@ gxeditor.genDocSpecFullInfo = function (spec) {
 
         for (const attrName in elemSpec.attributes) {
             const attrSpec = elemSpec.attributes[attrName];
-            gxeditor.genAttrMenu(attrName, attrSpec);
+            if (attrName === "__text__") {
+                gxeditor.genTextMenu(attrName, attrSpec, elemSpec);
+            } else {
+                gxeditor.genAttrMenu(attrName, attrSpec);
+            }
         }
     }
 }
