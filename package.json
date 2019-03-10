@@ -3,6 +3,7 @@
   "version": "0.0.9",
   "description": "game xml editor",
   "homepage": "https://github.com/uhziel/gxeditor",
+  "document": "https://uhziel.gitbook.io/gxeditor",
   "main": "app/main.js",
   "scripts": {
     "test": "none",

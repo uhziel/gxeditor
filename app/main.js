@@ -124,6 +124,10 @@ function refreshAppMenu() {
           click() { shell.openExternal(package.homepage); }
         },
         {
+          label: gxStrings.appMenuDocument,
+          click() { shell.openExternal(package.document); }
+        },
+        {
           label: gxStrings.appMenuAbout,
           click() {
             dialog.showMessageBox(mainWindow, {

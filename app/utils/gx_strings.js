@@ -21,6 +21,7 @@ const gxStrings = {
     appMenuModeRaw: "原生",
     appMenuHelp: "帮助",
     appMenuHomepage: "主页",
+    appMenuDocument: "文档",
     appMenuAbout: "关于",
     appMenuAboutMessage: "版本 v",
     appMenuEmptyProject: "空项目",
