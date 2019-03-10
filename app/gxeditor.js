@@ -312,6 +312,7 @@ gxeditor.getNewElementParam = function (spec, elemName) {
         }
     }
     param += " >";
+    param += textParam;
     for (const key in element.tmpl.children) {
         const childName = element.tmpl.children[key];
         const childElem = spec.elements[childName];
@@ -319,7 +320,6 @@ gxeditor.getNewElementParam = function (spec, elemName) {
             param += gxeditor.getNewElementParam(spec, childName);
         }
     }
-    param += textParam;
     param += `</${elemName}>`;
     return param;
 }
@@ -504,10 +504,7 @@ gxeditor.genDocSpec = function (xmlTmpl) {
     return spec;
 }
 
-function _genDefautTmplAttr(attr) {
-    const attrName = attr.name;
-    const attrValue = attr.value;
-
+function _genDefautTmplAttr(attrName, attrValue) {
     const attrTmpl = {
         "cnName": attrName,
         "desc": `对于 ${attrName} 的描述`,
@@ -544,25 +541,39 @@ function _genDefaultTemplate(defaultTemplate, elem) {
             "attributes": {}
         };
     }
+
+    for (let i = 0; i < elem.childNodes.length; i++) {
+		const child = elem.childNodes[i];
+		if (child.nodeType == Node.ELEMENT_NODE) { //element node
+            const childElem = child;
+            const childElemName = childElem.tagName;
+            if (childElemName == "comment") {
+                continue;
+            }
     
-    for (let i = 0; i < elem.children.length; i++) {
-        const childElem = elem.children[i];
-        const childElemName = childElem.tagName;
-        if (childElemName == "comment") {
-            continue;
+            if (!defaultTemplate[elemName].children.includes(childElemName)) {
+                defaultTemplate[elemName].children.push(childElemName);
+            }
+    
+            _genDefaultTemplate(defaultTemplate, childElem);
         }
-
-        if (!defaultTemplate[elemName].children.includes(childElemName)) {
-            defaultTemplate[elemName].children.push(childElemName);
-        }
-
-        _genDefaultTemplate(defaultTemplate, childElem);
+        else if (child.nodeType == Node.TEXT_NODE && child.nodeValue.trim().length > 0) { //text node
+            const attrName = "__text__";
+            const attrValue = child.nodeValue;
+            defaultTemplate[elemName].attributes[attrName] =
+                _genDefautTmplAttr(attrName, attrValue);    
+		}
     }
-
+    
     for (let i = 0; i < elem.attributes.length; i++) {
         const attr = elem.attributes[i];
-        defaultTemplate[elemName].attributes[attr.name] = _genDefautTmplAttr(attr);
+        if (attr.name === "xml:space") {
+            continue;
+        }
+        defaultTemplate[elemName].attributes[attr.name] =
+            _genDefautTmplAttr(attr.name, attr.value);
     }
+
 }
 
 gxeditor.genDefaultTemplate = function (xmlAsString) {
