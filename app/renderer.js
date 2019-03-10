@@ -227,7 +227,8 @@ function fileOnLoad() {
         return;
     }
     if (!fs.existsSync(curFilePath)) {
-        gxpage.switchFile(null);
+        gxpage.deleteFilePath(curFilePath);
+        ipcRenderer.send('reqaction', 'refreshAppMenu');
         editor.innerHTML = "";
         return;
     }
@@ -310,8 +311,8 @@ function onActionOpen(arg) {
         if (gxpage.switchFile(path)) {
             fileOnLoad();
             document.title = gxpage.genAppTitle();
-            ipcRenderer.send('reqaction', 'refreshAppMenu');
         }
+        ipcRenderer.send('reqaction', 'refreshAppMenu');
     }
 }
 

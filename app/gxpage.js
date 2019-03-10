@@ -34,6 +34,10 @@ GXPage.prototype.switchProject = function (projectPath) {
     return true;
 }
 
+GXPage.prototype.deleteFilePath = function (filePath) {
+    this.appConfig.deleteFilePath(filePath);
+}
+
 GXPage.prototype.switchFile = function (filePath) {
     if (!this.appConfig.switchFile(filePath)) {
         return false;

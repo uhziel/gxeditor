@@ -3,6 +3,7 @@
 const path = require("path");
 const { app } = require('electron');
 const GXConfig = require("./gx_config");
+const fs = require("fs");
 
 let gxAppConfig = {};
 gxAppConfig.version = "0.1.0";
@@ -57,6 +58,10 @@ gxAppConfig.switchFile = function(filePath) {
     if (recent.projects.length === 0) {
         return false;
     }
+    if (!fs.existsSync(filePath)) {
+        gxAppConfig.deleteFilePath(filePath);
+        return false;
+    }
     const curProject = recent.projects[0];
     let i = 0;
     for (; i < curProject.files.length; i++) {
@@ -82,6 +87,21 @@ gxAppConfig.switchFile = function(filePath) {
     }
     gxAppConfig.config.set("recent", recent);
     return true;
+}
+
+gxAppConfig.deleteFilePath = function(filePath) {
+    let recent = gxAppConfig.config.get("recent");
+    if (recent.projects.length === 0) {
+        return;
+    }
+    const curProject = recent.projects[0];
+    for (let i = 0; i < curProject.files.length; i++) {
+        if (curProject.files[i] === filePath) {
+            curProject.files.splice(i, 1);
+            gxAppConfig.config.set("recent", recent);
+            break;
+        }
+    }
 }
 
 gxAppConfig.getCurProjectPath = function() {
