@@ -1,9 +1,10 @@
-const iconv = require('iconv-lite');
-const fs = require('fs');
-const format = require('js-beautify').html;
-const Xonomy = require('./third_party/xonomy-3.5.0/xonomy.js');
-const path = require('path');
-const { remote } = require('electron');
+const iconv = require("iconv-lite");
+const fs = require("fs");
+const format = require("js-beautify").html;
+const Xonomy = require("./third_party/xonomy-3.5.0/xonomy.js");
+const path = require("path");
+const { remote } = require("electron");
+const gxpage = require("./gxpage");
 
 let gxeditor = {};
 
@@ -127,13 +128,21 @@ gxeditor.askRef = function (defaultString, tmpl) {
 
 ///////////////////////////////////////
 // Image
-let curDataPath = '/Users/zhulei/workspace/gxeditor/example/data';
+function _getFileTypeRootDirPath(tmpl) {
+    if (typeof tmpl.rootDir === "string") {
+        return path.join(gxpage.getDataDirPath(), tmpl.rootDir);
+    } else {
+        return gxpage.getDataDirPath();
+    }
+}
 gxeditor.askImage = function (defaultString, tmpl) {
-    const pathString = path.join(curDataPath, defaultString);
+    const fileRootDir = _getFileTypeRootDirPath(tmpl);
+    const pathString = path.join(fileRootDir, defaultString);
     return `
         <form onsubmit='Xonomy.answer(this.val.value); return false;'>
         <img id='pathimg' src='file://${pathString}' width='200' alt='图片内容'>
         <div>
+            <input type='hidden' id='fileRootDir' value='${fileRootDir}'>
             <label for='path'>路径：</label>
             <input type='text' id='path' name='val' value='${defaultString}' onclick='gxeditor.onclickImage(event);' readonly>
             <input type='submit' value='确定' >
@@ -142,8 +151,9 @@ gxeditor.askImage = function (defaultString, tmpl) {
     `;
 }
 gxeditor.onclickImage = function(event) {
+    const fileRootDir = document.getElementById('fileRootDir').value;
     const files = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
-        defaultPath: curDataPath,
+        defaultPath: fileRootDir,
         filters: [
             { name: "图片", extensions: ['png', 'jpg', 'gif', 'bmp'] },
             { name: '所有类型', extensions: ['*'] }],
@@ -152,16 +162,18 @@ gxeditor.onclickImage = function(event) {
     if (files) {
         const currentFile = files[0];
         document.getElementById('pathimg').src = `file://${currentFile}`;
-        document.getElementById('path').value = path.relative(curDataPath, currentFile);
+        document.getElementById('path').value = path.relative(fileRootDir, currentFile);
     }
 }
 
 ///////////////////////////////////////
 // File
 gxeditor.askFile = function (defaultString, tmpl) {
+    const fileRootDir = _getFileTypeRootDirPath(tmpl);
     return `
         <form onsubmit='Xonomy.answer(this.val.value); return false;'>
         <div>
+            <input type='hidden' id='fileRootDir' value='${fileRootDir}'>
             <label for='path'>路径：</label>
             <input type='text' id='path' name='val' value='${defaultString}' onclick='gxeditor.onclickFile(event);' readonly>
             <input type='submit' value='确定' >
@@ -170,27 +182,30 @@ gxeditor.askFile = function (defaultString, tmpl) {
     `;
 }
 gxeditor.onclickFile = function(event) {
+    const fileRootDir = document.getElementById('fileRootDir').value;
     const files = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
-        defaultPath: curDataPath,
+        defaultPath: fileRootDir,
         filters: [
             { name: '所有类型', extensions: ['*'] }],
         properties: ['openFile']
     });
     if (files) {
         const currentFile = files[0];
-        document.getElementById('path').value = path.relative(curDataPath, currentFile);
+        document.getElementById('path').value = path.relative(fileRootDir, currentFile);
     }
 }
 
 ///////////////////////////////////////
 // Sound
 gxeditor.askSound = function (defaultString, tmpl) {
-    const pathString = path.join(curDataPath, defaultString);
+    const fileRootDir = _getFileTypeRootDirPath(tmpl);
+    const pathString = path.join(fileRootDir, defaultString);
     return `
         <form onsubmit='Xonomy.answer(this.val.value); return false;'>
         <audio id='pathsound' src='file://${pathString}' controls alt='声音内容'>
         </audio>
         <div>
+            <input type='hidden' id='fileRootDir' value='${fileRootDir}'>
             <label for='path'>路径：</label>
             <input type='text' id='path' name='val' value='${defaultString}' onclick='gxeditor.onclickSound(event);' readonly>
             <input type='submit' value='确定' >
@@ -199,8 +214,9 @@ gxeditor.askSound = function (defaultString, tmpl) {
     `;
 }
 gxeditor.onclickSound = function(event) {
+    const fileRootDir = document.getElementById('fileRootDir').value;
     const files = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
-        defaultPath: curDataPath,
+        defaultPath: fileRootDir,
         filters: [
             { name: "声音", extensions: ['mp3', 'ogg', 'wav'] },
             { name: '所有类型', extensions: ['*'] }],
@@ -209,7 +225,7 @@ gxeditor.onclickSound = function(event) {
     if (files) {
         const currentFile = files[0];
         document.getElementById('pathsound').src = `file://${currentFile}`;
-        document.getElementById('path').value = path.relative(curDataPath, currentFile);
+        document.getElementById('path').value = path.relative(fileRootDir, currentFile);
     }
 }
 

@@ -41,7 +41,8 @@
             },
             "sound": {
                 "type": "SOUND",
-                "default": ""
+                "default": "",
+                "rootDir": "sounds"
             }
         }
     },
@@ -90,7 +91,8 @@
                 "cnName": "图标",
                 "type": "IMAGE",
                 "default": "",
-                "optional": true
+                "optional": true,
+                "rootDir": "icons"
             },
             "__text__": {
                 "cnName": "无意义",

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="GB2312"?>
-<test int="4" float="1.15" datetime="2018-01-01 07:02:01" string="abcefg" enum="1" file="icons/potions (6).png" sound="sounds/example1.mp3">
+<test int="4" float="1.15" datetime="2018-01-01 07:02:01" string="abcefg" enum="1" file="test_no_tmpl.xml" sound="example1.mp3">
     <commodities>
         <commodity item_id="1" buy_price="100" sell_price="101" />
         <commodity item_id="2" buy_price="100" sell_price="80" />
     </commodities>
     <items>
         <item id="1" name="小红药" xml:space="preserve">11</item>
-        <item id="2" name="小蓝药" icon="icons/blue1.png" xml:space="preserve">111</item>
-        <item id="3" name="中红药" icon="icons/potions (5).png" xml:space="preserve"></item>
-        <item id="4" name="中蓝药" icon="icons/potions (1).png" xml:space="preserve"></item>
+        <item id="2" name="小蓝药" icon="potions (2).png" xml:space="preserve">111</item>
+        <item id="3" name="中红药" icon="potions (1).png" xml:space="preserve"></item>
+        <item id="4" name="中蓝药" icon="potions (9).png" xml:space="preserve"></item>
     </items>
 </test>

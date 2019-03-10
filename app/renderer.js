@@ -7,13 +7,11 @@
 const { ipcRenderer, remote, clipboard, shell } = require("electron");
 const { Menu } = remote;
 const GXTemplate = require("./utils/gx_template");
-const GXPage = require("./gxpage.js");
+const gxpage = require("./gxpage.js");
 const CodeGenerator = require("./utils/gx_code_generator");
 const fs = require("fs");
 const path = require("path");
 const gxStrings = require("./utils/gx_strings");
-
-let gxpage = new GXPage();
 
 fileOnLoad();
 document.title = gxpage.genAppTitle();

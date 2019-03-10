@@ -123,4 +123,6 @@ GXPage.prototype.getCurFilePath = function () {
     return this.appConfig.getCurFilePath();
 }
 
-module.exports = GXPage;
+let gxpage = new GXPage();
+
+module.exports = gxpage;
