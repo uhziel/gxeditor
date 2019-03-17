@@ -1,6 +1,4 @@
-const iconv = require("iconv-lite");
 const fs = require("fs");
-const format = require("js-beautify").html;
 const Xonomy = require("./third_party/xonomy-3.5.0/xonomy.js");
 const path = require("path");
 const { remote } = require("electron");
@@ -8,24 +6,6 @@ const gxpage = require("./gxpage");
 
 let gxeditor = {};
 
-gxeditor.readXMLFromFile = function (filename) {
-    let buffer = fs.readFileSync(filename);
-    let content = iconv.decode(buffer, 'gbk');
-    return content;
-}
-
-gxeditor.writeXMLToFile = function (filename, content) {
-    let beautifulText = format(content, { eol: "\r\n" });
-    let buffer = iconv.encode(beautifulText, 'gbk');
-    let head = '<?xml version="1.0" encoding="GB2312"?>\n';
-    try {
-        fs.writeFileSync(filename, head, { flag: 'w' });
-        fs.writeFileSync(filename, buffer, { flag: 'a' });
-        return true;
-    } catch(err) {
-        return false;
-    }
-}
 
 gxeditor.writeTmplToFile = function (filename, content) {
     try {

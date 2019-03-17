@@ -12,6 +12,9 @@ const CodeGenerator = require("./utils/gx_code_generator");
 const fs = require("fs");
 const path = require("path");
 const gxStrings = require("./utils/gx_strings");
+const GXXmlFile = require("./utils/gx_xml_file")
+
+let curXmlFile = null;
 
 fileOnLoad();
 document.title = gxpage.genAppTitle();
@@ -178,9 +181,9 @@ function saveCurDoc() {
         return;
     }
     let curFilePath = gxpage.getCurFilePath();
-    if (curFilePath) {
+    if (curFilePath && curXmlFile) {
         const xmlAsString = Xonomy.harvest();
-        const writeResult = gxeditor.writeXMLToFile(curFilePath, xmlAsString);
+        const writeResult = curXmlFile.writeContent(xmlAsString);
         if (!writeResult) {
             remote.dialog.showErrorBox(gxStrings.saveDataFileFail, gxStrings.saveDataFileFailDetail);
             clipboard.writeText(curFilePath);
@@ -218,6 +221,7 @@ function askSaveIfNeed() {
 }
 
 function fileOnLoad() {
+    curXmlFile = null;
     let editor = document.getElementById("editor");
     const curFilePath = gxpage.getCurFilePath();
     if (!curFilePath) {
@@ -231,7 +235,8 @@ function fileOnLoad() {
         return;
     }
 
-    const xmlText = gxeditor.readXMLFromFile(curFilePath);
+    curXmlFile = new GXXmlFile(curFilePath);
+    const xmlText = curXmlFile.readContent();
     const tmplFilePath = gxpage.getCurTemplatePath();
 
     let spec = null;
