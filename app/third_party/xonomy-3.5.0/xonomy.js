@@ -410,7 +410,7 @@ Xonomy.refresh=function() {
 		$(this).children(".tag.opening").children(".attributes").children(".attribute").each(function(){
 			var atSpec=elSpec.attributes[this.getAttribute("data-name")];
 			if(atSpec.displayName) $(this).children(".name").html(Xonomy.textByLang(atSpec.displayName(Xonomy.harvestAttribute(this))));
-			if(atSpec.displayValue) $(this).children(".value").html(Xonomy.textByLang(atSpec.displayValue(Xonomy.harvestAttribute(this))));
+			if(atSpec.displayValue) $(this).children(".valueContainer").children(".value").html(Xonomy.textByLang(atSpec.displayValue(Xonomy.harvestAttribute(this))));
 			if(atSpec.caption) $(this).children(".inlinecaption").html("&nbsp;"+Xonomy.textByLang(atSpec.caption(Xonomy.harvestAttribute(this)))+"&nbsp;");
 		});
 	});

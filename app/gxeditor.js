@@ -215,6 +215,20 @@ gxeditor.fillCnNameInfo = function (name, spec, tmpl) {
     }
 }
 
+gxeditor.fillDisplayValue = function (spec, tmpl) {
+    if (typeof tmpl.enumList === "object") {
+        spec.displayValue = function (jsAttribute) {
+            for (let i = 0; i < tmpl.enumList.length; i++) {
+                if (tmpl.enumList[i].value == jsAttribute.value &&
+                    isValidPick(tmpl.enumList[i].displayIf, jsAttribute)) {
+                    return tmpl.enumList[i].caption;
+                }
+            }
+            return jsAttribute.value;
+        }
+    }
+}
+
 gxeditor.getCnName = function (name, tmpl) {
     if (typeof tmpl.cnName === 'string') {
         return tmpl.cnName;
@@ -267,6 +281,7 @@ gxeditor.genTextMenu = function (attrName, attrSpec, elemSpec) {
     elemSpec.hasText = true;
 
     gxeditor.fillCnNameInfo(attrName, attrSpec, tmpl);
+    gxeditor.fillDisplayValue(attrSpec, tmpl);
 }
 
 gxeditor.genAttrMenu = function (attrName, attrSpec) {
@@ -287,6 +302,7 @@ gxeditor.genAttrMenu = function (attrName, attrSpec) {
     attrSpec.title = tmpl.desc;
 
     gxeditor.fillCnNameInfo(attrName, attrSpec, tmpl);
+    gxeditor.fillDisplayValue(attrSpec, tmpl);
 }
 
 gxeditor.getNewElementParam = function (spec, elemName) {
