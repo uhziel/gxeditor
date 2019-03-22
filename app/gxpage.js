@@ -123,6 +123,23 @@ GXPage.prototype.getCurFilePath = function () {
     return this.appConfig.getCurFilePath();
 }
 
+GXPage.prototype.needDataPathSwitchToSlash = function () {
+    if (process.platform !== "win32") {
+        return false;
+    }
+
+    if (!this.curProjectConfig) {
+        return false;
+    }
+
+    const val = this.curProjectConfig.get("dataPathUseSlash");
+    if (!val) {
+        return false;
+    }
+
+    return true;
+}
+
 let gxpage = new GXPage();
 
 module.exports = gxpage;
