@@ -1,4 +1,5 @@
 {
     "dataDirPath": "data",
-    "wikiPage": "https://github.com/uhziel/gxeditor/wiki/${dataBasename}"
+    "wikiPage": "https://github.com/uhziel/gxeditor/wiki/${dataBasename}",
+    "dataPathUseSlash": true
 }

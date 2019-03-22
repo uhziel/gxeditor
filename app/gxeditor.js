@@ -120,7 +120,11 @@ function _getFileTypeRootDirPath(tmpl) {
 // File
 gxeditor.askFile = function (defaultString, tmpl) {
     const fileRootDir = _getFileTypeRootDirPath(tmpl);
-    const pathString = path.join(fileRootDir, defaultString);
+    const realRelativePath = defaultString;
+    if (gxpage.needDataPathSwitchToSlash()) {
+        realRelativePath = realRelativePath.replace(/\//g, '\\');
+    }
+    const pathString = path.join(fileRootDir, realRelativePath);
     const fileType = tmpl.fileType ? tmpl.fileType : "";
 
     let extraHtml = "";
@@ -164,7 +168,11 @@ gxeditor.onclickFile = function(event) {
         if (fileType) {
             document.getElementById("fileToDisplay").src = `file://${currentFile}`;
         }
-        document.getElementById("path").value = path.relative(fileRootDir, currentFile);
+        let pathValue = path.relative(fileRootDir, currentFile);
+        if (gxpage.needDataPathSwitchToSlash()) {
+            pathValue = pathValue.replace(/\\/g, '/');
+        }
+        document.getElementById("path").value = pathValue;
     }
 }
 
