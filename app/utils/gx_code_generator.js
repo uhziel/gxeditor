@@ -135,8 +135,7 @@ GXCodeGenerator.prototype.genHeaderStructVarAttr = function (attrName, attr) {
     if (attr.type == 'INT' || attr.type == 'ENUM' || attr.type == 'REF') {
         type = 'int';
     }
-    else if (attr.type == 'STRING' || attr.type == 'IMAGE' || attr.type == 'FILE'
-    || attr.type == 'SOUND') {
+    else if (attr.type == 'STRING' || attr.type == 'FILE') {
         type = 'std::string';
     }
     else if (attr.type == 'DOUBLE') {

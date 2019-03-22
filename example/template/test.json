@@ -40,7 +40,8 @@
                 "default": ""
             },
             "sound": {
-                "type": "SOUND",
+                "type": "FILE",
+                "fileType": "SOUND",
                 "default": "",
                 "rootDir": "sounds"
             }
@@ -89,7 +90,8 @@
             },
             "icon": {
                 "cnName": "图标",
-                "type": "IMAGE",
+                "type": "FILE",
+                "fileType": "IMAGE",
                 "default": "",
                 "optional": true,
                 "rootDir": "icons"
