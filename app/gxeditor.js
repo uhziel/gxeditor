@@ -120,7 +120,7 @@ function _getFileTypeRootDirPath(tmpl) {
 // File
 gxeditor.askFile = function (defaultString, tmpl) {
     const fileRootDir = _getFileTypeRootDirPath(tmpl);
-    const realRelativePath = defaultString;
+    let realRelativePath = defaultString;
     if (gxpage.needDataPathSwitchToSlash()) {
         realRelativePath = realRelativePath.replace(/\//g, '\\');
     }
