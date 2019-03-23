@@ -93,7 +93,7 @@ GXPage.prototype.getCurTemplatePath = function () {
 }
 
 GXPage.prototype.isLargeText = function (len) {
-    return true;
+    return len >= this.appConfig.getLargeTextLength();
 }
 
 GXPage.prototype.getDataDirPath = function () {

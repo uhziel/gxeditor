@@ -6,12 +6,35 @@ const GXConfig = require("./gx_config");
 const fs = require("fs");
 
 let gxAppConfig = {};
-gxAppConfig.version = "0.1.0";
+gxAppConfig.version = "0.1.1";
+
+function compareVersion(v1, v2) {
+    if (typeof v1 !== 'string') return false;
+    if (typeof v2 !== 'string') return false;
+    v1 = v1.split('.');
+    v2 = v2.split('.');
+    const k = Math.min(v1.length, v2.length);
+    for (let i = 0; i < k; ++ i) {
+        v1[i] = parseInt(v1[i], 10);
+        v2[i] = parseInt(v2[i], 10);
+        if (v1[i] > v2[i]) return 1;
+        if (v1[i] < v2[i]) return -1;        
+    }
+    return v1.length == v2.length ? 0: (v1.length < v2.length ? -1 : 1);
+}
 
 (function() {
     const configPath = path.join(app.getPath('userData'), `app_config.json`);
     gxAppConfig.config = new GXConfig(configPath);
-    if (!gxAppConfig.config.get("version")) {
+    let oldVersion = gxAppConfig.config.get("version");
+    if (oldVersion === gxAppConfig.version) {
+        return;
+    }
+
+    if (!oldVersion) {
+        oldVersion = "0.0.0";
+    }
+    if (compareVersion(oldVersion, "0.1.0") === -1) {
         const defaultRecent = {
             "projectsMaxNum": 3,
             "filesMaxNum": 10,
@@ -19,7 +42,11 @@ gxAppConfig.version = "0.1.0";
         };
         gxAppConfig.config.set("recent", defaultRecent);
     }
-    //TODO 处理下版本号升级的情况 gxAppConfig.config.get("version") != gxAppConfig.version
+
+    if (compareVersion(oldVersion, "0.1.1") === -1) {
+        gxAppConfig.config.set("largeTextLength", 10000);
+    }
+
     gxAppConfig.config.set("version", gxAppConfig.version);
 })();
 
@@ -128,6 +155,10 @@ gxAppConfig.getCurFilePath = function() {
 
 gxAppConfig.getRecent = function() {
     return gxAppConfig.config.get("recent");
+}
+
+gxAppConfig.getLargeTextLength = function() {
+    return gxAppConfig.config.get("largeTextLength");
 }
 
 module.exports = gxAppConfig;

@@ -84,34 +84,37 @@ const contextMenuTemplate = [
 ];
 
 const contextMenu = Menu.buildFromTemplate(contextMenuTemplate);
-editor.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-    {
-        let menuItem = contextMenu.getMenuItemById("openInWiki");
-        if (gxpage.getWikiPage()) {
-            menuItem.visible = true;
-        } else {
-            menuItem.visible = false;
-        }
-    }
 
-    {
-        let genMenuItem = contextMenu.getMenuItemById("genDefaultTemplate");
-        let tmplMenuItem = contextMenu.getMenuItemById("tmplRevealInExplorer");
-        let genCppCodeMenuItem = contextMenu.getMenuItemById("genCppCode");
-        if (gxpage.getCurTemplatePath()) {
-            genMenuItem.visible = false;
-            tmplMenuItem.visible = true;
-            genCppCodeMenuItem.visible = true;
-        } else {
-            genMenuItem.visible = true;
-            tmplMenuItem.visible = false;
-            genCppCodeMenuItem.visible = false;
+function bindContextMenu(editor) {
+    editor.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        {
+            let menuItem = contextMenu.getMenuItemById("openInWiki");
+            if (gxpage.getWikiPage()) {
+                menuItem.visible = true;
+            } else {
+                menuItem.visible = false;
+            }
         }
-    }
-
-    contextMenu.popup(remote.getCurrentWindow());
-});
+    
+        {
+            let genMenuItem = contextMenu.getMenuItemById("genDefaultTemplate");
+            let tmplMenuItem = contextMenu.getMenuItemById("tmplRevealInExplorer");
+            let genCppCodeMenuItem = contextMenu.getMenuItemById("genCppCode");
+            if (gxpage.getCurTemplatePath()) {
+                genMenuItem.visible = false;
+                tmplMenuItem.visible = true;
+                genCppCodeMenuItem.visible = true;
+            } else {
+                genMenuItem.visible = true;
+                tmplMenuItem.visible = false;
+                genCppCodeMenuItem.visible = false;
+            }
+        }
+    
+        contextMenu.popup(remote.getCurrentWindow());
+    });
+}
 
 //监听与主进程的通信
 ipcRenderer.on('action', (event, arg, arg1) => {
@@ -261,6 +264,7 @@ function fileOnLoad() {
     gxeditor.setViewModeEasy();
     try {
         let editor = document.getElementById("editor");
+        bindContextMenu(editor);
         gxCoreEditor.render(xmlText, editor, spec);
     } catch (error) {
         remote.dialog.showErrorBox('xml文件解析错误', '请在浏览器中打开当前文件检查具体问题。文件路径已拷贝到剪切板。');
