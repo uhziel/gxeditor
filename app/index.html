@@ -5,11 +5,21 @@
     <meta charset="UTF-8">
     <title>gxeditor</title>
     <link type="text/css" rel="stylesheet" href="third_party/xonomy-3.5.0/xonomy.css" />
+    <style type="text/css" media="screen">
+        .ace_editor {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+    </style>
 </head>
 
 <body>
     <div id="editor"></div>
 
+    <script src="../node_modules/ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
     <script>
         // You can also require other files to run in this process
         window.$ = window.jQuery = require('./third_party/jquery-1.11.0.min.js');

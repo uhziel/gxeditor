@@ -12,7 +12,15 @@ const CodeGenerator = require("./utils/gx_code_generator");
 const fs = require("fs");
 const path = require("path");
 const gxStrings = require("./utils/gx_strings");
-const GXXmlFile = require("./utils/gx_xml_file")
+const GXXmlFile = require("./utils/gx_xml_file");
+const gxCoreEditor = require("./utils/gx_core_editor");
+
+gxCoreEditor.on("change", function() {
+    if (gxpage.isCurFileSaved) {
+        gxpage.isCurFileSaved = false;
+        document.title = gxpage.genAppTitle();
+    }
+});
 
 let curXmlFile = null;
 
@@ -156,20 +164,12 @@ ipcRenderer.on('action', (event, arg, arg1) => {
             }
         case "undo":
             {
-                if (Xonomy.hasBubble()) {
-                    remote.getCurrentWindow().webContents.undo();
-                } else {
-                    Xonomy.undo();
-                }
+                gxCoreEditor.undo();
                 break;
             }
         case "redo":
             {
-                if (Xonomy.hasBubble()) {
-                    remote.getCurrentWindow().webContents.redo();
-                } else {
-                    Xonomy.redo();
-                }
+                gxCoreEditor.redo();
                 break;
             }
     }
@@ -182,7 +182,7 @@ function saveCurDoc() {
     }
     let curFilePath = gxpage.getCurFilePath();
     if (curFilePath && curXmlFile) {
-        const xmlAsString = Xonomy.harvest();
+        const xmlAsString = gxCoreEditor.harvest();
         const writeResult = curXmlFile.writeContent(xmlAsString);
         if (!writeResult) {
             remote.dialog.showErrorBox(gxStrings.saveDataFileFail, gxStrings.saveDataFileFailDetail);
@@ -198,7 +198,7 @@ function saveCurDoc() {
 function saveCurDocDefaultTmpl() {
     const templatePath = gxpage.getTemplatePath();
     if (templatePath) {
-        const xmlAsString = Xonomy.harvest();
+        const xmlAsString = gxCoreEditor.harvest();
         const defaultTemplte = gxeditor.genDefaultTemplate(xmlAsString);
         const tmplAsString = JSON.stringify(defaultTemplte, null, 4);
         const writeResult = gxeditor.writeTmplToFile(templatePath, tmplAsString);
@@ -220,18 +220,20 @@ function askSaveIfNeed() {
     if (response == 0) saveCurDoc();
 }
 
+function clearData() {
+    gxCoreEditor.destroy(); 
+}
+
 function fileOnLoad() {
     curXmlFile = null;
-    let editor = document.getElementById("editor");
+    clearData();
     const curFilePath = gxpage.getCurFilePath();
     if (!curFilePath) {
-        editor.innerHTML = "";
         return;
     }
     if (!fs.existsSync(curFilePath)) {
         gxpage.deleteFilePath(curFilePath);
         ipcRenderer.send('reqaction', 'refreshAppMenu');
-        editor.innerHTML = "";
         return;
     }
 
@@ -245,7 +247,6 @@ function fileOnLoad() {
         try {
             templateConfig = new GXTemplate(tmplFilePath);
         } catch (error) {
-            editor.innerHTML = "";
             remote.dialog.showErrorBox(gxStrings.parseTmplFail, gxStrings.parseTmplFailDetail);
             clipboard.writeText(tmplFilePath);
             console.error(error);
@@ -257,34 +258,11 @@ function fileOnLoad() {
         spec = gxeditor.genDocSpec(defaultTmpl);
     }
 
-    spec.onchange = function () {
-        if (gxpage.isCurFileSaved) {
-            gxpage.isCurFileSaved = false;
-            document.title = gxpage.genAppTitle();
-        }
-    }
-
-    //TODO zhulei 后续去除写死的validate
-    if (spec.elements["commodity"]) {
-        spec.elements["commodity"].validate = function (jsElement) {
-            const buy_price = jsElement.getAttributeValue("buy_price", null);
-            const sell_price = jsElement.getAttributeValue("sell_price", null);
-            if (buy_price !== null && sell_price !== null) {
-                if (Number(buy_price) < Number(sell_price)) {
-                    Xonomy.warnings.push({
-                        htmlID: jsElement.htmlID,
-                        text: `卖价(sell_price)不能高于买价(buy_price)。`
-                    });
-                }
-            }
-        };
-    }
-
     gxeditor.setViewModeEasy();
     try {
-        Xonomy.render(xmlText, editor, spec);
+        let editor = document.getElementById("editor");
+        gxCoreEditor.render(xmlText, editor, spec);
     } catch (error) {
-        editor.innerHTML = "";
         remote.dialog.showErrorBox('xml文件解析错误', '请在浏览器中打开当前文件检查具体问题。文件路径已拷贝到剪切板。');
         clipboard.writeText(curFilePath);
         console.error(error);

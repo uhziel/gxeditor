@@ -92,6 +92,10 @@ GXPage.prototype.getCurTemplatePath = function () {
     return templatePath;
 }
 
+GXPage.prototype.isLargeText = function (len) {
+    return true;
+}
+
 GXPage.prototype.getDataDirPath = function () {
     if (!this.curProjectConfig) {
         return null;
