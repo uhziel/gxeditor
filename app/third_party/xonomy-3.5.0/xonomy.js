@@ -419,17 +419,20 @@ Xonomy.refresh=function() {
 Xonomy.harvestCache={};
 Xonomy.harvest=function() { //harvests the contents of an editor
 	//Returns xml-as-string.
-	var rootElement=$(".xonomy .element").first().toArray()[0];
-	var js=Xonomy.harvestElement(rootElement);
-	for(var key in Xonomy.namespaces) {
-		if(!js.hasAttribute(key)) js.attributes.push({
-			type: "attribute",
-			name: key,
-			value: Xonomy.namespaces[key],
-			parent: js
-		});
-	}
-	return Xonomy.js2xml(js);
+	var xmlAsString = "";
+	$(".xonomy > .element").each(function () {
+		var js=Xonomy.harvestElement(this);
+		for(var key in Xonomy.namespaces) {
+			if(!js.hasAttribute(key)) js.attributes.push({
+				type: "attribute",
+				name: key,
+				value: Xonomy.namespaces[key],
+				parent: js
+			});
+		}
+		xmlAsString += Xonomy.js2xml(js);		
+	});
+	return xmlAsString;
 }
 Xonomy.harvestElement=function(htmlElement, jsParent) {
 	var htmlID=htmlElement.id;

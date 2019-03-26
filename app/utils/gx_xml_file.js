@@ -2,7 +2,6 @@
 
 const fs = require('fs');
 const iconv = require("iconv-lite");
-const format = require("js-beautify").html;
 
 function GXXmlFile(filePath) {
     this.path = filePath;

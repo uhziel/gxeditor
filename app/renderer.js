@@ -5,7 +5,7 @@
 'use strict';
 
 const { ipcRenderer, remote, clipboard, shell } = require("electron");
-const { Menu } = remote;
+const { Menu, BrowserWindow } = remote;
 const GXTemplate = require("./utils/gx_template");
 const gxpage = require("./gxpage.js");
 const CodeGenerator = require("./utils/gx_code_generator");
@@ -23,17 +23,36 @@ gxCoreEditor.on("change", function() {
 });
 
 let curXmlFile = null;
+let popupWindow = null;
 
 fileOnLoad();
 document.title = gxpage.genAppTitle();
 
 const contextMenuTemplate = [
-    { label: gxStrings.appMenuCut, role: 'cut' },
-    { label: gxStrings.appMenuCopy, role: 'copy' },
-    { label: gxStrings.appMenuPaste, role: 'paste' },
-    { type: 'separator' },
-    { label: gxStrings.appMenuSelectAll, role: 'selectall' },
-    { type: 'separator' },
+    {
+        id: "render",
+        label: gxStrings.render,
+        click() {
+            let aceEditor = gxCoreEditor.getAceEditor();
+            let selectionRange = aceEditor.getSelectionRange();
+            localStorage.setItem("xmlText", aceEditor.session.getTextRange(selectionRange));
+            localStorage.setItem("tmpl", JSON.stringify(gxCoreEditor.getTmpl()));
+            popupWindow = new BrowserWindow({
+                width: 800,
+                height: 400,
+                parent: remote.getCurrentWindow(),
+                modal: false
+            });
+            popupWindow.loadFile("app/xonomy_pop_up.html");
+            popupWindow.on("closed", () => {
+                let isChanged = JSON.parse(localStorage.getItem("isChanged"));
+                if (isChanged) {
+                    aceEditor.session.replace(selectionRange, localStorage.getItem("xmlText"));
+                }
+                popupWindow = null;
+            });
+        }
+    },
     {
         label: gxStrings.revealInExplorer,
         click() {
@@ -88,6 +107,16 @@ const contextMenu = Menu.buildFromTemplate(contextMenuTemplate);
 function bindContextMenu(editor) {
     editor.addEventListener('contextmenu', (e) => {
         e.preventDefault();
+
+        {
+            let menuItem = contextMenu.getMenuItemById("render");
+            if (gxCoreEditor.getAceEditor()) {
+                menuItem.visible = true;
+            } else {
+                menuItem.visible = false;
+            }
+        }
+
         {
             let menuItem = contextMenu.getMenuItemById("openInWiki");
             if (gxpage.getWikiPage()) {
@@ -224,11 +253,11 @@ function askSaveIfNeed() {
 }
 
 function clearData() {
+    curXmlFile = null;
     gxCoreEditor.destroy(); 
 }
 
 function fileOnLoad() {
-    curXmlFile = null;
     clearData();
     const curFilePath = gxpage.getCurFilePath();
     if (!curFilePath) {
@@ -244,7 +273,7 @@ function fileOnLoad() {
     const xmlText = curXmlFile.readContent();
     const tmplFilePath = gxpage.getCurTemplatePath();
 
-    let spec = null;
+    let tmpl = null;
     if (tmplFilePath) {
         let templateConfig = null;
         try {
@@ -255,17 +284,16 @@ function fileOnLoad() {
             console.error(error);
             return;
         }
-        spec = gxeditor.genDocSpec(templateConfig.data);
+        tmpl = templateConfig.data;
     } else {
-        const defaultTmpl = gxeditor.genDefaultTemplate(xmlText);
-        spec = gxeditor.genDocSpec(defaultTmpl);
+        tmpl = gxeditor.genDefaultTemplate(xmlText);
     }
 
     gxeditor.setViewModeEasy();
     try {
         let editor = document.getElementById("editor");
         bindContextMenu(editor);
-        gxCoreEditor.render(xmlText, editor, spec);
+        gxCoreEditor.render(xmlText, editor, tmpl);
     } catch (error) {
         remote.dialog.showErrorBox('xml文件解析错误', '请在浏览器中打开当前文件检查具体问题。文件路径已拷贝到剪切板。');
         clipboard.writeText(curFilePath);

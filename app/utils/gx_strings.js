@@ -39,6 +39,7 @@ const gxStrings = {
     saveTmplFileFailDetail: "可能该文件已经存在并且只读，或者硬盘空间不够。",
     tmplRevealInExplorer: "打开模版所在文件夹",
     genCppCode: "生成cpp代码",
+    render: "渲染",
 }
 
 module.exports = gxStrings;

@@ -67,14 +67,16 @@ function refreshAppMenu() {
         {
           label: gxStrings.appMenuUndo,
           click() {
-            mainWindow.webContents.send('action', 'undo');
+            const focusedWindows = BrowserWindow.getFocusedWindow();
+            focusedWindows.webContents.send('action', 'undo');
           },
           accelerator: 'CmdOrCtrl+Z'
         },
         {
           label: gxStrings.appMenuRedo,
           click() {
-            mainWindow.webContents.send('action', 'redo');
+            const focusedWindows = BrowserWindow.getFocusedWindow();
+            focusedWindows.webContents.send('action', 'redo');
           },
           accelerator: 'CmdOrCtrl+Shift+Z'
         },
@@ -103,14 +105,16 @@ function refreshAppMenu() {
           label: gxStrings.appMenuModeEasy,
           type: "radio",
           click() {
-            mainWindow.webContents.send('action', 'setViewModeEasy');
+            const focusedWindows = BrowserWindow.getFocusedWindow();
+            focusedWindows.webContents.send('action', 'setViewModeEasy');
           }
         },
         {
           label: gxStrings.appMenuModeRaw,
           type: "radio",
           click() {
-            mainWindow.webContents.send('action', 'setViewModeRaw');
+            const focusedWindows = BrowserWindow.getFocusedWindow();
+            focusedWindows.webContents.send('action', 'setViewModeRaw');
           }
         }
       ]
