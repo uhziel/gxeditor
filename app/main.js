@@ -161,6 +161,7 @@ function refreshAppMenu() {
   if (process.env.GXEDITOR_DEBUG) {
     const editMenuItem = appMenu.getMenuItemById("appMenuEdit");
     editMenuItem.submenu.append(new MenuItem({ role: 'toggleDevTools' }));
+    editMenuItem.submenu.append(new MenuItem({ role: 'forceReload' }));
   }
 
   //添加下默认的"打开最近"菜单
