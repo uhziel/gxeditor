@@ -289,6 +289,7 @@ function fileOnLoad() {
     const tmplFilePath = gxpage.getCurTemplatePath();
 
     let tmpl = null;
+    let isDefaultTmpl = false;
     if (tmplFilePath) {
         let templateConfig = null;
         try {
@@ -302,13 +303,18 @@ function fileOnLoad() {
         tmpl = templateConfig.data;
     } else {
         tmpl = gxeditor.genDefaultTemplate(xmlText);
+        isDefaultTmpl = true;
     }
 
     gxeditor.setViewModeEasy();
     try {
         let editor = document.getElementById("editor");
         bindContextMenu(editor);
-        gxCoreEditor.render(xmlText, editor, tmpl);
+        let coreEditorType = "Xonomy";
+        if (isDefaultTmpl || gxpage.isLargeText(xmlText.length)) {
+            coreEditorType = "ace";
+        }
+        gxCoreEditor.render(coreEditorType, xmlText, editor, tmpl);
     } catch (error) {
         remote.dialog.showErrorBox('xml文件解析错误', '请在浏览器中打开当前文件检查具体问题。文件路径已拷贝到剪切板。');
         clipboard.writeText(curFilePath);

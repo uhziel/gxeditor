@@ -1,6 +1,5 @@
 'use strict';
 
-const gxpage = require("../gxpage");
 const EventEmitter = require("events");
 const format = require("js-beautify").html;
 const gxeditor = require("../gxeditor");
@@ -15,12 +14,11 @@ class GXCoreEditor extends EventEmitter {
         this.xonomyFormat = null;
     }
 
-    render(text, editor, tmpl) {
-        if (gxpage.isLargeText(text.length)) {
+    render(coreEditorType, text, editor, tmpl) {
+        if (coreEditorType === "ace") {
             if (!$(editor).hasClass("ace_editor")) {
                 $(editor).addClass("ace_editor");
             }
-            this.coreEditorType = "ace";
             this.coreEditor = ace.edit(editor);
             this.coreEditor.setOptions({
                 theme: "ace/theme/textmate",
@@ -29,14 +27,16 @@ class GXCoreEditor extends EventEmitter {
             });
             this.coreEditor.session.setValue(text);
             this.coreEditor.on("change", this.emit.bind(this, "change"));
-        } else {
+        } else if (coreEditorType === "Xonomy") {
             let spec = gxeditor.genDocSpec(tmpl);
             Xonomy.render(text, editor, spec);
             spec.onchange = this.emit.bind(this, "change");
-            this.coreEditorType = "Xonomy";
             this.coreEditor = Xonomy;
             this.xonomyFormat = gxDetectFormat(text);
+        } else {
+            console.assert(0);
         }
+        this.coreEditorType = coreEditorType;
         this.tmpl = tmpl;
     }
 
