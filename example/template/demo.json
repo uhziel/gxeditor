@@ -51,7 +51,9 @@
                 "desc": "对于 age 的描述",
                 "type": "INT",
                 "optional": false,
-                "default": "0"
+                "default": "0",
+                "min": 0,
+                "max": 150
             }
         }
     },
@@ -204,7 +206,8 @@
                 "type": "FILE",
                 "optional": false,
                 "default": "0",
-                "fileType": "IMAGE"
+                "fileType": "IMAGE",
+                "rootDir": "icons"
             }
         }
     },
