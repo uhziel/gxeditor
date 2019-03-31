@@ -52,7 +52,7 @@ const contextMenuTemplate = [
                 width: 800,
                 height: 400,
                 parent: remote.getCurrentWindow(),
-                modal: false
+                modal: true
             });
             popupWindow.loadFile("app/xonomy_pop_up.html");
             remote.getGlobal("sharedObject").isXonomyPopup = 1;

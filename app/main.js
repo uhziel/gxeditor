@@ -162,11 +162,11 @@ function refreshAppMenu() {
 
   //如果现在渲染窗口打开,只显示部分数据
   const fileMenuItem = appMenu.getMenuItemById("appMenuFile");
-  if (global.sharedObject.isXonomyPopup) {
-    fileMenuItem.enabled = false;
-  } else {
-    fileMenuItem.enabled = true;
-  }
+  const fileMenuEnabled = !global.sharedObject.isXonomyPopup;
+  fileMenuItem.submenu.items.forEach((menuItem) => {
+    menuItem.enabled = fileMenuEnabled;
+  });
+
   const findMenuItem = appMenu.getMenuItemById("appMenuFind");
   if (global.sharedObject.isXonomyPopup) {
     findMenuItem.enabled = false;
