@@ -11,7 +11,8 @@ autoUpdater.logger = logger;
 autoUpdater.logger.transports.file.level = 'info';
 
 global.sharedObject = {
-  appConfig : gxAppConfig
+  appConfig : gxAppConfig,
+  isXonomyPopup: false
 };
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -24,6 +25,7 @@ function refreshAppMenu() {
   var appMenuTemplate = [
     {
       label: gxStrings.appMenuFile,
+      id: "appMenuFile",
       submenu: [
         {
           label: gxStrings.appMenuOpenProject,
@@ -87,6 +89,7 @@ function refreshAppMenu() {
         { type: 'separator' },
         {
           label: gxStrings.appMenuFind,
+          id: "appMenuFind",
           click() {
             if (searchWindow === null) {
               newSearchWindow(mainWindow);
@@ -155,6 +158,20 @@ function refreshAppMenu() {
     openMenuItem.enabled = false;
   } else {
     openMenuItem.enabled = true;
+  }
+
+  //如果现在渲染窗口打开,只显示部分数据
+  const fileMenuItem = appMenu.getMenuItemById("appMenuFile");
+  if (global.sharedObject.isXonomyPopup) {
+    fileMenuItem.enabled = false;
+  } else {
+    fileMenuItem.enabled = true;
+  }
+  const findMenuItem = appMenu.getMenuItemById("appMenuFind");
+  if (global.sharedObject.isXonomyPopup) {
+    findMenuItem.enabled = false;
+  } else {
+    findMenuItem.enabled = true;
   }
 
   //开发环境时，加上开关 DevTools 菜单选项

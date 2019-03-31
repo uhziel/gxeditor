@@ -55,12 +55,16 @@ const contextMenuTemplate = [
                 modal: false
             });
             popupWindow.loadFile("app/xonomy_pop_up.html");
+            remote.getGlobal("sharedObject").isXonomyPopup = 1;
+            ipcRenderer.send("reqaction", "refreshAppMenu");
             popupWindow.on("closed", () => {
                 let isChanged = JSON.parse(localStorage.getItem("isChanged"));
                 if (isChanged) {
                     aceEditor.session.replace(selectionRange, localStorage.getItem("xmlText"));
                 }
                 popupWindow = null;
+                remote.getGlobal("sharedObject").isXonomyPopup = 0;
+                ipcRenderer.send("reqaction", "refreshAppMenu");
             });
         }
     },
