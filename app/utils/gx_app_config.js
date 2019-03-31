@@ -44,7 +44,7 @@ function compareVersion(v1, v2) {
     }
 
     if (compareVersion(oldVersion, "0.1.1") === -1) {
-        gxAppConfig.config.set("largeTextLength", 10000);
+        gxAppConfig.config.set("largeTextLength", 50000);
     }
 
     gxAppConfig.config.set("version", gxAppConfig.version);
