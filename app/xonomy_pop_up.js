@@ -43,8 +43,14 @@ let editor = document.getElementById("editor");
 const tmpl = JSON.parse(localStorage.getItem("tmpl"));
 const text = localStorage.getItem("xmlText");
 const format = gxIndextFormat(text);
-const textHasRoot = `<__root__>${text}</__root__>`
-gxCoreEditor.render(textHasRoot, editor, tmpl);
+const textHasRoot = `<__root__>${text}</__root__>`;
+try {
+    gxCoreEditor.render(textHasRoot, editor, tmpl);
+} catch (error) {
+    $(editor).append("<p>渲染失败。请查看内容的语法是否出错：</p>");
+    $(editor).append("<pre></pre>");
+    $("#editor > pre").text(text);
+}
 gxCoreEditor.setXonomyFormat(format);
 
 window.addEventListener("beforeunload", (event) => {
