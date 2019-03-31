@@ -7,7 +7,7 @@ function GXXmlFile(filePath) {
     this.path = filePath;
     this.encoding = "utf-8";
     let firstLine = fs.readFileSync(this.path, "utf-8").split("\n")[0];
-    let match = firstLine.match('encoding="(.+)"');
+    let match = firstLine.match('encoding="(.+?)"');
     if (match) {
         let encoding = match[1];
         if (typeof encoding === "string" && encoding.length > 0) {
