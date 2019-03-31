@@ -4,49 +4,7 @@ const gxpage = require("../gxpage");
 const EventEmitter = require("events");
 const format = require("js-beautify").html;
 const gxeditor = require("../gxeditor");
-const detectIndent = require("detect-indent");
-
-function getHeadCharNum(text, char) {
-    if (!text) {
-        return 0;
-    }
-
-    let num = 0;
-    while (text[num] === char) {
-        num++;
-    }
-    return num;
-}
-
-function getXonomyOptions(text) {
-    const indentStatus = detectIndent(text);
-    const firstLine = text.split("\n", 1)[0];
-    console.assert(firstLine.length);
-
-    let xonomyOptions = {};
-    xonomyOptions.eol = "\n";  //默认换行结束符
-    if (firstLine[firstLine.length - 1] === "\r") {
-        xonomyOptions.eol = "\r\n";
-    }
-
-    if (indentStatus.type === "space") {
-        xonomyOptions.indentSize = indentStatus.amount;
-        xonomyOptions.indentChar = " ";        
-    }
-    else if (indentStatus.type === "tab") {
-        xonomyOptions.indentSize = indentStatus.amount;
-        xonomyOptions.indentChar = "\t";        
-    } else {
-        xonomyOptions.indentSize = 4;     //默认1个缩进占4个字符
-        xonomyOptions.indentChar = " ";   //默认缩进字符
-    }
-
-    const indentCharNum = getHeadCharNum(firstLine, xonomyOptions.indentChar);
-
-    xonomyOptions.indentLevel = Math.trunc(indentCharNum / xonomyOptions.indentSize);
-
-    return xonomyOptions;
-}
+const gxDetectFormat = require("./gx_detect_format");
 
 class GXCoreEditor extends EventEmitter {
     constructor() {
@@ -54,7 +12,7 @@ class GXCoreEditor extends EventEmitter {
         this.coreEditorType = "none";
         this.coreEditor = null;  
         this.tmpl = null;
-        this.xonomyOptions = null;
+        this.xonomyFormat = null;
     }
 
     render(text, editor, tmpl) {
@@ -77,7 +35,7 @@ class GXCoreEditor extends EventEmitter {
             spec.onchange = this.emit.bind(this, "change");
             this.coreEditorType = "Xonomy";
             this.coreEditor = Xonomy;
-            this.xonomyOptions = getXonomyOptions(text);
+            this.xonomyFormat = gxDetectFormat(text);
         }
         this.tmpl = tmpl;
     }
@@ -99,11 +57,12 @@ class GXCoreEditor extends EventEmitter {
             return this.coreEditor.getValue();
         } else if (this.coreEditorType === "Xonomy") {
             const content = this.coreEditor.harvest();
-            const beautifulText = format(content, {
-                indent_size: this.xonomyOptions.indentSize,
-                indent_char: this.xonomyOptions.indentChar,
-                indent_level: this.xonomyOptions.indentLevel,
-                eol: this.xonomyOptions.eol
+            const contentRemoveRoot = content.replace(/^<__root__>|<\/__root__>$/g, "");
+            const beautifulText = format(contentRemoveRoot, {
+                indent_size: this.xonomyFormat.indentSize,
+                indent_char: this.xonomyFormat.indentChar,
+                indent_level: this.xonomyFormat.indentLevel,
+                eol: this.xonomyFormat.eol
             });
             return beautifulText;
         } else {
@@ -142,9 +101,13 @@ class GXCoreEditor extends EventEmitter {
             return null;
         }
     }
-    
+
     getTmpl() {
         return this.tmpl;
+    }
+
+    setXonomyFormat(format) {
+        this.xonomyFormat = format;
     }
 }
 

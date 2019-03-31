@@ -3,6 +3,7 @@
 const { ipcRenderer } = require("electron");
 const gxCoreEditor = require("./utils/gx_core_editor");
 const gxeditor = require("./gxeditor");
+const gxIndextFormat = require("./utils/gx_detect_format");
 
 let isChanged = false;
 gxCoreEditor.on("change", function() {
@@ -40,7 +41,11 @@ gxeditor.setViewModeEasy();
 
 let editor = document.getElementById("editor");
 const tmpl = JSON.parse(localStorage.getItem("tmpl"));
-gxCoreEditor.render(localStorage.getItem("xmlText"), editor, tmpl);
+const text = localStorage.getItem("xmlText");
+const format = gxIndextFormat(text);
+const textHasRoot = `<__root__>${text}</__root__>`
+gxCoreEditor.render(textHasRoot, editor, tmpl);
+gxCoreEditor.setXonomyFormat(format);
 
 window.addEventListener("beforeunload", (event) => {
     localStorage.setItem("isChanged", isChanged);
