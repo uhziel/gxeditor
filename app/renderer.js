@@ -31,8 +31,8 @@ document.title = gxpage.genAppTitle();
 function _selectLines(aceEditor) {
     let selectionRange = aceEditor.getSelectionRange();
     selectionRange.start.column = 0;
-    selectionRange.end.row++;
-    selectionRange.end.column = 0;
+    selectionRange.end.column =
+        aceEditor.session.getLine(selectionRange.end.row).length;
     aceEditor.session.getSelection().setSelectionRange(selectionRange);
 
     return selectionRange;
