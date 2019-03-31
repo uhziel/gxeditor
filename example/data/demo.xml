@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<demo>
+  <demo_int age="4" />
+  <demo_double height="1.72" />
+  <demo_enum sex="1" />
+  <demo_multilevel_enum province="0" city="0" />
+  <demo_string value="gxeditor" />
+  <demo_datetime value="2018-01-01 07:02:01" />
+  <demo_ref value="1" />
+  <demo_file value="icons/blue1.png" />
+  <demo_image value="icons/potions (8).png" />
+  <demo_sound value="sounds/example1.mp3" />
+  <staffs>
+    <staff id="1" name="约翰" />
+    <staff id="2" name="露西" />
+  </staffs>
+</demo>

@@ -1,0 +1,261 @@
+{
+    "__help_node__": {
+        "cnName": "该元素的中文名。",
+        "desc": "对该元素的描述，如果鼠标移动到该元素上，会以tips的形式展示出来。",
+        "multi": "该元素是否多选。如果多选，该元素允许出现多次。",
+        "optional": "该元素是否可选。如果可选，该元素默认不会出现，需用户手动创建。",
+        "children": "该元素的子元素。",
+        "attributes": "描述该元素拥有的所有属性。对于属性字段的描述，请看 __help_attribute__ 。"
+    },
+    "__help_attribute__": {
+        "cnName": "该属性的中文名。",
+        "desc": "对该属性的描述，如果鼠标移动到该属性上，会以tips的形式展示出来。",
+        "type": "属性的类型。支持INT(整数)、DOUBLE(浮点)、STRING(字符串)、ENUM(枚举)、REF(引用)等",
+        "optional": "该属性是否可选。如果可选，该属性默认不会出现，需用户手动创建。",
+        "default": "该属性的默认值。",
+        "min": "该属性的最小值。",
+        "max": "该属性的最大值。",
+        "precision": "精度",
+        "enumList": "仅type=ENUM时有效。",
+        "refPath": "仅type=REF时有效。"
+    },
+    "demo": {
+        "cnName": "演示",
+        "desc": "对于 demo 的描述",
+        "multi": false,
+        "optional": false,
+        "children": [
+            "demo_int",
+            "demo_double",
+            "demo_enum",
+            "demo_multilevel_enum",
+            "demo_string",
+            "demo_datetime",
+            "demo_ref",
+            "demo_file",
+            "demo_image",
+            "demo_sound",
+            "staffs"
+        ],
+        "attributes": {}
+    },
+    "demo_int": {
+        "cnName": "演示整数",
+        "desc": "对于 demo_int 的描述",
+        "multi": true,
+        "optional": false,
+        "children": [],
+        "attributes": {
+            "age": {
+                "cnName": "年龄",
+                "desc": "对于 age 的描述",
+                "type": "INT",
+                "optional": false,
+                "default": "0"
+            }
+        }
+    },
+    "demo_double": {
+        "cnName": "演示浮点数",
+        "desc": "对于 demo_double 的描述",
+        "multi": true,
+        "optional": false,
+        "children": [],
+        "attributes": {
+            "height": {
+                "cnName": "身高(m)",
+                "desc": "对于 height 的描述",
+                "type": "DOUBLE",
+                "optional": false,
+                "default": "0.0",
+                "precision": 0.01
+            }
+        }
+    },
+    "demo_enum": {
+        "cnName": "演示枚举",
+        "desc": "对于 demo_enum 的描述",
+        "multi": true,
+        "optional": false,
+        "children": [],
+        "attributes": {
+            "sex": {
+                "cnName": "性别",
+                "desc": "对于 sex 的描述",
+                "type": "ENUM",
+                "optional": false,
+                "default": "0",
+                "enumList": [
+                    { "value": 0, "caption": "男" },
+                    { "value": 1, "caption": "女" }
+                ]
+            }
+        }
+    },
+    "demo_multilevel_enum": {
+        "cnName": "演示多级枚举",
+        "desc": "对于 demo_multilevel_enum 的描述",
+        "multi": true,
+        "optional": false,
+        "children": [],
+        "attributes": {
+            "province": {
+                "cnName": "省份",
+                "desc": "对于 province 的描述",
+                "type": "ENUM",
+                "optional": false,
+                "default": "0",
+                "enumList": [
+                    { "value": 0, "caption": "湖北" },
+                    { "value": 1, "caption": "湖南" }
+                ]
+            },
+            "city": {
+                "cnName": "城市",
+                "desc": "对于 city 的描述",
+                "type": "ENUM",
+                "optional": false,
+                "default": "0",
+                "enumList": [
+                    { "value": 0, "caption": "武汉市", "displayIf": { "province" : 0 } },
+                    { "value": 1, "caption": "荆州市", "displayIf": { "province" : 0 } },
+                    { "value": 2, "caption": "宜昌市", "displayIf": { "province" : 0 } },
+                    { "value": 0, "caption": "长沙市", "displayIf": { "province" : 1 } },
+                    { "value": 1, "caption": "岳阳市", "displayIf": { "province" : 1 } }
+                ]
+            }
+        }
+    },
+    "demo_string": {
+        "cnName": "演示字符串",
+        "desc": "对于 demo_string 的描述",
+        "multi": true,
+        "optional": false,
+        "children": [],
+        "attributes": {
+            "value": {
+                "cnName": "值",
+                "desc": "对于 value 的描述",
+                "type": "STRING",
+                "optional": false,
+                "default": ""
+            }
+        }
+    },
+    "demo_datetime": {
+        "cnName": "演示日期时间",
+        "desc": "对于 demo_datetime 的描述",
+        "multi": true,
+        "optional": false,
+        "children": [],
+        "attributes": {
+            "value": {
+                "cnName": "值",
+                "desc": "对于 value 的描述",
+                "type": "DATETIME",
+                "optional": false,
+                "default": ""
+            }
+        }
+    },
+    "demo_ref": {
+        "cnName": "演示引用",
+        "desc": "对于 demo_ref 的描述",
+        "multi": true,
+        "optional": false,
+        "children": [],
+        "attributes": {
+            "value": {
+                "cnName": "员工id",
+                "desc": "对于 value 的描述",
+                "type": "REF",
+                "optional": false,
+                "default": "0",
+                "refPath": "staff"
+            }
+        }
+    },
+    "demo_file": {
+        "cnName": "演示文件",
+        "desc": "对于 demo_file 的描述",
+        "multi": true,
+        "optional": false,
+        "children": [],
+        "attributes": {
+            "value": {
+                "cnName": "值",
+                "desc": "对于 value 的描述",
+                "type": "FILE",
+                "optional": false,
+                "default": "0"
+            }
+        }
+    },
+    "demo_image": {
+        "cnName": "演示图片",
+        "desc": "对于 demo_image 的描述",
+        "multi": true,
+        "optional": false,
+        "children": [],
+        "attributes": {
+            "value": {
+                "cnName": "值",
+                "desc": "对于 value 的描述",
+                "type": "FILE",
+                "optional": false,
+                "default": "0",
+                "fileType": "IMAGE"
+            }
+        }
+    },
+    "demo_sound": {
+        "cnName": "演示声音",
+        "desc": "对于 demo_sound 的描述",
+        "multi": true,
+        "optional": false,
+        "children": [],
+        "attributes": {
+            "value": {
+                "cnName": "value",
+                "desc": "对于 value 的描述",
+                "type": "FILE",
+                "optional": false,
+                "default": "0",
+                "fileType": "SOUND"
+            }
+        }
+    },
+    "staffs": {
+        "cnName": "员工s",
+        "desc": "对于 staffs 的描述",
+        "multi": true,
+        "optional": false,
+        "children": [
+            "staff"
+        ],
+        "attributes": {}
+    },
+    "staff": {
+        "cnName": "员工",
+        "desc": "对于 staff 的描述",
+        "multi": true,
+        "optional": false,
+        "children": [],
+        "attributes": {
+            "id": {
+                "cnName": "id",
+                "desc": "对于 id 的描述",
+                "type": "INT",
+                "optional": false,
+                "default": "0"
+            },
+            "name": {
+                "cnName": "名字",
+                "desc": "对于 name 的描述",
+                "type": "STRING",
+                "optional": false,
+                "default": ""
+            }
+        }
+    }
+}
