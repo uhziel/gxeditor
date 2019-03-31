@@ -312,6 +312,11 @@ ipcMain.on('reqaction', (event, arg, arg1, arg2) => {
       refreshAppMenu();
       break;
     }
+    case "reloadWindow":
+    {
+      event.sender.reload();
+      break;
+    }
   }
 });
 

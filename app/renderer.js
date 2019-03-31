@@ -253,7 +253,8 @@ function saveCurDocDefaultTmpl() {
             remote.dialog.showErrorBox(gxStrings.saveTmplFileFail, gxStrings.saveTmplFileFailDetail);
             return;
         }
-        ipcRenderer.send('reqaction', 'showItemInFolder', templatePath);
+        ipcRenderer.send("reqaction", "showItemInFolder", templatePath);
+        ipcRenderer.send("reqaction", "reloadWindow");
     }
 }
 
