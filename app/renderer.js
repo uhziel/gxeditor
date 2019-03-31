@@ -28,13 +28,24 @@ let popupWindow = null;
 fileOnLoad();
 document.title = gxpage.genAppTitle();
 
+function _selectLines(aceEditor) {
+    let selectionRange = aceEditor.getSelectionRange();
+    selectionRange.start.column = 0;
+    selectionRange.end.row++;
+    selectionRange.end.column = 0;
+    aceEditor.session.getSelection().setSelectionRange(selectionRange);
+
+    return selectionRange;
+}
+
 const contextMenuTemplate = [
     {
         id: "render",
         label: gxStrings.render,
         click() {
             let aceEditor = gxCoreEditor.getAceEditor();
-            let selectionRange = aceEditor.getSelectionRange();
+            let selectionRange = _selectLines(aceEditor);
+            aceEditor.session.getSelection().setSelectionRange(selectionRange);
             localStorage.setItem("xmlText", aceEditor.session.getTextRange(selectionRange));
             localStorage.setItem("tmpl", JSON.stringify(gxCoreEditor.getTmpl()));
             popupWindow = new BrowserWindow({
