@@ -40,6 +40,7 @@ const gxStrings = {
     tmplRevealInExplorer: "打开模版所在文件夹",
     genCppCode: "生成cpp代码",
     render: "渲染",
+    appMenuReload: "重载文件"
 }
 
 module.exports = gxStrings;

@@ -98,7 +98,8 @@ function refreshAppMenu() {
           accelerator: 'CmdOrCtrl+F'
         },
         { type: 'separator' },
-        { label: gxStrings.appMenuSelectAll, role: 'selectall' }
+        { label: gxStrings.appMenuSelectAll, role: 'selectall' },
+        { label: gxStrings.appMenuReload, role: 'forceReload' }
       ]
     },
     {
@@ -178,7 +179,6 @@ function refreshAppMenu() {
   if (process.env.GXEDITOR_DEBUG) {
     const editMenuItem = appMenu.getMenuItemById("appMenuEdit");
     editMenuItem.submenu.append(new MenuItem({ role: 'toggleDevTools' }));
-    editMenuItem.submenu.append(new MenuItem({ role: 'forceReload' }));
   }
 
   //添加下默认的"打开最近"菜单
