@@ -551,7 +551,7 @@ function _genDefaultTemplate(defaultTemplate, elem) {
 
 gxeditor.genDefaultTemplate = function (xmlAsString) {
     const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlAsString, "application/xml");
+    const xmlDoc = parser.parseFromString(xmlAsString.replace(/<\?xml.*\?>/, ""), "application/xml");
 
     let defaultTemplate = {
         "__help_node__": {

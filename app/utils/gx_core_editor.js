@@ -29,7 +29,7 @@ class GXCoreEditor extends EventEmitter {
             this.coreEditor.on("change", this.emit.bind(this, "change"));
         } else if (coreEditorType === "Xonomy") {
             let spec = gxeditor.genDocSpec(tmpl);
-            Xonomy.render(text, editor, spec);
+            Xonomy.render(text.replace(/<\?xml.*\?>/, ""), editor, spec);
             spec.onchange = this.emit.bind(this, "change");
             this.coreEditor = Xonomy;
             this.xonomyFormat = gxDetectFormat(text);
