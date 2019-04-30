@@ -18,6 +18,7 @@ class GXCoreEditor extends EventEmitter {
         if (coreEditorType === "ace") {
             if (!$(editor).hasClass("ace_editor")) {
                 $(editor).addClass("ace_editor");
+                $(editor).before("<p class='ace_editor_statusbar'>您可以反选部分XML数据后“右键菜单->渲染”。</p>");
             }
             this.coreEditor = ace.edit(editor);
             this.coreEditor.setOptions({
@@ -49,6 +50,7 @@ class GXCoreEditor extends EventEmitter {
         this.coreEditorType = "none";
     
         $("#editor").remove();
+        $("#ace_editor_statusbar").remove();
         $("body").append('<div id="editor"></div>');        
     }
 
