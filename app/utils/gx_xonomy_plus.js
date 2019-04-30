@@ -156,8 +156,7 @@ Xonomy.modifyText = function(htmlID, val) {
     const parentElem=obj.parentNode.parentNode;
     const oldVal = obj.getAttribute('data-value');
     obj.setAttribute('data-value', val);
-    $(obj).find("span.value>span.word,span.value>span.char,span.value>span.space").remove();
-    $(obj.getElementsByClassName("value")[0]).append(Xonomy.chewText(val));
+    $(obj.getElementsByClassName("value")[0]).text(Xonomy.chewText(val));
 
     Xonomy.changed(Xonomy.harvestText(obj,Xonomy.harvestElement(parentElem)));
     window.setTimeout(function(){Xonomy.clickoff(); Xonomy.setFocus(htmlID, 'text')}, 100);

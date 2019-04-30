@@ -680,7 +680,7 @@ Xonomy.renderText=function(text) {
 	html+='<div id="'+htmlID+'" data-value="'+Xonomy.xmlEscape(text.value)+'" class="'+classNames+'">';
 		html+='<span class="connector"></span>';
 		var txt=Xonomy.chewText(text.value);
-		html+='<span class="value" onclick="Xonomy.click(\''+htmlID+'\', \'text\')"><span class="insertionPoint"><span class="inside"></span></span><span class="dots"></span>'+txt+'</span>';
+		html+='<span class="value" onclick="Xonomy.click(\''+htmlID+'\', \'text\')">'+txt+'</span>';
 	html+='</div>';
 	text.htmlID = htmlID;
 	return html;
@@ -700,6 +700,8 @@ Xonomy.renderDisplayText=function(text, displayText) {
 }
 
 Xonomy.chewText=function(txt) {
+	return txt;
+	/*
 	var ret="";
 	ret+="<span class='word'>"; //start word
 	for(var i=0; i<txt.length; i++) {
@@ -713,6 +715,7 @@ Xonomy.chewText=function(txt) {
 	}
 	ret+="</span>"; //end word
 	return ret;
+	*/
 };
 Xonomy.charClick=function(c) {
 	Xonomy.clickoff();

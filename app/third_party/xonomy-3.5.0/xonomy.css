@@ -35,7 +35,7 @@
 .xonomy.nerd .element > .tag.opening > .attributes > .attribute > .name { color: #ff4455; cursor: pointer; }
 .xonomy.nerd .element > .tag.opening > .attributes > .attribute > .valueContainer { cursor: pointer; }
 .xonomy.nerd .element > .tag.opening > .attributes > .attribute > .valueContainer > .value { color: #666666; }
-.xonomy.nerd .element > .children > .textnode > .value { color: #000000; cursor: pointer; }
+.xonomy.nerd .element > .children > .textnode > .value { color: #000000; cursor: pointer; white-space: pre;}
 .xonomy.nerd .element > .children > .textnode > .value > .insertionPoint { display: none; }
 .xonomy.nerd .element > .children > .textnode > .value > .dots { display: none; }
 
@@ -226,7 +226,7 @@
 .xonomy.laic .element > .children { padding-left: 40px; }
 .xonomy.laic .element > .children > .textnode { display: block; margin: 10px 0px 0px 0px; }
 .xonomy.laic .element.oneliner > .children > .textnode { margin-top: 0px; }
-.xonomy.laic .element > .children > .textnode > .value { display: inline-block; font-family: monospace, "宋体"; background-color: #ffffff; padding: 4px 0px; border-bottom: 1px solid #999999; cursor: pointer; min-width: 2em; }
+.xonomy.laic .element > .children > .textnode > .value { display: inline-block; font-family: monospace, "宋体"; background-color: #ffffff; padding: 4px 0px; border-bottom: 1px solid #999999; cursor: pointer; min-width: 2em; white-space: pre;}
 .xonomy.laic .element.oneliner > .children > .textnode > .value { text-align: center; }
 .xonomy.laic .element > .tag.closing { display: none; }
 .xonomy.laic .element > .tag { display: block; padding: 5px 10px; background-color: #eeeeee; box-shadow: 0px 0px 2px #999999; z-index: 9;}

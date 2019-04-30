@@ -470,7 +470,7 @@ gxeditor.genDocSpec = function (xmlTmpl) {
                 actionParameter: null
             }
         ],
-        oneliner: true,
+        oneliner: false,
         hasText: true
     };
 

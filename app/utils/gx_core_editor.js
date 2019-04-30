@@ -64,6 +64,7 @@ class GXCoreEditor extends EventEmitter {
                 indent_size: this.xonomyFormat.indentSize,
                 indent_char: this.xonomyFormat.indentChar,
                 indent_level: this.xonomyFormat.indentLevel,
+                content_unformatted: ["comment"],
                 eol: this.xonomyFormat.eol
             });
             return beautifulText;
