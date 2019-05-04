@@ -6,7 +6,7 @@ const GXConfig = require("./gx_config");
 const fs = require("fs");
 
 let gxAppConfig = {};
-gxAppConfig.version = "0.1.1";
+gxAppConfig.version = "0.1.2";
 
 function compareVersion(v1, v2) {
     if (typeof v1 !== 'string') return false;
@@ -46,6 +46,10 @@ function compareVersion(v1, v2) {
     if (compareVersion(oldVersion, "0.1.1") === -1) {
         gxAppConfig.config.set("largeTextLength", 50000);
     }
+
+    if (compareVersion(oldVersion, "0.1.2") === -1) {
+        gxAppConfig.config.set("viewMode", "easy");
+    } 
 
     gxAppConfig.config.set("version", gxAppConfig.version);
 })();
@@ -159,6 +163,14 @@ gxAppConfig.getRecent = function() {
 
 gxAppConfig.getLargeTextLength = function() {
     return gxAppConfig.config.get("largeTextLength");
+}
+
+gxAppConfig.getViewMode = function() {
+    return gxAppConfig.config.get("viewMode");
+}
+
+gxAppConfig.setViewMode = function(mode) {
+    gxAppConfig.config.set("viewMode", mode);
 }
 
 module.exports = gxAppConfig;

@@ -1,6 +1,6 @@
 'use strict';
 
-const { ipcRenderer } = require("electron");
+const { ipcRenderer, remote } = require("electron");
 const gxCoreEditor = require("./utils/gx_core_editor");
 const gxeditor = require("./gxeditor");
 const gxIndextFormat = require("./utils/gx_detect_format");
@@ -14,14 +14,9 @@ gxCoreEditor.on("change", function() {
 
 ipcRenderer.on('action', (event, arg, arg1) => {
     switch (arg) {
-        case "setViewModeRaw":
+        case "setViewMode":
             {
-                gxeditor.setViewModeRaw();
-                break;
-            }
-        case "setViewModeEasy":
-            {
-                gxeditor.setViewModeEasy();
+                gxeditor.setViewMode(arg1);
                 break;
             }
         case "undo":
@@ -37,8 +32,7 @@ ipcRenderer.on('action', (event, arg, arg1) => {
     }
 });
 
-gxeditor.setViewModeEasy();
-
+gxeditor.setViewMode(remote.getGlobal("sharedObject").appConfig.getViewMode());
 let editor = document.getElementById("editor");
 const tmpl = JSON.parse(localStorage.getItem("tmpl"));
 const text = localStorage.getItem("xmlText");

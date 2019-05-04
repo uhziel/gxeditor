@@ -107,18 +107,20 @@ function refreshAppMenu() {
       submenu: [
         {
           label: gxStrings.appMenuModeEasy,
+          id: "appMenuModeEasy",
           type: "radio",
           click() {
             const focusedWindows = BrowserWindow.getFocusedWindow();
-            focusedWindows.webContents.send('action', 'setViewModeEasy');
+            focusedWindows.webContents.send("action", "setViewMode", "easy");
           }
         },
         {
           label: gxStrings.appMenuModeRaw,
+          id: "appMenuModeRaw",
           type: "radio",
           click() {
             const focusedWindows = BrowserWindow.getFocusedWindow();
-            focusedWindows.webContents.send('action', 'setViewModeRaw');
+            focusedWindows.webContents.send("action", "setViewMode", "raw");
           }
         }
       ]
@@ -217,6 +219,16 @@ function refreshAppMenu() {
         }
       })); 
     }
+  }
+
+  //按照配置勾选当前的显示模式
+  const viewMode = gxAppConfig.getViewMode();
+  if (viewMode === "raw") {
+    const modeRawMenuItem = appMenu.getMenuItemById("appMenuModeRaw");
+    modeRawMenuItem.checked = true;
+  } else {
+    const modeEasyMenuItem = appMenu.getMenuItemById("appMenuModeEasy");
+    modeEasyMenuItem.checked = true;
   }
 
   Menu.setApplicationMenu(appMenu);

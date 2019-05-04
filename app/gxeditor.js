@@ -579,16 +579,17 @@ gxeditor.genDefaultTemplate = function (xmlAsString) {
     return defaultTemplate;
 }
 
-gxeditor.setViewModeRaw = function () {
-    Xonomy.lang = "en";
-    Xonomy.setMode("nerd");
-    Xonomy.refresh();
-}
-
-gxeditor.setViewModeEasy = function () {
-    Xonomy.lang = "cn";
-    Xonomy.setMode("laic");
-    Xonomy.refresh();
+gxeditor.setViewMode = function (mode) {
+    if (mode === "raw") {
+        Xonomy.lang = "en";
+        Xonomy.setMode("nerd");
+        Xonomy.refresh(); 
+    } else {
+        Xonomy.lang = "cn";
+        Xonomy.setMode("laic");
+        Xonomy.refresh();
+    }
+    remote.getGlobal("sharedObject").appConfig.setViewMode(mode);
 }
 
 module.exports = gxeditor;

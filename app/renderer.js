@@ -202,14 +202,9 @@ ipcRenderer.on('action', (event, arg, arg1) => {
                 ipcRenderer.sendSync('reqaction', 'exit');
                 break;
             }
-        case "setViewModeRaw":
+        case "setViewMode":
             {
-                gxeditor.setViewModeRaw();
-                break;
-            }
-        case "setViewModeEasy":
-            {
-                gxeditor.setViewModeEasy();
+                gxeditor.setViewMode(arg1);
                 break;
             }
         case "undo":
@@ -312,8 +307,7 @@ function fileOnLoad() {
         tmpl = gxeditor.genDefaultTemplate(xmlText);
         isDefaultTmpl = true;
     }
-
-    gxeditor.setViewModeEasy();
+    gxeditor.setViewMode(remote.getGlobal("sharedObject").appConfig.getViewMode());
     try {
         let editor = document.getElementById("editor");
         bindContextMenu(editor);
