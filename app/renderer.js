@@ -164,7 +164,7 @@ function bindContextMenu(editor) {
 }
 
 //监听与主进程的通信
-ipcRenderer.on('action', (event, arg, arg1) => {
+ipcRenderer.on("action", (event, arg, arg1) => {
     switch (arg) {
         case "openProject":
             {
@@ -215,6 +215,12 @@ ipcRenderer.on('action', (event, arg, arg1) => {
         case "redo":
             {
                 gxCoreEditor.redo();
+                break;
+            }
+        case "reload":
+            {
+                askSaveIfNeed();
+                remote.getCurrentWindow().reload();
                 break;
             }
     }

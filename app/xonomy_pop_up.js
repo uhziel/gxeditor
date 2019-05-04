@@ -29,6 +29,11 @@ ipcRenderer.on('action', (event, arg, arg1) => {
                 gxCoreEditor.redo();
                 break;
             }
+        case "reload":
+            {
+                remote.getCurrentWindow().reload();
+                break;
+            }
     }
 });
 

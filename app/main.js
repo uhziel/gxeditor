@@ -95,11 +95,18 @@ function refreshAppMenu() {
               newSearchWindow(mainWindow);
             }
           },
-          accelerator: 'CmdOrCtrl+F'
+          accelerator: "CmdOrCtrl+F"
         },
-        { type: 'separator' },
-        { label: gxStrings.appMenuSelectAll, role: 'selectall' },
-        { label: gxStrings.appMenuReload, role: 'forceReload' }
+        { type: "separator" },
+        { label: gxStrings.appMenuSelectAll, role: "selectall" },
+        {
+          label: gxStrings.appMenuReload,
+          accelerator: 'CmdOrCtrl+Shift+R',
+          click() {
+            const focusedWindows = BrowserWindow.getFocusedWindow();
+            focusedWindows.webContents.send("action", "reload");            
+          }
+        }
       ]
     },
     {
