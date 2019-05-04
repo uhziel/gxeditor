@@ -74,13 +74,20 @@ GXPage.prototype.getTemplatePath = function () {
     if (!curFilePath) {
         return null;
     }
-    const basename = path.basename(curFilePath, ".xml");
+    const curDataDirPath = this.getDataDirPath();
+    if (!curDataDirPath) {
+        return null;
+    }
     const curProjectPath = this.appConfig.getCurProjectPath();
     if (!curProjectPath) {
         return null;
     }
+    const relativePath = path.relative(curDataDirPath, curFilePath);
+    const basename = path.basename(relativePath, ".xml");
+    const basenameEraseDigits = basename.replace(/_?[\d]+/, "");
 
-    const templatePath = path.join(curProjectPath, `template/${basename}.json`);
+    let templatePath = path.join(curProjectPath, `template/${relativePath}/..`, basenameEraseDigits);
+    templatePath += ".json";
     return templatePath;
 }
 

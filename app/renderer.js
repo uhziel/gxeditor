@@ -52,7 +52,10 @@ const contextMenuTemplate = [
                 width: 800,
                 height: 400,
                 parent: remote.getCurrentWindow(),
-                modal: true
+                modal: true,
+                webPreferences: {
+                    nodeIntegration: true
+                }
             });
             popupWindow.loadFile("app/xonomy_pop_up.html");
             remote.getGlobal("sharedObject").isXonomyPopup = 1;
@@ -79,8 +82,8 @@ const contextMenuTemplate = [
         id: "openInWiki",
         label: gxStrings.openInWiki,
         click() {
-            const curFilePath = gxpage.getCurFilePath();
-            const basename = path.basename(curFilePath);
+            const curTmplPath = gxpage.getTemplatePath();
+            const basename = path.basename(curTmplPath);
             const wikiPage = gxpage.getWikiPage(basename);
             if (wikiPage) {
                 shell.openExternal(wikiPage);
@@ -245,6 +248,9 @@ function saveCurDoc() {
 function saveCurDocDefaultTmpl() {
     const templatePath = gxpage.getTemplatePath();
     if (templatePath) {
+        const templateDir = path.dirname(templatePath);
+        fs.mkdirSync(templateDir, { recursive: true });
+
         const xmlAsString = gxCoreEditor.harvest();
         const defaultTemplte = gxeditor.genDefaultTemplate(xmlAsString);
         const tmplAsString = JSON.stringify(defaultTemplte, null, 4);

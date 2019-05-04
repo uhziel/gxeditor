@@ -224,7 +224,13 @@ function refreshAppMenu() {
 
 function createWindow() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 800, height: 600 })
+  mainWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  });
 
   // and load the index.html of the app.
   mainWindow.loadFile('app/index.html')
@@ -321,7 +327,12 @@ ipcMain.on('reqaction', (event, arg, arg1, arg2) => {
 });
 
 function newSearchWindow(parentWindow) {
-  searchWindow = new BrowserWindow({parent: parentWindow});
+  searchWindow = new BrowserWindow({
+    parent: parentWindow,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  });
   let {x, y, width} = parentWindow.getContentBounds();
   searchWindow.setBounds({ x: x+width-300, y: y, width: 300, height: 100 });
   searchWindow.webContents.loadFile('app/search_text_box.html');
