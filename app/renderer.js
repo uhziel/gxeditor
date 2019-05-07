@@ -83,7 +83,7 @@ const contextMenuTemplate = [
         label: gxStrings.openInWiki,
         click() {
             const curTmplPath = gxpage.getTemplatePath();
-            const basename = path.basename(curTmplPath);
+            const basename = path.basename(curTmplPath, ".json");
             const wikiPage = gxpage.getWikiPage(basename);
             if (wikiPage) {
                 shell.openExternal(wikiPage);
