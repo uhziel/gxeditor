@@ -121,8 +121,9 @@ function _getFileTypeRootDirPath(tmpl) {
 gxeditor.askFile = function (defaultString, tmpl) {
     const fileRootDir = _getFileTypeRootDirPath(tmpl);
     let realRelativePath = defaultString;
-    if (gxpage.needDataPathSwitchToSlash()) {
-        realRelativePath = realRelativePath.replace(/\//g, '\\');
+    const pathSep = tmpl.pathSep ? tmpl.pathSep : "/";
+    if (path.sep !== pathSep) {
+        realRelativePath = realRelativePath.replace(new RegExp("\\" + pathSep, "g"), path.sep);
     }
     const pathString = path.join(fileRootDir, realRelativePath);
     const fileType = tmpl.fileType ? tmpl.fileType : "";
@@ -140,6 +141,7 @@ gxeditor.askFile = function (defaultString, tmpl) {
         <div>
             <input type="hidden" id="fileRootDir" value="${fileRootDir}">
             <input type="hidden" id="fileType" value="${fileType}">
+            <input type="hidden" id="pathSep" value="${pathSep}">
             <label for="path">路径：</label>
             <input type="text" id="path" name="val" value="${defaultString}" onclick="gxeditor.onclickFile(event);" readonly>
             <input type="submit" value="确定" >
@@ -150,6 +152,7 @@ gxeditor.askFile = function (defaultString, tmpl) {
 gxeditor.onclickFile = function(event) {
     const fileRootDir = document.getElementById("fileRootDir").value;
     const fileType = document.getElementById("fileType").value;
+    const pathSep = document.getElementById("pathSep").value;
     let dialogFilters = [
         { name: "所有类型", extensions: ["*"] }
     ];
@@ -169,8 +172,8 @@ gxeditor.onclickFile = function(event) {
             document.getElementById("fileToDisplay").src = `file://${currentFile}`;
         }
         let pathValue = path.relative(fileRootDir, currentFile);
-        if (gxpage.needDataPathSwitchToSlash()) {
-            pathValue = pathValue.replace(/\\/g, '/');
+        if (path.sep !== pathSep) {
+            pathValue = pathValue.replace(new RegExp("\\" + path.sep, "g"), pathSep);
         }
         document.getElementById("path").value = pathValue;
     }

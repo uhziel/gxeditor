@@ -7,8 +7,8 @@
   <demo_string value="gxeditor" />
   <demo_datetime value="2018-01-01 07:02:01" />
   <demo_ref value="1" />
-  <demo_file value="icons/blue1.png" />
-  <demo_image value="potions (1).png" />
+  <demo_file value="potions (1).png" />
+  <demo_image value="icons\blue1.png" />
   <demo_sound value="sounds/example1.mp3" />
   <staffs>
     <staff id="1" name="约翰" />

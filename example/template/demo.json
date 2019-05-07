@@ -189,7 +189,9 @@
                 "desc": "对于 value 的描述",
                 "type": "FILE",
                 "optional": false,
-                "default": "0"
+                "default": "0",
+                "rootDir": "icons",
+                "pathSep": "/"
             }
         }
     },
@@ -207,7 +209,7 @@
                 "optional": false,
                 "default": "0",
                 "fileType": "IMAGE",
-                "rootDir": "icons"
+                "pathSep": "\\"
             }
         }
     },
@@ -219,7 +221,7 @@
         "children": [],
         "attributes": {
             "value": {
-                "cnName": "value",
+                "cnName": "值",
                 "desc": "对于 value 的描述",
                 "type": "FILE",
                 "optional": false,
