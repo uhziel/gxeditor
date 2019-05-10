@@ -108,7 +108,7 @@
                 "optional": false,
                 "default": "0",
                 "enumList": [
-                    { "value": 0, "caption": "湖北" },
+                    { "value": 0, "caption": "湖北", "desc": "简称“鄂”（别称：“楚”、“荆楚”）" },
                     { "value": 1, "caption": "湖南" }
                 ]
             },
@@ -119,7 +119,7 @@
                 "optional": false,
                 "default": "0",
                 "enumList": [
-                    { "value": 0, "caption": "武汉市", "displayIf": { "province" : 0 } },
+                    { "value": 0, "caption": "武汉市", "displayIf": { "province" : 0 }, "desc": "简称'汉'，别称江城、东方芝加哥" },
                     { "value": 1, "caption": "荆州市", "displayIf": { "province" : 0 } },
                     { "value": 2, "caption": "宜昌市", "displayIf": { "province" : 0 } },
                     { "value": 0, "caption": "长沙市", "displayIf": { "province" : 1 } },

@@ -199,6 +199,20 @@ gxeditor.fillDisplayValue = function (spec, tmpl) {
     }
 }
 
+gxeditor.fillSpecCaption = function (spec, tmpl) {
+    if (typeof tmpl.enumList === "object") {
+        spec.caption = function (jsAttribute) {
+            for (let i = 0; i < tmpl.enumList.length; i++) {
+                if (tmpl.enumList[i].value == jsAttribute.value &&
+                    isValidPick(tmpl.enumList[i].displayIf, jsAttribute)) {
+                    return tmpl.enumList[i].desc;
+                }
+            }
+            return null;
+        }
+    }
+}
+
 gxeditor.getCnName = function (name, tmpl) {
     if (typeof tmpl.cnName === 'string') {
         return tmpl.cnName;
@@ -267,6 +281,7 @@ gxeditor.genAttrMenu = function (attrName, attrSpec) {
 
     gxeditor.fillCnNameInfo(attrName, attrSpec, tmpl);
     gxeditor.fillDisplayValue(attrSpec, tmpl);
+    gxeditor.fillSpecCaption(attrSpec, tmpl);
 }
 
 gxeditor.getNewElementParam = function (spec, elemName) {
@@ -398,6 +413,9 @@ gxeditor.genElementMenu = function (spec, elemName, elemSpec) {
 
 gxeditor.genDocSpecFullInfo = function (spec) {
     for (const elemName in spec.elements) {
+        if (elemName.search(/^__.*__$/) !== -1) {
+            continue;
+        }
         const elemSpec = spec.elements[elemName];
         gxeditor.genElementMenu(spec, elemName, elemSpec);
 
