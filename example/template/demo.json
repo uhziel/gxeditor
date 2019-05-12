@@ -1,24 +1,4 @@
 {
-    "__help_node__": {
-        "cnName": "该元素的中文名。",
-        "desc": "对该元素的描述，如果鼠标移动到该元素上，会以tips的形式展示出来。",
-        "multi": "该元素是否多选。如果多选，该元素允许出现多次。",
-        "optional": "该元素是否可选。如果可选，该元素默认不会出现，需用户手动创建。",
-        "children": "该元素的子元素。",
-        "attributes": "描述该元素拥有的所有属性。对于属性字段的描述，请看 __help_attribute__ 。"
-    },
-    "__help_attribute__": {
-        "cnName": "该属性的中文名。",
-        "desc": "对该属性的描述，如果鼠标移动到该属性上，会以tips的形式展示出来。",
-        "type": "属性的类型。支持INT(整数)、DOUBLE(浮点)、STRING(字符串)、ENUM(枚举)、REF(引用)等",
-        "optional": "该属性是否可选。如果可选，该属性默认不会出现，需用户手动创建。",
-        "default": "该属性的默认值。",
-        "min": "该属性的最小值。",
-        "max": "该属性的最大值。",
-        "precision": "精度",
-        "enumList": "仅type=ENUM时有效。",
-        "refPath": "仅type=REF时有效。"
-    },
     "demo": {
         "cnName": "演示",
         "desc": "对于 demo 的描述",

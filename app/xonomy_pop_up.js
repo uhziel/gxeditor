@@ -43,6 +43,10 @@ const tmpl = JSON.parse(localStorage.getItem("tmpl"));
 const text = localStorage.getItem("xmlText");
 const format = gxIndextFormat(text);
 const textHasRoot = `<__root__>${text}</__root__>`;
+const defaultTmpl = gxeditor.genDefaultTemplate(textHasRoot);
+tmpl["__root__"] = defaultTmpl["__root__"];
+tmpl["__root__"].multi = false;
+
 try {
     gxCoreEditor.render("Xonomy", textHasRoot, editor, tmpl);
 } catch (error) {
