@@ -411,7 +411,7 @@ Xonomy.refresh=function() {
 			var atSpec=elSpec.attributes[this.getAttribute("data-name")];
 			if(atSpec.displayName) $(this).children(".name").html(Xonomy.textByLang(atSpec.displayName(Xonomy.harvestAttribute(this))));
 			if(atSpec.displayValue) $(this).children(".valueContainer").children(".value").html(Xonomy.textByLang(atSpec.displayValue(Xonomy.harvestAttribute(this))));
-			if(atSpec.caption) $(this).children(".inlinecaption").html("&nbsp;"+Xonomy.textByLang(atSpec.caption(Xonomy.harvestAttribute(this)))+"&nbsp;");
+			if(atSpec.caption) $(this).children(".inlinecaption").html(Xonomy.textByLang(atSpec.caption(Xonomy.harvestAttribute(this))));
 		});
 	});
 };
@@ -666,7 +666,7 @@ Xonomy.renderAttribute=function(attribute, optionalParentName) {
 			html+='<span class="value">'+displayValue+'</span>';
 			html+='<span class="punc">"</span>';
 		html+='</span>';
-		if(caption) html+="<span class='inlinecaption'>"+caption+"</span>";
+		html+="<span class='inlinecaption'>"+caption+"</span>";
 	html+='</span>';
 	attribute.htmlID = htmlID;
 	return html;
