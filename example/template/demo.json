@@ -30,6 +30,7 @@
             "demo_enum",
             "demo_multilevel_enum",
             "demo_string",
+            "demo_str_name",
             "demo_datetime",
             "demo_ref",
             "demo_file",
@@ -141,6 +142,24 @@
                 "type": "STRING",
                 "optional": false,
                 "default": ""
+            }
+        }
+    },
+    "demo_str_name": {
+        "cnName": "演示字符串名",
+        "desc": "对于 demo_str_name 的描述",
+        "multi": false,
+        "optional": false,
+        "children": [],
+        "attributes": {
+            "value": {
+                "cnName": "值",
+                "desc": "对于 value 的描述",
+                "type": "STR_NAME",
+                "optional": false,
+                "default": "",
+                "filePath": "strings/str_demo.csv",
+                "fileEncoding": "utf8"
             }
         }
     },

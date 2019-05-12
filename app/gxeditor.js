@@ -3,9 +3,9 @@ const Xonomy = require("./third_party/xonomy-3.5.0/xonomy.js");
 const path = require("path");
 const { remote } = require("electron");
 const gxpage = require("./gxpage");
+const gxStrFileParse = require("./utils/gx_str_file_parse");
 
 let gxeditor = {};
-
 
 gxeditor.writeTmplToFile = function (filename, content) {
     try {
@@ -199,9 +199,9 @@ gxeditor.fillDisplayValue = function (spec, tmpl) {
     }
 }
 
-gxeditor.fillSpecCaption = function (spec, tmpl) {
+gxeditor.fillSpecCaption = function (spec, attrSpec, tmpl) {
     if (typeof tmpl.enumList === "object") {
-        spec.caption = function (jsAttribute) {
+        attrSpec.caption = function (jsAttribute) {
             for (let i = 0; i < tmpl.enumList.length; i++) {
                 if (tmpl.enumList[i].value == jsAttribute.value &&
                     isValidPick(tmpl.enumList[i].displayIf, jsAttribute)) {
@@ -209,6 +209,10 @@ gxeditor.fillSpecCaption = function (spec, tmpl) {
                 }
             }
             return null;
+        }
+    } else if (tmpl.type === "STR_NAME") {
+        attrSpec.caption = function (jsAttribute) {
+            return spec.strings[jsAttribute.value];
         }
     }
 }
@@ -237,6 +241,9 @@ gxeditor.setAsker = function (tmpl, spec) {
     else if (tmpl.type === "STRING") {
         spec.asker = Xonomy.askString;
     }
+    else if (tmpl.type === "STR_NAME") {
+        spec.asker = Xonomy.askString;
+    }
     else if (tmpl.type == "DATETIME") {
         spec.asker = gxeditor.askDateTime;
     }
@@ -262,7 +269,7 @@ gxeditor.genTextMenu = function (attrName, attrSpec, elemSpec) {
     gxeditor.fillDisplayValue(attrSpec, tmpl);
 }
 
-gxeditor.genAttrMenu = function (attrName, attrSpec) {
+gxeditor.genAttrMenu = function (spec, attrName, attrSpec) {
     attrSpec.menu = [];
     const tmpl = attrSpec.tmpl;
     // 给属性添加删除自身的actionelement
@@ -281,7 +288,7 @@ gxeditor.genAttrMenu = function (attrName, attrSpec) {
 
     gxeditor.fillCnNameInfo(attrName, attrSpec, tmpl);
     gxeditor.fillDisplayValue(attrSpec, tmpl);
-    gxeditor.fillSpecCaption(attrSpec, tmpl);
+    gxeditor.fillSpecCaption(spec, attrSpec, tmpl);
 }
 
 gxeditor.getNewElementParam = function (spec, elemName) {
@@ -411,11 +418,21 @@ gxeditor.genElementMenu = function (spec, elemName, elemSpec) {
     gxeditor.fillCnNameInfo(elemName, elemSpec, tmpl);
 }
 
+gxeditor.loadStrFiles = function (spec) {
+    for (const filePath in spec.strFiles) {
+        if (spec.strFiles.hasOwnProperty(filePath)) {
+            const fileEncoding = spec.strFiles[filePath];
+            const strings = gxStrFileParse(filePath, fileEncoding);
+            spec.strings = Object.assign(spec.strings, strings);
+        }
+    }
+}
 gxeditor.genDocSpecFullInfo = function (spec) {
     for (const elemName in spec.elements) {
         if (elemName.search(/^__.*__$/) !== -1) {
             continue;
         }
+
         const elemSpec = spec.elements[elemName];
         gxeditor.genElementMenu(spec, elemName, elemSpec);
 
@@ -424,7 +441,7 @@ gxeditor.genDocSpecFullInfo = function (spec) {
             if (attrName === "__text__") {
                 gxeditor.genTextMenu(attrName, attrSpec, elemSpec);
             } else {
-                gxeditor.genAttrMenu(attrName, attrSpec);
+                gxeditor.genAttrMenu(spec, attrName, attrSpec);
             }
         }
     }
@@ -460,10 +477,16 @@ gxeditor.genDocSpec = function (xmlTmpl) {
         },
         allowLayby: true,
         laybyMessage: "您可以将节点拖过来临时存放再放回其他地方。",
-        elements: {}
+        elements: {},
+        strFiles: {},
+        strings: {}
     };
 
     for (const elemName in xmlTmpl) {
+        if (elemName.search(/^__.*__$/) !== -1) {
+            continue;
+        }
+
         const elemTmpl = xmlTmpl[elemName];
         spec.elements[elemName] = {};
 
@@ -473,13 +496,19 @@ gxeditor.genDocSpec = function (xmlTmpl) {
 
         for (const attrName in elemTmpl.attributes) {
             const attrTmpl = elemTmpl.attributes[attrName];
-            elemSpec.attributes[attrName] = {};
 
-            const attrSpec = elemSpec.attributes[attrName];
-            attrSpec.tmpl = attrTmpl;
+            elemSpec.attributes[attrName] = {
+                "tmpl": attrTmpl
+            }
+            
+            if (attrTmpl.type === "STR_NAME") {
+                const strFilePath = path.join(gxpage.getDataDirPath(), attrTmpl.filePath);
+                spec.strFiles[strFilePath] = attrTmpl.fileEncoding;
+            }
         }
     }
 
+    gxeditor.loadStrFiles(spec);
     gxeditor.genDocSpecFullInfo(spec);
     spec.elements.comment = {
         displayName: "注释",

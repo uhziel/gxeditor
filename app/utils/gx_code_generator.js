@@ -131,18 +131,18 @@ GXCodeGenerator.prototype.genHeaderStructVarElem = function (template, elemName)
 };
 
 GXCodeGenerator.prototype.genHeaderStructVarAttr = function (attrName, attr) {
-    let type = '';
-    if (attr.type == 'INT' || attr.type == 'ENUM' || attr.type == 'REF') {
-        type = 'int';
+    let type = "";
+    if (attr.type == "INT" || attr.type == "ENUM" || attr.type == "REF") {
+        type = "int";
     }
-    else if (attr.type == 'STRING' || attr.type == 'FILE') {
-        type = 'std::string';
+    else if (attr.type == "STRING" || attr.type == "FILE" || attr.type == "STR_NAME") {
+        type = "std::string";
     }
-    else if (attr.type == 'DOUBLE') {
-        type = 'double';
+    else if (attr.type == "DOUBLE") {
+        type = "double";
     }
-    else if (attr.type == 'DATETIME') {
-        type = 'GXDateTime';
+    else if (attr.type == "DATETIME") {
+        type = "GXDateTime";
     }
     else {
         type = attr.type;
