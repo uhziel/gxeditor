@@ -147,7 +147,8 @@ gxeditor.askFile = function (defaultString, tmpl) {
             <input type="hidden" id="fileType" value="${fileType}">
             <input type="hidden" id="pathSep" value="${pathSep}">
             <label for="path">路径：</label>
-            <input type="text" id="path" name="val" value="${defaultString}" onclick="gxeditor.onclickFile(event);" readonly>
+            <input type="text" id="path" name="val" value="${defaultString}">
+            <input type="button" onclick="gxeditor.onclickFile(event);" value="选择" >
             <input type="submit" value="确定" >
         </div>
         </form>
