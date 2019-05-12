@@ -201,7 +201,7 @@ gxeditor.fillDisplayValue = function (spec, tmpl) {
             for (let i = 0; i < tmpl.enumList.length; i++) {
                 if (tmpl.enumList[i].value == jsAttribute.value &&
                     isValidPick(tmpl.enumList[i].displayIf, jsAttribute)) {
-                    return tmpl.enumList[i].caption;
+                    return `${tmpl.enumList[i].value}:${tmpl.enumList[i].caption}`;
                 }
             }
             return jsAttribute.value;
