@@ -538,6 +538,10 @@ function _genDefautTmplAttr(attrName, attrValue) {
         "default": ""
     };
 
+    if (typeof attrValue === "string" && attrValue.length <= 0) {
+        return attrTmpl;
+    }
+
     const num = Number(attrValue);
     if (!Number.isNaN(num)) {
         if (num % 1 === 0) {
