@@ -125,14 +125,17 @@ gxeditor.askFile = function (defaultString, tmpl) {
     if (path.sep !== pathSep) {
         realRelativePath = realRelativePath.replace(new RegExp("\\" + pathSep, "g"), path.sep);
     }
-    const pathString = path.join(fileRootDir, realRelativePath);
+    let fileAbsolutePath = "";
+    if (realRelativePath) {
+        fileAbsolutePath = path.join(fileRootDir, realRelativePath);
+    }
     const fileType = tmpl.fileType ? tmpl.fileType : "";
 
     let extraHtml = "";
     if (fileType === "SOUND") {
-        extraHtml += `<audio id="fileToDisplay" src="file://${pathString}" controls alt="声音内容"></audio>`;
+        extraHtml += `<audio id="fileToDisplay" src="file://${fileAbsolutePath}" controls alt="声音内容"></audio>`;
     } else if (fileType === "IMAGE") {
-        extraHtml += `<img id="fileToDisplay" src="file://${pathString}" width="200" alt="图片内容">`;
+        extraHtml += `<img id="fileToDisplay" src="file://${fileAbsolutePath}" width="200" alt="图片内容">`;
     }
 
     return `
@@ -140,6 +143,7 @@ gxeditor.askFile = function (defaultString, tmpl) {
         ${extraHtml}
         <div>
             <input type="hidden" id="fileRootDir" value="${fileRootDir}">
+            <input type="hidden" id="fileAbsolutePath" value="${fileAbsolutePath}">
             <input type="hidden" id="fileType" value="${fileType}">
             <input type="hidden" id="pathSep" value="${pathSep}">
             <label for="path">路径：</label>
@@ -151,6 +155,7 @@ gxeditor.askFile = function (defaultString, tmpl) {
 }
 gxeditor.onclickFile = function(event) {
     const fileRootDir = document.getElementById("fileRootDir").value;
+    const fileAbsolutePath = document.getElementById("fileAbsolutePath").value;
     const fileType = document.getElementById("fileType").value;
     const pathSep = document.getElementById("pathSep").value;
     let dialogFilters = [
@@ -161,8 +166,12 @@ gxeditor.onclickFile = function(event) {
     } else if (fileType === "IMAGE") {
         dialogFilters.unshift({ name: "图片", extensions: ["png", "jpg", "gif", "bmp"] });
     }
+    let defaultPath = fileRootDir;
+    if (fileAbsolutePath.length > 0) {
+        defaultPath = fileAbsolutePath;
+    }
     const files = remote.dialog.showOpenDialog(remote.getCurrentWindow(), {
-        defaultPath: fileRootDir,
+        defaultPath: defaultPath,
         filters: dialogFilters,
         properties: ["openFile"]
     });
