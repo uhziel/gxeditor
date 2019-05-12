@@ -20,7 +20,10 @@ function parse(filePath, fileEncoding) {
 
     const buffer = fs.readFileSync(filePath);
     const content = iconv.decode(buffer, fileEncoding);
-    const csvAarry = csvParse(content);
+    const csvAarry = csvParse(content, {
+        relax: true,
+        skip_empty_lines: true
+    });
     csvAarry.forEach(element => {
         strings[element[0]] = element[1];
     });
