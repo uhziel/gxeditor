@@ -48,10 +48,14 @@ const contextMenuTemplate = [
             aceEditor.session.getSelection().setSelectionRange(selectionRange);
             localStorage.setItem("xmlText", aceEditor.session.getTextRange(selectionRange));
             localStorage.setItem("tmpl", JSON.stringify(gxCoreEditor.getTmpl()));
+            const parent = remote.getCurrentWindow();
+            let {x, y} = parent.getContentBounds();
             popupWindow = new BrowserWindow({
+                x: x + 25,
+                y: y + 25,
                 width: 800,
-                height: 400,
-                parent: remote.getCurrentWindow(),
+                height: 600,
+                parent: parent,
                 modal: true,
                 webPreferences: {
                     nodeIntegration: true
