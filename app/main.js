@@ -346,14 +346,19 @@ ipcMain.on('reqaction', (event, arg, arg1, arg2) => {
 });
 
 function newSearchWindow(parentWindow) {
+  let {x, y, width} = parentWindow.getContentBounds();
+  x = x + width - 230;
   searchWindow = new BrowserWindow({
+    x: x,
+    y: y,
+    width: 230,
+    height: 40,
+    frame: false,
     parent: parentWindow,
     webPreferences: {
       nodeIntegration: true
     }
   });
-  let {x, y, width} = parentWindow.getContentBounds();
-  searchWindow.setBounds({ x: x+width-300, y: y, width: 300, height: 100 });
   searchWindow.webContents.loadFile('app/search_text_box.html');
   //searchWindow.webContents.openDevTools(); 
   searchWindow.on('closed', () => {
