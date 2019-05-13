@@ -274,9 +274,6 @@ gxeditor.genTextMenu = function (attrName, attrSpec, elemSpec) {
 
     gxeditor.setAsker(tmpl, elemSpec);
     elemSpec.hasText = true;
-
-    gxeditor.fillCnNameInfo(attrName, attrSpec, tmpl);
-    gxeditor.fillDisplayValue(attrSpec, tmpl);
 }
 
 gxeditor.genAttrMenu = function (spec, attrName, attrSpec) {
