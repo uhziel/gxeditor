@@ -58,7 +58,11 @@ function refreshAppMenu() {
         },
         {
           label: gxStrings.appMenuQuit,
-          role: 'quit'
+          click() {
+            const focusedWindows = BrowserWindow.getFocusedWindow();
+            focusedWindows.close();
+          },
+          accelerator: 'CmdOrCtrl+Q'
         }
       ]
     },
@@ -174,7 +178,9 @@ function refreshAppMenu() {
   const fileMenuItem = appMenu.getMenuItemById("appMenuFile");
   const fileMenuEnabled = !global.sharedObject.isXonomyPopup;
   fileMenuItem.submenu.items.forEach((menuItem) => {
-    menuItem.enabled = fileMenuEnabled;
+    if (menuItem.label !== gxStrings.appMenuQuit) {
+      menuItem.enabled = fileMenuEnabled;
+    }
   });
 
   const findMenuItem = appMenu.getMenuItemById("appMenuFind");
