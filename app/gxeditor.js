@@ -543,11 +543,11 @@ function _genDefautTmplAttr(attrName, attrValue) {
     if (!Number.isNaN(num)) {
         if (num % 1 === 0) {
             attrTmpl.type = "INT";
-            attrTmpl.default = "0";
+            attrTmpl.default = 0;
         } else {
             attrTmpl.type = "DOUBLE";
             attrTmpl.precision = 0.01;
-            attrTmpl.default = "0.0";
+            attrTmpl.default = 0.0;
         }
     }
 
