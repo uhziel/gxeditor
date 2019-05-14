@@ -142,7 +142,11 @@ GXCodeGenerator.prototype.genHeaderStructVarAttr = function (attrName, attr) {
         type = "double";
     }
     else if (attr.type == "DATETIME") {
-        type = "GXDateTime";
+        if (this.cppTmpl.varTypeDATETIME) {
+            type = this.cppTmpl.varTypeDATETIME;
+        } else {
+            type = "GXDateTime";
+        }
     }
     else {
         type = attr.type;
@@ -183,7 +187,7 @@ GXCodeGenerator.prototype.genSourceElem = function (template, elemName, isRoot) 
         for (const attrName in elem.attributes) {
             const attr = elem.attributes[attrName];
 
-            constructorContent += this.cppTmpl.genSourceFileCtorVar(attrName, attr.default, isFirst);
+            constructorContent += this.cppTmpl.genSourceFileCtorVar(attrName, attr, isFirst);
             isFirst = false;
 
             loadContent += this.cppTmpl.genSourceFileLoadVar(attrName);

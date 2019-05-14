@@ -32,7 +32,7 @@
                 "desc": "对于 age 的描述",
                 "type": "INT",
                 "optional": false,
-                "default": "0",
+                "default": 0,
                 "min": 0,
                 "max": 150
             }
@@ -50,7 +50,7 @@
                 "desc": "对于 height 的描述",
                 "type": "DOUBLE",
                 "optional": false,
-                "default": "0.0",
+                "default": 0.0,
                 "precision": 0.01
             }
         }
@@ -67,7 +67,7 @@
                 "desc": "对于 sex 的描述",
                 "type": "ENUM",
                 "optional": false,
-                "default": "0",
+                "default": 0,
                 "enumList": [
                     { "value": 0, "caption": "男" },
                     { "value": 1, "caption": "女" }
@@ -87,7 +87,7 @@
                 "desc": "对于 province 的描述",
                 "type": "ENUM",
                 "optional": false,
-                "default": "0",
+                "default": 0,
                 "enumList": [
                     { "value": 0, "caption": "湖北", "desc": "简称“鄂”（别称：“楚”、“荆楚”）" },
                     { "value": 1, "caption": "湖南" }
@@ -98,7 +98,7 @@
                 "desc": "对于 city 的描述",
                 "type": "ENUM",
                 "optional": false,
-                "default": "0",
+                "default": 0,
                 "enumList": [
                     { "value": 0, "caption": "武汉市", "displayIf": { "province" : 0 }, "desc": "简称'汉'，别称江城、东方芝加哥" },
                     { "value": 1, "caption": "荆州市", "displayIf": { "province" : 0 } },
@@ -171,7 +171,7 @@
                 "desc": "对于 value 的描述",
                 "type": "REF",
                 "optional": false,
-                "default": "0",
+                "default": 0,
                 "refPath": "staff"
             }
         }
@@ -188,7 +188,7 @@
                 "desc": "对于 value 的描述",
                 "type": "FILE",
                 "optional": false,
-                "default": "0",
+                "default": "",
                 "rootDir": "icons",
                 "pathSep": "/"
             }
@@ -206,7 +206,7 @@
                 "desc": "对于 value 的描述",
                 "type": "FILE",
                 "optional": false,
-                "default": "0",
+                "default": "",
                 "fileType": "IMAGE",
                 "pathSep": "\\"
             }
@@ -224,7 +224,7 @@
                 "desc": "对于 value 的描述",
                 "type": "FILE",
                 "optional": false,
-                "default": "0",
+                "default": "",
                 "fileType": "SOUND"
             }
         }
@@ -251,7 +251,7 @@
                 "desc": "对于 id 的描述",
                 "type": "INT",
                 "optional": false,
-                "default": "0"
+                "default": 0
             },
             "name": {
                 "cnName": "名字",

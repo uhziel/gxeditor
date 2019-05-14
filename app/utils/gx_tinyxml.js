@@ -58,9 +58,11 @@ ${elemStructName}::${elemStructName}()
 ${content}{}
 `;
 
-cppTmpl.genSourceFileCtorVar = (variable, defaultValue, isFirst) => 
-`    ${isFirst ? ':' : ','} ${variable}(${typeof defaultValue==='string' ? '\"'+defaultValue+'\"':defaultValue})
-`;
+cppTmpl.genSourceFileCtorVar = (variable, attr, isFirst) => {
+	const defaultValue = attr.default;
+	return `    ${isFirst ? ':' : ','} ${variable}(${typeof defaultValue==='string' ? '\"'+defaultValue+'\"':defaultValue})
+`
+};
 
 cppTmpl.genSourceFileLoad = (elemStructName, content) => `
 void ${elemStructName}::Load(TiXmlElement* node)
