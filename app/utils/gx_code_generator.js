@@ -63,8 +63,8 @@ GXCodeGenerator.prototype.genFromTemplate = function (tmplFilePath) {
     const sourceContent = this.cppTmpl.genSourceFile(fileBaseName,
         tmplNamespace, elemContent);
 
-    const headerFilePath = path.resolve(this.cppCodePath, `${fileBaseName}.h`);
-    const sourceFilePath = path.resolve(this.cppCodePath, `${fileBaseName}.cpp`);
+    const headerFilePath = path.resolve(this.cppCodePath, `${fileBaseName}.config.h`);
+    const sourceFilePath = path.resolve(this.cppCodePath, `${fileBaseName}.config.cpp`);
 
     fs.writeFileSync(headerFilePath, headerContent);
     fs.writeFileSync(sourceFilePath, sourceContent);
@@ -220,7 +220,7 @@ function getIncludeDirectives(__include__) {
 
     __include__.forEach(includePath => {
         const basename = path.basename(includePath, '.json');
-        includeDirectives += `#include "${basename}.h"\n`
+        includeDirectives += `#include "${basename}.config.h"\n`
     });
     return includeDirectives;
 };

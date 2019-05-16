@@ -1,4 +1,4 @@
-#include "fruit.h"
+#include "fruit.config.h"
 
 namespace GXShare {
 

@@ -2,7 +2,7 @@
 #define __fruits__GXHEADER__
 
 #include "gx_utils.h"
-#include "fruit.h"
+#include "fruit.config.h"
 
 namespace GXFruits {
 

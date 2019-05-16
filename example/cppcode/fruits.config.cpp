@@ -1,4 +1,4 @@
-#include "fruits.h"
+#include "fruits.config.h"
 
 namespace GXFruits {
 

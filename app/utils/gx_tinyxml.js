@@ -46,7 +46,7 @@ cppTmpl.genHeaderFileStructVar = (type, variable) =>
 //////////////////////////////////////////////////
 // SourceFile
 cppTmpl.genSourceFile = (fileBaseName, tmplNamespace, content) =>
-`#include "${fileBaseName}.h"
+`#include "${fileBaseName}.config.h"
 
 namespace ${tmplNamespace} {
 ${content}
