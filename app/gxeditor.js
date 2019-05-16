@@ -529,7 +529,7 @@ gxeditor.genDocSpec = function (xmlTmpl) {
 function _genDefautTmplAttr(attrName, attrValue) {
     const attrTmpl = {
         "cnName": attrName,
-        "desc": `对于 ${attrName} 的描述`,
+        "desc": "",
         "type": "STRING",
         "optional": false,
         "default": ""
@@ -560,7 +560,7 @@ function _genDefaultTemplate(defaultTemplate, elem) {
     if (!defaultTemplate[elemName]) {
         defaultTemplate[elemName] = {
             "cnName": elemName,
-            "desc": `对于 ${elemName} 的描述`,
+            "desc": "",
             "multi": true,
             "optional": false,
             "children": [],
