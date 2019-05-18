@@ -245,4 +245,19 @@ Xonomy.getParentHtmlID = function(elemHtmlID) {
     return obj.parentNode.parentNode.id;
 };
 
+Xonomy.filterPickList = function(event) {
+    if (event.isComposing || event.keyCode === 229) {
+        return;
+    }
+
+    const input = document.getElementById("pickListInput");
+    const filterValue = input.value;
+    const xonomyBubbleContent = document.getElementById("xonomyBubbleContent");
+    const menuItems = xonomyBubbleContent.getElementsByClassName("menuItem");
+    for (let i = 0; i < menuItems.length; i++) {
+        const found = menuItems[i].textContent.indexOf(filterValue) > -1;
+        menuItems[i].style.display = found ? "block" : "none";
+    }
+};
+
 module.exports = Xonomy;

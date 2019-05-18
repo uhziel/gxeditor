@@ -197,7 +197,7 @@
 #xonomyBubble.nerd #xonomyBubbleContent span.techno span.elName { color: #cc3333; }
 #xonomyBubble.nerd #xonomyBubbleContent div.menuItem.techno { padding-top: 6px; padding-bottom: 6px; font-family: monospace, "宋体"; font-size: 0.9rem; }
 #xonomyBubble.nerd #xonomyBubbleContent div.menuItem.techno span.explainer { font-family: Verdana, sans-serif, "宋体"; font-size: 0.8em; color: #999999; font-weight: normal; margin-left: 3px; }
-#xonomyBubble.nerd #xonomyBubbleContent div.menuItem.current { x-background-color: #ffffdd; }
+#xonomyBubble.nerd #xonomyBubbleContent div.menuItem.current { background-color: #ffffdd; }
 #xonomyBubble.nerd #xonomyBubbleContent div.menuItem:hover { background-color: #ffffcc; }
 
 /*When the pop-up box takes input from the user*/
@@ -405,7 +405,7 @@
 #xonomyBubble.laic #xonomyBubbleContent span.techno span.elName { font-family: Verdana, sans-serif, "宋体"; font-weight: bold; color: #315696; }
 #xonomyBubble.laic #xonomyBubbleContent div.menuItem.techno span.explainer { font-family: Verdana, sans-serif, "宋体"; font-size: 1em; color: #999999; font-weight: normal; margin-left: 0.5em; }
 #xonomyBubble.laic #xonomyBubbleContent div.menuItem.techno span.explainer.alone {margin-left: 0px;}
-#xonomyBubble.laic #xonomyBubbleContent div.menuItem.current { x-background-color: #ffffdd; }
+#xonomyBubble.laic #xonomyBubbleContent div.menuItem.current { background-color: #ffffdd; }
 #xonomyBubble.laic #xonomyBubbleContent div.menuItem:hover { background-color: #f6f6f6; }
 
 /*When the pop-up box takes input from the user*/

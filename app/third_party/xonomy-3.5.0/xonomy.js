@@ -1045,7 +1045,7 @@ Xonomy.askString=function(defaultString, askerParameter, jsMe) {
 	var html="";
 	html+="<form onsubmit='Xonomy.answer(this.val.value); return false'>";
 		html+="<input name='val' class='textbox focusme' style='width: "+width+"px;' value='"+Xonomy.xmlEscape(defaultString)+"' onkeyup='Xonomy.notKeyUp=true'/>";
-		html+=" <input type='submit' value='OK'>";
+		html+=" <input type='submit' value='确定'>";
 	html+="</form>";
 	return html;
 };
@@ -1054,7 +1054,7 @@ Xonomy.askLongString=function(defaultString, askerParameter, jsMe) {
 	var html="";
 	html+="<form onsubmit='Xonomy.answer(this.val.value); return false'>";
 		html+="<textarea name='val' class='textbox focusme' spellcheck='false' style='width: "+width+"px; height: 150px;'>"+Xonomy.xmlEscape(defaultString)+"</textarea>";
-		html+="<div class='submitline'><input type='submit' value='OK'></div>";
+		html+="<div class='submitline'><input type='submit' value='确定'></div>";
 	html+="</form>";
 	return html;
 };
@@ -1068,8 +1068,10 @@ Xonomy.askOpenPicklist=function(defaultString, picklist) {
     var html="";
 		html+=Xonomy.pickerMenu(picklist, defaultString);
 		html+="<form class='undermenu' onsubmit='Xonomy.answer(this.val.value); return false'>";
-		html+="<input name='val' class='textbox focusme' value='"+(!isInPicklist ? Xonomy.xmlEscape(defaultString) : "")+"' onkeyup='Xonomy.notKeyUp=true'/>";
-		html+=" <input type='submit' value='OK'>";
+		html+="<input id='pickListInput' style='display:block' class='textbox' placeholder='输入以过滤' onkeyup='Xonomy.filterPickList(event);'/>";
+		html+="<Label for='pickListVal' >值：</Label>"
+		html+="<input name='val' id='pickListVal' class='textbox focusme' value='"+(!isInPicklist ? Xonomy.xmlEscape(defaultString) : "")+"' onkeyup='Xonomy.notKeyUp=true'/>";
+		html+="<input type='submit' value='确定'>";
 		html+="</form>";
     return html;
 };
