@@ -6,7 +6,7 @@ gxeditor(Game Xml Editor)，游戏Xml编辑器。旨在方便的编辑、校验�
 
 #### 使用文档
 
-https://uhziel.gitbook.io/gxeditor
+https://gxeditor.gitbook.io/gxeditor
 
 #### 软件下载地址
 
