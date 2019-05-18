@@ -1,3 +1,12 @@
+(function($){
+	$.fn.focusTextToEnd = function(){
+			this.focus();
+			var $thisVal = this.val();
+			this.val('').val($thisVal);
+			return this;
+	}
+}(jQuery));
+
 var Xonomy={
 	lang: "", //"en"|"de"|fr"| ...
 	mode: "nerd", //"nerd"|"laic"
@@ -1011,7 +1020,7 @@ Xonomy.showBubble=function($anchor) {
 	$bubble.css(placement);
 	$bubble.slideDown("fast", function() {
 		if(Xonomy.keyNav) $bubble.find(".focusme").first().focus(); //if the context menu contains anything with the class name 'focusme', focus it.
-		else $bubble.find("input.focusme, select.focusme, textarea.focusme").first().focus();
+		else $bubble.find("input.focusme, select.focusme, textarea.focusme").first().focusTextToEnd();
 	});
 
 	$bubble.on("keyup", function(event){
