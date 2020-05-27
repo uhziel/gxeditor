@@ -1,29 +1,26 @@
 # gxeditor
 
-#### 项目介绍
-gxeditor(Game Xml Editor)，游戏Xml编辑器。旨在方便的编辑、校验游戏xml文件。
-也可以生成cpp读取模版的代码。
+## 软件介绍
 
-#### 使用文档
+gxeditor\(Game Xml Editor\)，游戏Xml编辑器，旨在方便的编辑Xml文件，后续会添加校验数据有效性的功能。
 
-https://gxeditor.gitbook.io/gxeditor
+对开发者来说，代码生成功能（生成cpp代码，读取游戏数据），可以省掉很多重复性工作。
 
-#### 软件下载地址
+## 核心编辑功能演示
 
-https://github.com/uhziel/gxeditor/releases 下载有"Lastest release"标记的  gxeditor-setup-xxx.exe
+先后演示了编辑整数、浮点数、枚举、字符串、文件、图片、声音等的效果。
 
-下载安装好，以后有稳定版本更新，会自动升级。
+![](.gitbook/assets/demo%20%282%29.gif)
 
-#### 开发环境安装和测试
+## 相关地址
 
-```bash
-npm install
-npm start
-```
+### 下载地址
 
-#### 打包和发布
+[https://github.com/uhziel/gxeditor/releases](https://github.com/uhziel/gxeditor/releases) 下载有"Lastest release"标记的  gxeditor-setup-xxx.exe
 
-```bash
-npm run pack
-npm run dist
-```
+下载安装好，以后有稳定版本更新，它会自动升级。
+
+### Github主页
+
+[https://github.com/uhziel/gxeditor](https://github.com/uhziel/gxeditor)
+
